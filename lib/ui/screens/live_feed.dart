@@ -17,6 +17,7 @@ class Feed extends StatelessWidget {
       profileImage: 'https://thispersondoesnotexist.com/image',
       offerImage:
           'https://www.twopeasandtheirpod.com/wp-content/uploads/2021/03/Veggie-Pizza-8-500x375.jpg',
+      offerColor: Colors.amber,
     )));
   }
 }

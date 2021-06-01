@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reso/consts/theme.dart';
-import 'package:reso/ui/screens/Feed.dart';
+import 'package:reso/ui/screens/live_feed.dart';
 
 void main() {
   runApp(const MyApp());

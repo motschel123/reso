@@ -20,6 +20,7 @@ class OfferCard extends StatelessWidget {
       required this.offerDescription,
       required this.offerAuthor,
       required this.profileImage,
+      required this.offerColor,
       this.offerTime,
       this.offerLocation,
       this.offerImage})
@@ -30,6 +31,8 @@ class OfferCard extends StatelessWidget {
       offerDescription,
       offerAuthor,
       profileImage;
+
+  final Color offerColor;
 
   final String? offerTime, offerLocation, offerImage;
 
@@ -46,12 +49,13 @@ class OfferCard extends StatelessWidget {
                 Container(
                   height: 56.0,
                   width: 40.0,
-                  color: Colors.amber,
+                  color: offerColor,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 16.0),
                   child: CircleAvatar(
                     backgroundImage: NetworkImage(profileImage),
+                    backgroundColor: offerColor,
                     radius: 28.0,
                   ),
                 ),
