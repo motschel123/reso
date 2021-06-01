@@ -70,7 +70,7 @@ class OfferCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Text>[
                       Text(offerTitle,
-                          style: Theme.of(context).textTheme.headline2),
+                          style: Theme.of(context).textTheme.headline3),
                       Text(offerPrice,
                           style: Theme.of(context).textTheme.bodyText2)
                     ],
