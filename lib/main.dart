@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/ui/screens/live_feed.dart';
+import 'package:reso/ui/screens/offer_detail.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: lightTheme,
-      home: const Feed(),
+      home: const OfferDetail(),
     );
   }
 }
