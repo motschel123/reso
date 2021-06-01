@@ -8,11 +8,15 @@ class OfferCard extends StatelessWidget {
   /// The [profileImage] is the network path to the profile image of the author and
   /// must not be null.
   ///
+  /// [offerColor] is the background color of the Container behind the profile image
+  /// and must not be null.
+  ///
   /// The [offerTime], [offerLocation] arguments are optional and displayed with
   /// matching icons beneath the description.
   ///
   /// Using [offerImage], an addition image can be provided which is displayed
   /// in large beneath the rest.
+  ///
   const OfferCard(
       {Key? key,
       required this.offerTitle,
