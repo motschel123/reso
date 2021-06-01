@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:reso/ui/widgets/offer_card.dart';
 
-class Feed extends StatelessWidget {
-  const Feed({Key? key}) : super(key: key);
+class LiveFeed extends StatelessWidget {
+  const LiveFeed({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
