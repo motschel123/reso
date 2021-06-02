@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:reso/ui/widgets/offer_heading.dart';
 
+/// A screen for displaying all information about an offer
+///
+/// The [offerTitle], [offerPrice], [offerDescription] and [offerAuthor] arguments
+/// are required and display general information about the offer.
+/// The [profileImage] is the network path to the profile image of the author and
+/// must not be null.
+///
+/// [offerColor] is the background color of the Container behind the profile image
+/// and must not be null.
+///
+/// The [offerTime], [offerLocation] arguments are optional and displayed with
+/// matching icons beneath the description.
+///
+/// Using [offerImage], an addition image can be provided which is displayed
+/// in large beneath the rest.
 class OfferDetail extends StatelessWidget {
-  /// A screen for displaying all information about an offer
-  ///
-  /// The [offerTitle], [offerPrice], [offerDescription] and [offerAuthor] arguments
-  /// are required and display general information about the offer.
-  /// The [profileImage] is the network path to the profile image of the author and
-  /// must not be null.
-  ///
-  /// [offerColor] is the background color of the Container behind the profile image
-  /// and must not be null.
-  ///
-  /// The [offerTime], [offerLocation] arguments are optional and displayed with
-  /// matching icons beneath the description.
-  ///
-  /// Using [offerImage], an addition image can be provided which is displayed
-  /// in large beneath the rest.
   const OfferDetail(
       {Key? key,
       required this.offerTitle,
