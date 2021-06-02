@@ -5,19 +5,25 @@ import 'package:flutter/material.dart';
 /// The parameters [hintText] and [controller] are required.
 ///
 /// [multiline] controls whether the TextFormField accepts multiple lines of input
+/// The keyboardType of the TextFormField can optionally be set with [keyboardType]
+/// and the input can be obscured by settings [obscuredText] to true.
 class StyledTextFormField extends StatelessWidget {
   const StyledTextFormField(
       {Key? key,
       required this.hintText,
       required this.controller,
-      this.multiline = false})
+      this.multiline = false,
+      this.obscureText = false,
+      this.keyboardType = TextInputType.text})
       : super(key: key);
 
   final TextEditingController controller;
 
   final String hintText;
 
-  final bool multiline;
+  final bool multiline, obscureText;
+
+  final TextInputType keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +31,9 @@ class StyledTextFormField extends StatelessWidget {
       cursorColor: Colors.black.withOpacity(0.5),
       style: Theme.of(context).textTheme.bodyText1,
       maxLines: multiline ? null : 1,
-      keyboardType: multiline ? TextInputType.multiline : TextInputType.text,
+      keyboardType: multiline ? TextInputType.multiline : keyboardType,
       controller: controller,
+      obscureText: obscureText,
       decoration: InputDecoration(
           hintText: hintText,
           hintStyle: Theme.of(context).textTheme.bodyText2,
@@ -91,6 +98,42 @@ class StyledDropdownButtonFormField extends StatelessWidget {
           child: Text(value),
         );
       }).toList(),
+    );
+  }
+}
+
+/// A large, custom styled Button
+///
+/// The parameters [text], [color] and [callback] are required and define the
+/// label, background color and onTap callback of the Button
+class StyledButtonLarge extends StatelessWidget {
+  const StyledButtonLarge(
+      {Key? key,
+      required this.text,
+      required this.color,
+      required this.callback})
+      : super(key: key);
+
+  final String text;
+  final Color color;
+  final Function callback;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => callback,
+      child: Container(
+          height: 42.0,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+          ),
+          child: Center(
+            child: Text(
+              text,
+              style: Theme.of(context).textTheme.button,
+            ),
+          )),
     );
   }
 }
