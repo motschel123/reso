@@ -116,12 +116,12 @@ class StyledButtonLarge extends StatelessWidget {
 
   final String text;
   final Color color;
-  final Function callback;
+  final void Function() callback;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => callback,
+    return GestureDetector(
+      onTap: callback,
       child: Container(
           height: 42.0,
           decoration: BoxDecoration(

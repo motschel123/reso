@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:reso/auth/application_state.dart';
+import 'package:reso/ui/screens/live_feed.dart';
 import 'package:reso/ui/widgets/styled_form_elements.dart';
-
-enum ApplicationLoginState {
-  loggedOut,
-  emailAddress,
-  register,
-  password,
-}
 
 class Authentication extends StatelessWidget {
   const Authentication({
     Key? key,
     required this.loginState,
     required this.email,
+    required this.startLoginFlow,
     required this.verifyEmail,
     required this.signInWithEmailAndPassword,
     required this.cancelRegistration,
@@ -23,6 +19,7 @@ class Authentication extends StatelessWidget {
 
   final ApplicationLoginState loginState;
   final String? email;
+  final void Function() startLoginFlow;
   final void Function(
     String email,
     void Function(Exception e) error,
@@ -36,6 +33,7 @@ class Authentication extends StatelessWidget {
   final void Function() cancelLogin;
   final void Function(
     String email,
+    String displayName,
     String password,
     void Function(Exception e) error,
   ) registerAccount;
@@ -43,19 +41,9 @@ class Authentication extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-          child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: buildAuthElements(context),
-      )),
-    );
-  }
-
-  Widget buildAuthElements(BuildContext context) {
     switch (loginState) {
       case ApplicationLoginState.loggedOut:
-        return const AppTitle();
+        return AppTitle(startLoginFlow: startLoginFlow);
 
       case ApplicationLoginState.emailAddress:
         return EmailForm(
@@ -68,9 +56,10 @@ class Authentication extends StatelessWidget {
         return RegisterForm(
           email: email!,
           cancel: cancelRegistration,
-          registerAccount: (String email, String password) {
+          registerAccount: (String email, String displayName, String password) {
             registerAccount(
                 email,
+                displayName,
                 password,
                 (Exception e) => _showErrorDialog(
                     context, 'Account konnte nicht erstellt werden', e));
@@ -88,31 +77,34 @@ class Authentication extends StatelessWidget {
                   (Exception e) => _showErrorDialog(
                       context, 'Anmeldung nicht erfolgreich', e));
             });
+      case ApplicationLoginState.loggedIn:
+        return const LiveFeed();
     }
   }
 }
 
 class AppTitle extends StatelessWidget {
-  const AppTitle({Key? key}) : super(key: key);
+  const AppTitle({Key? key, required this.startLoginFlow}) : super(key: key);
+
+  final void Function() startLoginFlow;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Container(
-            height: 42.0,
-            decoration: const BoxDecoration(
-              color: Colors.amber,
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-            ),
-            child: Center(
-              child: Text(
-                'Weiter',
-                style: Theme.of(context).textTheme.button,
-              ),
-            )),
-      ],
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              StyledButtonLarge(
+                  text: 'Anmelden / Registrieren',
+                  color: Colors.amber,
+                  callback: startLoginFlow),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -131,21 +123,28 @@ class _EmailFormState extends State<EmailForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          StyledTextFormField(
-            hintText: 'Email',
-            controller: _controller,
-            keyboardType: TextInputType.emailAddress,
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                StyledTextFormField(
+                  hintText: 'Email',
+                  controller: _controller,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(height: 16.0),
+                StyledButtonLarge(
+                    text: 'Weiter',
+                    color: Colors.amber,
+                    callback: () => widget.callback(_controller.text))
+              ],
+            ),
           ),
-          const SizedBox(height: 16.0),
-          StyledButtonLarge(
-              text: 'Weiter',
-              color: Colors.amber,
-              callback: () => widget.callback(_controller.text))
-        ],
+        ),
       ),
     );
   }
@@ -160,7 +159,8 @@ class RegisterForm extends StatefulWidget {
   }) : super(key: key);
 
   final String email;
-  final void Function(String email, String password) registerAccount;
+  final void Function(String email, String displayName, String password)
+      registerAccount;
   final void Function() cancel;
 
   @override
@@ -169,43 +169,64 @@ class RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<RegisterForm> {
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _displayNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _repeatPasswordController =
       TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    _emailController.text = widget.email;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Form(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          StyledTextFormField(
-            hintText: 'Email',
-            controller: _emailController,
-            keyboardType: TextInputType.emailAddress,
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                StyledTextFormField(
+                  hintText: 'Email',
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(height: 8.0),
+                StyledTextFormField(
+                  hintText: 'Benutzername',
+                  controller: _displayNameController,
+                ),
+                const SizedBox(height: 8.0),
+                StyledTextFormField(
+                  hintText: 'Passwort',
+                  controller: _passwordController,
+                  obscureText: true,
+                ),
+                const SizedBox(height: 8.0),
+                StyledTextFormField(
+                  hintText: 'Passwort wiederholen',
+                  controller: _repeatPasswordController,
+                  obscureText: true,
+                ),
+                const SizedBox(height: 16.0),
+                StyledButtonLarge(
+                    text: 'Registrieren',
+                    color: Colors.amber,
+                    callback: () => widget.registerAccount(
+                        _emailController.text,
+                        _displayNameController.text,
+                        _passwordController.text)),
+                const SizedBox(height: 16.0),
+                StyledButtonLarge(
+                    text: 'Zurück', color: Colors.red, callback: widget.cancel),
+              ],
+            ),
           ),
-          const SizedBox(height: 8.0),
-          StyledTextFormField(
-            hintText: 'Passwort',
-            controller: _passwordController,
-            obscureText: true,
-          ),
-          const SizedBox(height: 8.0),
-          StyledTextFormField(
-            hintText: 'Passwort wiederholen',
-            controller: _repeatPasswordController,
-            obscureText: true,
-          ),
-          const SizedBox(height: 16.0),
-          StyledButtonLarge(
-              text: 'Registrieren',
-              color: Colors.amber,
-              callback: () => widget.registerAccount(
-                  _emailController.text, _passwordController.text)),
-          const SizedBox(height: 16.0),
-          StyledButtonLarge(
-              text: 'Zurück', color: Colors.red, callback: widget.cancel),
-        ],
+        ),
       ),
     );
   }
@@ -232,32 +253,45 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController _passwordController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    _emailController.text = widget.email;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Form(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          StyledTextFormField(
-            hintText: 'Email',
-            controller: _emailController,
-            keyboardType: TextInputType.emailAddress,
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                StyledTextFormField(
+                  hintText: 'Email',
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(height: 8.0),
+                StyledTextFormField(
+                  hintText: 'Passwort',
+                  controller: _passwordController,
+                  obscureText: true,
+                ),
+                const SizedBox(height: 8.0),
+                StyledButtonLarge(
+                    text: 'Anmelden',
+                    color: Colors.amber,
+                    callback: () => widget.loginAccount(
+                        _emailController.text, _passwordController.text)),
+                const SizedBox(height: 16.0),
+                StyledButtonLarge(
+                    text: 'Zurück', color: Colors.red, callback: widget.cancel),
+              ],
+            ),
           ),
-          const SizedBox(height: 8.0),
-          StyledTextFormField(
-            hintText: 'Passwort',
-            controller: _passwordController,
-            obscureText: true,
-          ),
-          const SizedBox(height: 8.0),
-          StyledButtonLarge(
-              text: 'Anmelden',
-              color: Colors.amber,
-              callback: () => widget.loginAccount(
-                  _emailController.text, _passwordController.text)),
-          const SizedBox(height: 16.0),
-          StyledButtonLarge(
-              text: 'Zurück', color: Colors.red, callback: widget.cancel),
-        ],
+        ),
       ),
     );
   }
