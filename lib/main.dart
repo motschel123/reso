@@ -1,9 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/ui/screens/offer_detail.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const _InitializeApp(child: MyApp()));
+}
+
+class _InitializeApp extends StatefulWidget {
+  const _InitializeApp({
+    Key? key,
+    required this.child,
+    this.onError = const Center(
+      child: Text('Error'),
+    ),
+    this.onLoading = const Center(
+      child: CircularProgressIndicator(),
+    ),
+  }) : super(key: key);
+
+  final Widget child;
+  final Widget onError;
+  final Widget onLoading;
+
+  @override
+  State<_InitializeApp> createState() => _InitializeAppState();
+}
+
+class _InitializeAppState extends State<_InitializeApp> {
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<FirebaseApp>(
+      future: _initialization,
+      builder: (BuildContext context, AsyncSnapshot<FirebaseApp> snapshot) {
+        if (snapshot.hasError) {
+          return widget.onError;
+        }
+        if (snapshot.connectionState == ConnectionState.done) {
+          return widget.child;
+        }
+        return widget.onLoading;
+      },
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
