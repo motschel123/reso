@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/ui/screens/create_offer.dart';
+import 'package:reso/ui/screens/navigation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +15,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: lightTheme,
-      home: const CreateOffer(),
+      home: NavigationContainer(),
+      // home: const CreateOffer(),
       // home: const OfferDetail(
       //   offerTitle: '3D-Druck',
       //   offerPrice: 'ab 3,00€',
