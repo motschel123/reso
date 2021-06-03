@@ -1,3 +1,6 @@
+# Firebase API Keys
+/app/google-services.json
+
 gradle-wrapper.jar
 /.gradle
 /captures/

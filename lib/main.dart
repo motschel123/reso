@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:reso/auth/application_state.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/ui/screens/navigation.dart';
+import 'package:reso/ui/screens/authentication.dart';
 
 void main() {
-  runApp(const MyApp());
+  //  runApp(const InitializeApp(child: MyApp()));
+  runApp(ChangeNotifierProvider<ApplicationState>(
+      create: (BuildContext context) => ApplicationState(),
+      builder: (BuildContext context, _) => const App()));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class App extends StatelessWidget {
+  const App({Key? key}) : super(key: key);
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'ReSo',
       theme: lightTheme,
-      home: const NavigationContainer(),
       // home: const CreateOffer(),
       // home: const OfferDetail(
       //   offerTitle: '3D-Druck',
@@ -27,6 +32,20 @@ class MyApp extends StatelessWidget {
       //       'https://www.twopeasandtheirpod.com/wp-content/uploads/2021/03/Veggie-Pizza-8-500x375.jpg',
       //   offerColor: Colors.amber,
       // ),
+      home: Consumer<ApplicationState>(
+        builder: (BuildContext context, ApplicationState appState, _) =>
+            Authentication(
+          email: appState.email,
+          loginState: appState.loginState,
+          startLoginFlow: appState.startLoginFlow,
+          verifyEmail: appState.verifyEmail,
+          signInWithEmailAndPassword: appState.signInWithEmailAndPassword,
+          cancelRegistration: appState.cancelRegistration,
+          cancelLogin: appState.cancelLogin,
+          registerAccount: appState.registerAccount,
+          signOut: appState.signOut,
+        ),
+      ),
     );
   }
 }

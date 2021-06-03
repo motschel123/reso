@@ -151,22 +151,23 @@ class StyledButtonLarge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: enabled ? callback : null,
-      child: AnimatedContainer(
+        onTap: enabled ? callback : null,
+        child: AnimatedContainer(
           curve: Curves.easeInOut,
           duration: const Duration(milliseconds: 200),
-          height: 42.0,
-          decoration: BoxDecoration(
-            color: enabled ? color : disabledColor,
-            borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-          ),
-          child: Center(
-            child: Text(
-              text,
-              style: Theme.of(context).textTheme.button,
-            ),
-          )),
-    );
+          child: Container(
+              height: 42.0,
+              decoration: BoxDecoration(
+                color: enabled ? color : disabledColor,
+                borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+              ),
+              child: Center(
+                child: Text(
+                  text,
+                  style: Theme.of(context).textTheme.button,
+                ),
+              )),
+        ));
   }
 }
 
