@@ -3,6 +3,8 @@ import 'package:reso/ui/screens/create_offer.dart';
 import 'package:reso/ui/screens/live_feed.dart';
 
 class NavigationContainer extends StatefulWidget {
+  const NavigationContainer({Key? key}) : super(key: key);
+
   @override
   _NavigationContainerState createState() => _NavigationContainerState();
 }

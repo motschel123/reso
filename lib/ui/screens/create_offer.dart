@@ -17,8 +17,8 @@ class _CreateOfferState extends State<CreateOffer> {
   String _selectedOfferType = 'Produkt';
   String _selectedLocation = 'Innenstadt';
 
-  DateTime _selectedDate = DateTime.now();
-  TimeOfDay _selectedTime = TimeOfDay.now();
+  DateTime? _selectedDate;
+  TimeOfDay? _selectedTime;
 
   bool _checkboxSelected = false;
 
@@ -27,11 +27,11 @@ class _CreateOfferState extends State<CreateOffer> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
-        initialDate: _selectedDate,
+        initialDate: _selectedDate ?? DateTime.now(),
         firstDate: DateTime.now(),
         lastDate: DateTime(2101));
 
-    if (picked != null && picked != _selectedDate) {
+    if (picked != null) {
       setState(() {
         _selectedDate = picked;
       });
@@ -39,10 +39,10 @@ class _CreateOfferState extends State<CreateOffer> {
   }
 
   Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked =
-        await showTimePicker(context: context, initialTime: _selectedTime);
+    final TimeOfDay? picked = await showTimePicker(
+        context: context, initialTime: _selectedTime ?? TimeOfDay.now());
 
-    if (picked != null && picked != _selectedTime) {
+    if (picked != null) {
       setState(() {
         _selectedTime = picked;
       });
@@ -129,6 +129,7 @@ class _CreateOfferState extends State<CreateOffer> {
                                 Expanded(
                                     child: StyledDropdownButtonFormField(
                                   items: const <String>[
+                                    '-',
                                     'Erlangen Süd',
                                     'Innenstadt',
                                     'Bruck'
@@ -146,40 +147,33 @@ class _CreateOfferState extends State<CreateOffer> {
                             Row(
                               children: <Widget>[
                                 Expanded(
-                                  child: InkWell(
-                                    onTap: () => _selectDate(context),
-                                    child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 16.0, vertical: 16.0),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(4.0),
-                                            border: Border.all(
-                                                color: Colors.black
-                                                    .withOpacity(0.1))),
-                                        child: Text(MaterialLocalizations.of(
-                                                context)
-                                            .formatShortDate(_selectedDate))),
-                                  ),
-                                ),
+                                    child: StyledIconButtonSmall(
+                                  text: _selectedDate != null
+                                      ? MaterialLocalizations.of(context)
+                                          .formatShortDate(_selectedDate!)
+                                      : 'Datum',
+                                  icon: Icons.delete,
+                                  onTap: () => _selectDate(context),
+                                  iconOnTap: () => <void>{
+                                    setState(() {
+                                      _selectedDate = null;
+                                    })
+                                  },
+                                )),
                                 const SizedBox(width: 8.0),
                                 Expanded(
-                                  child: InkWell(
-                                    onTap: () => _selectTime(context),
-                                    child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 16.0, vertical: 16.0),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(4.0),
-                                            border: Border.all(
-                                                color: Colors.black
-                                                    .withOpacity(0.1))),
-                                        child: Text(MaterialLocalizations.of(
-                                                context)
-                                            .formatTimeOfDay(_selectedTime))),
-                                  ),
-                                )
+                                    child: StyledIconButtonSmall(
+                                        text: _selectedTime != null
+                                            ? MaterialLocalizations.of(context)
+                                                .formatTimeOfDay(_selectedTime!)
+                                            : 'Uhrzeit',
+                                        icon: Icons.delete,
+                                        onTap: () => _selectTime(context),
+                                        iconOnTap: () => <void>{
+                                              setState(() {
+                                                _selectedTime = null;
+                                              })
+                                            })),
                               ],
                             ),
                             const SizedBox(height: 16.0),

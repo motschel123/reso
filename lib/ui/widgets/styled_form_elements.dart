@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 /// and the input can be obscured by settings [obscuredText] to true.
 ///
 /// The input of the TextFormField can optionally be validated by passing a function
-/// to [validator].
+/// to [validator] and an icon can be added by passing it to [suffixIcon].
 class StyledTextFormField extends StatelessWidget {
   const StyledTextFormField(
       {Key? key,
@@ -18,7 +18,8 @@ class StyledTextFormField extends StatelessWidget {
       this.multiline = false,
       this.obscureText = false,
       this.keyboardType = TextInputType.text,
-      this.validator})
+      this.validator,
+      this.suffixIcon})
       : super(key: key);
 
   final TextEditingController controller;
@@ -31,6 +32,8 @@ class StyledTextFormField extends StatelessWidget {
 
   final String? Function(String?)? validator;
 
+  final Widget? suffixIcon;
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -42,6 +45,7 @@ class StyledTextFormField extends StatelessWidget {
       obscureText: obscureText,
       validator: validator,
       decoration: InputDecoration(
+          suffixIcon: suffixIcon,
           hintText: hintText,
           hintStyle: Theme.of(context).textTheme.bodyText2,
           isDense: true,
@@ -66,12 +70,16 @@ class StyledTextFormField extends StatelessWidget {
 /// as well as the currently selected item
 ///
 /// [onChanged] must not be null and is called whenever the selected item changes
+///
+/// The input of the DropdownButton can optionally be validated by passing a
+/// funciton to [validator]
 class StyledDropdownButtonFormField extends StatelessWidget {
   const StyledDropdownButtonFormField(
       {Key? key,
       required this.items,
       required this.value,
-      required this.onChanged})
+      required this.onChanged,
+      this.validator})
       : super(key: key);
 
   final List<String> items;
@@ -79,6 +87,8 @@ class StyledDropdownButtonFormField extends StatelessWidget {
   final String value;
 
   final void Function(String?) onChanged;
+
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +98,7 @@ class StyledDropdownButtonFormField extends StatelessWidget {
       iconSize: 20,
       elevation: 4,
       style: Theme.of(context).textTheme.bodyText2,
+      validator: validator,
       decoration: InputDecoration(
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
@@ -140,6 +151,53 @@ class StyledButtonLarge extends StatelessWidget {
               text,
               style: Theme.of(context).textTheme.button,
             ),
+          )),
+    );
+  }
+}
+
+/// Small Button with suffix icon
+///
+/// The parameters [text] and [icon] set the text and icon of the button and
+/// callbacks for both can be set using [onTap] and [iconOnTap].
+class StyledIconButtonSmall extends StatelessWidget {
+  const StyledIconButtonSmall(
+      {Key? key,
+      required this.text,
+      required this.icon,
+      required this.onTap,
+      required this.iconOnTap})
+      : super(key: key);
+
+  final String text;
+
+  final IconData icon;
+
+  final void Function()? onTap;
+  final void Function()? iconOnTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4.0),
+              border: Border.all(color: Colors.black.withOpacity(0.1))),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: Text(text),
+                ),
+              ),
+              GestureDetector(
+                  onTap: iconOnTap,
+                  child: Icon(icon,
+                      size: 20.0, color: Colors.black.withOpacity(0.1))),
+            ],
           )),
     );
   }
