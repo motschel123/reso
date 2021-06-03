@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+/// Defines the [Function] type which is called if an error occurse
 typedef OnError = void Function(Object error);
 
+/// The default [OnError] Function, which prints the error, stacktrace and
+/// throws the error afterwards
 void _defaultOnError(Object error) {
-  print(error.toString());
+  print('Firebase Initialization error: ' + error.toString());
+  print('Current StackStrace : \n' + StackTrace.current.toString());
+  throw error;
 }
 
 /// Using a [StatefulWidget] to ensure that initialization is only done once.
@@ -25,18 +30,18 @@ class InitializeApp extends StatefulWidget {
     Key? key,
     required this.child,
     this.onError = _defaultOnError,
-    this.onErrorChild = const Center(
+    this.errorChild = const Center(
       child: Text('Error'),
     ),
-    this.onLoadingChild = const Center(
+    this.loadingChild = const Center(
       child: CircularProgressIndicator(),
     ),
   }) : super(key: key);
 
   final Widget child;
   final OnError onError;
-  final Widget onErrorChild;
-  final Widget onLoadingChild;
+  final Widget errorChild;
+  final Widget loadingChild;
 
   @override
   State<InitializeApp> createState() => _InitializeAppState();
@@ -51,12 +56,12 @@ class _InitializeAppState extends State<InitializeApp> {
       builder: (BuildContext context, AsyncSnapshot<FirebaseApp> snapshot) {
         if (snapshot.hasError) {
           widget.onError(snapshot.error!);
-          return widget.onErrorChild;
+          return widget.errorChild;
         }
         if (snapshot.connectionState == ConnectionState.done) {
           return widget.child;
         }
-        return widget.onLoadingChild;
+        return widget.loadingChild;
       },
     );
   }
