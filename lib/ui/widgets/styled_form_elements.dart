@@ -54,6 +54,14 @@ class StyledTextFormField extends StatelessWidget {
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.black.withOpacity(0.5)),
           ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black.withOpacity(0.5)),
+            borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+            borderSide: BorderSide(color: Colors.black.withOpacity(0.1)),
+          ),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.black.withOpacity(0.1)),
           ),
@@ -144,7 +152,9 @@ class StyledButtonLarge extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: enabled ? callback : null,
-      child: Container(
+      child: AnimatedContainer(
+          curve: Curves.easeInOut,
+          duration: const Duration(milliseconds: 200),
           height: 42.0,
           decoration: BoxDecoration(
             color: enabled ? color : disabledColor,
