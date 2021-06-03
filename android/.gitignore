@@ -1,5 +1,5 @@
-# Firebase API Key
-app/google-services.json
+# Firebase API Keys
+/app/google-services.json
 
 gradle-wrapper.jar
 /.gradle

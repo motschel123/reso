@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/ui/screens/offer_detail.dart';
 
+import 'initialize_app.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(const InitializeApp(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
