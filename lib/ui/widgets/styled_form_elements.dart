@@ -129,21 +129,25 @@ class StyledButtonLarge extends StatelessWidget {
       {Key? key,
       required this.text,
       required this.color,
-      required this.callback})
+      required this.callback,
+      this.enabled = true,
+      this.disabledColor = Colors.grey})
       : super(key: key);
 
   final String text;
   final Color color;
+  final Color disabledColor;
   final void Function()? callback;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: callback,
+      onTap: enabled ? callback : null,
       child: Container(
           height: 42.0,
           decoration: BoxDecoration(
-            color: color,
+            color: enabled ? color : disabledColor,
             borderRadius: const BorderRadius.all(Radius.circular(8.0)),
           ),
           child: Center(

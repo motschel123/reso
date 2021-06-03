@@ -15,7 +15,7 @@ class _CreateOfferState extends State<CreateOffer> {
   final TextEditingController _priceController = TextEditingController();
 
   String _selectedOfferType = 'Produkt';
-  String _selectedLocation = 'Innenstadt';
+  String _selectedLocation = 'Kein Ort';
 
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
@@ -129,7 +129,7 @@ class _CreateOfferState extends State<CreateOffer> {
                                 Expanded(
                                     child: StyledDropdownButtonFormField(
                                   items: const <String>[
-                                    '-',
+                                    'Kein Ort',
                                     'Erlangen Süd',
                                     'Innenstadt',
                                     'Bruck'
@@ -198,6 +198,8 @@ class _CreateOfferState extends State<CreateOffer> {
                             StyledButtonLarge(
                                 text: 'Angebot erstellen',
                                 color: Colors.amber,
+                                disabledColor: Colors.black.withOpacity(0.1),
+                                enabled: _checkboxSelected,
                                 callback: () {
                                   if (_formKey.currentState!.validate()) {
                                     print('Valid input');
