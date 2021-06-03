@@ -22,6 +22,8 @@ class _CreateOfferState extends State<CreateOffer> {
 
   bool _checkboxSelected = false;
 
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
@@ -72,132 +74,143 @@ class _CreateOfferState extends State<CreateOffer> {
                     ),
                     const SizedBox(height: 16.0),
                     Form(
+                        key: _formKey,
                         child: Column(
-                      children: <Widget>[
-                        StyledTextFormField(
-                          hintText: 'Titel',
-                          controller: _titleController,
-                        ),
-                        const SizedBox(height: 8.0),
-                        StyledTextFormField(
-                          hintText: 'Beschreibung',
-                          multiline: true,
-                          controller: _descriptionController,
-                        ),
-                        const SizedBox(height: 8.0),
-                        StyledTextFormField(
-                          hintText: 'Preis',
-                          controller: _priceController,
-                        ),
-                        const SizedBox(height: 16.0),
-                        Row(
                           children: <Widget>[
-                            Expanded(
-                                child: StyledDropdownButtonFormField(
-                              items: const <String>[
-                                'Produkt',
-                                'Veranstaltung',
-                                'Gericht',
-                                'Dienstleistung'
-                              ],
-                              value: _selectedOfferType,
-                              onChanged: (String? value) {
-                                setState(() {
-                                  _selectedOfferType = value!;
-                                });
+                            StyledTextFormField(
+                              hintText: 'Titel',
+                              controller: _titleController,
+                              validator: (String? value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Titel fehlt';
+                                }
                               },
-                            )),
-                            const SizedBox(width: 8.0),
-                            Expanded(
-                                child: StyledDropdownButtonFormField(
-                              items: const <String>[
-                                'Erlangen Süd',
-                                'Innenstadt',
-                                'Bruck'
-                              ],
-                              value: _selectedLocation,
-                              onChanged: (String? value) {
-                                setState(() {
-                                  _selectedLocation = value!;
-                                });
+                            ),
+                            const SizedBox(height: 8.0),
+                            StyledTextFormField(
+                              hintText: 'Beschreibung',
+                              multiline: true,
+                              controller: _descriptionController,
+                              validator: (String? value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Beschreibung fehlt';
+                                }
                               },
-                            )),
-                          ],
-                        ),
-                        const SizedBox(height: 8.0),
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: InkWell(
-                                onTap: () => _selectDate(context),
-                                child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0, vertical: 16.0),
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(4.0),
-                                        border: Border.all(
-                                            color:
-                                                Colors.black.withOpacity(0.1))),
-                                    child: Text(
-                                        MaterialLocalizations.of(context)
+                            ),
+                            const SizedBox(height: 8.0),
+                            StyledTextFormField(
+                              hintText: 'Preis',
+                              controller: _priceController,
+                              validator: (String? value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Preis fehlt';
+                                }
+                              },
+                            ),
+                            const SizedBox(height: 16.0),
+                            Row(
+                              children: <Widget>[
+                                Expanded(
+                                    child: StyledDropdownButtonFormField(
+                                  items: const <String>[
+                                    'Produkt',
+                                    'Veranstaltung',
+                                    'Gericht',
+                                    'Dienstleistung'
+                                  ],
+                                  value: _selectedOfferType,
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      _selectedOfferType = value!;
+                                    });
+                                  },
+                                )),
+                                const SizedBox(width: 8.0),
+                                Expanded(
+                                    child: StyledDropdownButtonFormField(
+                                  items: const <String>[
+                                    'Erlangen Süd',
+                                    'Innenstadt',
+                                    'Bruck'
+                                  ],
+                                  value: _selectedLocation,
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      _selectedLocation = value!;
+                                    });
+                                  },
+                                )),
+                              ],
+                            ),
+                            const SizedBox(height: 8.0),
+                            Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () => _selectDate(context),
+                                    child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16.0, vertical: 16.0),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(4.0),
+                                            border: Border.all(
+                                                color: Colors.black
+                                                    .withOpacity(0.1))),
+                                        child: Text(MaterialLocalizations.of(
+                                                context)
                                             .formatShortDate(_selectedDate))),
-                              ),
-                            ),
-                            const SizedBox(width: 8.0),
-                            Expanded(
-                              child: InkWell(
-                                onTap: () => _selectTime(context),
-                                child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0, vertical: 16.0),
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(4.0),
-                                        border: Border.all(
-                                            color:
-                                                Colors.black.withOpacity(0.1))),
-                                    child: Text(
-                                        MaterialLocalizations.of(context)
+                                  ),
+                                ),
+                                const SizedBox(width: 8.0),
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () => _selectTime(context),
+                                    child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16.0, vertical: 16.0),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(4.0),
+                                            border: Border.all(
+                                                color: Colors.black
+                                                    .withOpacity(0.1))),
+                                        child: Text(MaterialLocalizations.of(
+                                                context)
                                             .formatTimeOfDay(_selectedTime))),
-                              ),
-                            )
-                          ],
-                        ),
-                        const SizedBox(height: 16.0),
-                        const Divider(height: 0),
-                        const SizedBox(height: 16.0),
-                        Row(
-                          children: <Widget>[
-                            Checkbox(
-                                value: _checkboxSelected,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    _checkboxSelected = value!;
-                                  });
-                                }),
-                            Text(
-                              'Lorem ipsum dolor sit amet, consectetur\nadipiscing elit. Donec condimentum velit \nvitae nunc elementum ultricies. Nullam iaculis hendrerit.\nvitae nunc elementum ultricies. Nullam iaculis hendrerit.',
-                              style: Theme.of(context).textTheme.bodyText2,
-                            )
-                          ],
-                        ),
-                        const SizedBox(height: 16.0),
-                        Container(
-                            height: 42.0,
-                            decoration: const BoxDecoration(
-                              color: Colors.amber,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8.0)),
+                                  ),
+                                )
+                              ],
                             ),
-                            child: Center(
-                              child: Text(
-                                'Angebot erstellen',
-                                style: Theme.of(context).textTheme.button,
-                              ),
-                            )),
-                      ],
-                    )),
+                            const SizedBox(height: 16.0),
+                            const Divider(height: 0),
+                            const SizedBox(height: 16.0),
+                            Row(
+                              children: <Widget>[
+                                Checkbox(
+                                    value: _checkboxSelected,
+                                    onChanged: (bool? value) {
+                                      setState(() {
+                                        _checkboxSelected = value!;
+                                      });
+                                    }),
+                                Text(
+                                  'Lorem ipsum dolor sit amet, consectetur\nadipiscing elit. Donec condimentum velit \nvitae nunc elementum ultricies. Nullam iaculis hendrerit.\nvitae nunc elementum ultricies. Nullam iaculis hendrerit.',
+                                  style: Theme.of(context).textTheme.bodyText2,
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: 16.0),
+                            StyledButtonLarge(
+                                text: 'Angebot erstellen',
+                                color: Colors.amber,
+                                callback: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    print('Valid input');
+                                  }
+                                }),
+                          ],
+                        )),
                   ],
                 ))));
   }
