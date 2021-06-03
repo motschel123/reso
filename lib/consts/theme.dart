@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 final ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
+  primaryColor: Colors.amber,
+  buttonColor: const Color(0xFFe6e6e6),
   textTheme: TextTheme(
     headline1: const TextStyle(
         fontSize: 24.0, color: Colors.black, fontWeight: FontWeight.w600),

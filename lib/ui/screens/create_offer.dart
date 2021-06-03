@@ -198,7 +198,7 @@ class _CreateOfferState extends State<CreateOffer> {
                             StyledButtonLarge(
                                 text: 'Angebot erstellen',
                                 color: Colors.amber,
-                                disabledColor: Colors.black.withOpacity(0.1),
+                                disabledColor: Theme.of(context).buttonColor,
                                 enabled: _checkboxSelected,
                                 callback: () {
                                   if (_formKey.currentState!.validate()) {
