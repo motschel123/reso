@@ -7,6 +7,9 @@ import 'package:flutter/material.dart';
 /// [multiline] controls whether the TextFormField accepts multiple lines of input
 /// The keyboardType of the TextFormField can optionally be set with [keyboardType]
 /// and the input can be obscured by settings [obscuredText] to true.
+///
+/// The input of the TextFormField can optionally be validated by passing a function
+/// to [validator].
 class StyledTextFormField extends StatelessWidget {
   const StyledTextFormField(
       {Key? key,
@@ -14,7 +17,8 @@ class StyledTextFormField extends StatelessWidget {
       required this.controller,
       this.multiline = false,
       this.obscureText = false,
-      this.keyboardType = TextInputType.text})
+      this.keyboardType = TextInputType.text,
+      this.validator})
       : super(key: key);
 
   final TextEditingController controller;
@@ -25,6 +29,8 @@ class StyledTextFormField extends StatelessWidget {
 
   final TextInputType keyboardType;
 
+  final String? Function(String?)? validator;
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -34,6 +40,7 @@ class StyledTextFormField extends StatelessWidget {
       keyboardType: multiline ? TextInputType.multiline : keyboardType,
       controller: controller,
       obscureText: obscureText,
+      validator: validator,
       decoration: InputDecoration(
           hintText: hintText,
           hintStyle: Theme.of(context).textTheme.bodyText2,
@@ -116,12 +123,12 @@ class StyledButtonLarge extends StatelessWidget {
 
   final String text;
   final Color color;
-  final Function callback;
+  final void Function()? callback;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => callback,
+    return GestureDetector(
+      onTap: callback,
       child: Container(
           height: 42.0,
           decoration: BoxDecoration(
