@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
 /// Defines the [Function] type which is called if an error occurse
 typedef OnError = void Function(Object error);
@@ -20,7 +22,9 @@ class InitializeApp extends StatefulWidget {
   /// and **must** be built before the App:
   ///   - FirebaseApp
   ///
-  /// The [child] is built after init is complete
+  /// All [Provider]s in [providers] will be globally accessable.
+  ///
+  /// The [app] is built after init is complete
   ///
   /// Use [onError] to handle a failed init and
   /// display an error message to the user
@@ -28,7 +32,8 @@ class InitializeApp extends StatefulWidget {
   /// Use [onLoading] to display progress to the user
   const InitializeApp({
     Key? key,
-    required this.child,
+    required this.app,
+    this.providers = const <SingleChildWidget>[],
     this.onError = _defaultOnError,
     this.errorChild = const Center(
       child: Text('Error'),
@@ -38,7 +43,8 @@ class InitializeApp extends StatefulWidget {
     ),
   }) : super(key: key);
 
-  final Widget child;
+  final Widget app;
+  final List<SingleChildWidget> providers;
   final OnError onError;
   final Widget errorChild;
   final Widget loadingChild;
@@ -59,7 +65,9 @@ class _InitializeAppState extends State<InitializeApp> {
           return widget.errorChild;
         }
         if (snapshot.connectionState == ConnectionState.done) {
-          return widget.child;
+          return MultiProvider(
+              providers: widget.providers,
+              builder: (BuildContext context, _) => widget.app);
         }
         return widget.loadingChild;
       },
