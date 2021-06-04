@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:reso/auth/application_state.dart';
-import 'package:reso/ui/screens/live_feed.dart';
 import 'package:reso/ui/screens/navigation.dart';
 import 'package:reso/ui/widgets/styled_form_elements.dart';
 

@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 import 'package:reso/auth/application_state.dart';
 import 'package:reso/consts/theme.dart';
-import 'package:reso/ui/screens/navigation.dart';
+import 'package:reso/initialize_app.dart';
 import 'package:reso/ui/screens/authentication.dart';
 
 void main() {
-  //  runApp(const InitializeApp(child: MyApp()));
-  runApp(ChangeNotifierProvider<ApplicationState>(
-      create: (BuildContext context) => ApplicationState(),
-      builder: (BuildContext context, _) => const App()));
+  runApp(
+    InitializeApp(
+      app: const App(),
+      providers: <SingleChildWidget>[
+        ChangeNotifierProvider<ApplicationState>(
+            create: (BuildContext context) => ApplicationState()),
+      ],
+    ),
+  );
 }
 
 class App extends StatelessWidget {

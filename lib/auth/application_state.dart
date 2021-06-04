@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 enum ApplicationLoginState {
   loggedIn,
@@ -12,12 +11,6 @@ enum ApplicationLoginState {
 
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {
-    init();
-  }
-
-  Future<void> init() async {
-    await Firebase.initializeApp();
-
     FirebaseAuth.instance.userChanges().listen((User? user) {
       if (user != null) {
         _loginState = ApplicationLoginState.loggedIn;
