@@ -1,7 +1,11 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:reso/firebase/storage_state.dart';
+import 'package:reso/model/offert.dart';
 import 'package:reso/ui/widgets/styled_form_elements.dart';
 
 /// A screen for creating a new offer
@@ -17,7 +21,7 @@ class _CreateOfferState extends State<CreateOffer> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
 
-  String _selectedOfferType = 'Produkt';
+  OfferType _selectedOfferType = OfferType.product;
   String _selectedLocation = 'Kein Ort';
 
   DateTime? _selectedDate;
@@ -29,6 +33,21 @@ class _CreateOfferState extends State<CreateOffer> {
   bool _checkboxSelected = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  void _createOffer(StorageState storageState) {
+    final DateTime dateTime = DateTime(
+        _selectedDate!.year,
+        _selectedDate!.month,
+        _selectedDate!.day,
+        _selectedTime!.hour,
+        _selectedTime!.minute);
+
+    storageState.addOffer(_titleController.text, _descriptionController.text,
+        _priceController.text, (FirebaseException e) {
+      print('Error creating offer, error: ${e.message}');
+    }, _selectedOfferType,
+        image: _selectedImage, location: _selectedLocation, dateTime: dateTime);
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -70,6 +89,8 @@ class _CreateOfferState extends State<CreateOffer> {
 
   @override
   Widget build(BuildContext context) {
+    final StorageState storageState = Provider.of<StorageState>(context);
+
     return Scaffold(
         body: SafeArea(
             child: SingleChildScrollView(
@@ -157,23 +178,21 @@ class _CreateOfferState extends State<CreateOffer> {
                       Row(
                         children: <Widget>[
                           Expanded(
-                              child: StyledDropdownButtonFormField(
-                            items: const <String>[
-                              'Produkt',
-                              'Veranstaltung',
-                              'Gericht',
-                              'Dienstleistung'
-                            ],
+                              child: StyledDropdownButtonFormField<OfferType>(
+                            items: OfferType.values,
                             value: _selectedOfferType,
-                            onChanged: (String? value) {
+                            onChanged: (OfferType? value) {
                               setState(() {
                                 _selectedOfferType = value!;
                               });
                             },
+                            toDisplayString: (OfferType value) {
+                              return value.displayString;
+                            },
                           )),
                           const SizedBox(width: 8.0),
                           Expanded(
-                              child: StyledDropdownButtonFormField(
+                              child: StyledDropdownButtonFormField<String>(
                             items: const <String>[
                               'Kein Ort',
                               'Erlangen Süd',
@@ -251,6 +270,7 @@ class _CreateOfferState extends State<CreateOffer> {
                           callback: () {
                             if (_formKey.currentState!.validate()) {
                               print('Valid input');
+                              _createOffer(storageState);
                             }
                           }),
                     ],

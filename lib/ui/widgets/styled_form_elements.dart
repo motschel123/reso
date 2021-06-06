@@ -81,26 +81,29 @@ class StyledTextFormField extends StatelessWidget {
 ///
 /// The input of the DropdownButton can optionally be validated by passing a
 /// funciton to [validator]
-class StyledDropdownButtonFormField extends StatelessWidget {
+class StyledDropdownButtonFormField<T> extends StatelessWidget {
   const StyledDropdownButtonFormField(
       {Key? key,
       required this.items,
       required this.value,
       required this.onChanged,
-      this.validator})
+      this.validator,
+      this.toDisplayString})
       : super(key: key);
 
-  final List<String> items;
+  final List<T> items;
 
-  final String value;
+  final T value;
 
-  final void Function(String?) onChanged;
+  final void Function(T?) onChanged;
 
-  final String? Function(String?)? validator;
+  final String? Function(T?)? validator;
+
+  final String Function(T)? toDisplayString;
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField<String>(
+    return DropdownButtonFormField<T>(
       value: value,
       icon: Icon(Icons.arrow_drop_down, color: Colors.black.withOpacity(0.1)),
       iconSize: 20,
@@ -118,10 +121,12 @@ class StyledDropdownButtonFormField extends StatelessWidget {
           border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(4.0)))),
       onChanged: onChanged,
-      items: items.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
+      items: items.map<DropdownMenuItem<T>>((T value) {
+        return DropdownMenuItem<T>(
           value: value,
-          child: Text(value),
+          child: Text(toDisplayString == null
+              ? value.toString()
+              : toDisplayString!(value)),
         );
       }).toList(),
     );

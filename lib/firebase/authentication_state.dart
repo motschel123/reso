@@ -9,8 +9,8 @@ enum ApplicationLoginState {
   password,
 }
 
-class ApplicationState extends ChangeNotifier {
-  ApplicationState() {
+class AuthenticationState extends ChangeNotifier {
+  AuthenticationState() {
     FirebaseAuth.instance.userChanges().listen((User? user) {
       if (user != null) {
         _loginState = ApplicationLoginState.loggedIn;
