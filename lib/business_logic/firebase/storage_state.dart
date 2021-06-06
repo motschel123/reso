@@ -5,7 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:reso/model/offert.dart';
+import 'package:reso/consts/firestore.dart';
+import 'package:reso/model/offer.dart';
 
 /// Helper class for adding and reading offers to and from Firebase
 class StorageState extends ChangeNotifier {
@@ -20,7 +21,7 @@ class StorageState extends ChangeNotifier {
     DateTime? dateTime,
   }) async {
     final CollectionReference<Map<String, dynamic>> offers =
-        FirebaseFirestore.instance.collection('offers');
+        FirebaseFirestore.instance.collection(OFFERS_COLLECTION);
 
     final FirebaseStorage storage = FirebaseStorage.instance;
 
@@ -43,16 +44,18 @@ class StorageState extends ChangeNotifier {
         await storage.ref(imageRef).putFile(compressedImage);
       }
 
-      await offers.add(<String, dynamic>{
-        'title': title,
-        'description': description,
-        'price': price,
-        'type': type.toString(),
-        'location': location,
-        'date': dateTime,
-        'userId': FirebaseAuth.instance.currentUser!.uid,
-        'image': imageRef,
-      });
+      await offers.add(
+        Offer(
+          authorUid: FirebaseAuth.instance.currentUser!.uid,
+          description: description,
+          price: price,
+          title: title,
+          type: type,
+          imageRef: imageRef,
+          location: location,
+          time: dateTime,
+        ).toMap(),
+      );
     } on FirebaseException catch (e) {
       errorCallback(e);
     } catch (e) {

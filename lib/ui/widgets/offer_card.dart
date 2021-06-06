@@ -80,7 +80,9 @@ class OfferCard extends StatelessWidget {
                     ],
                   ),
                   Text(offerDescription,
-                      style: Theme.of(context).textTheme.bodyText2),
+                      style: Theme.of(context).textTheme.bodyText2,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -130,11 +132,21 @@ class OfferCard extends StatelessWidget {
                   )),
             ),
           ),
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-          child: Divider(),
-        ),
       ],
+    );
+  }
+
+  static OfferCard sample() {
+    return const OfferCard(
+      offerTitle: '3D-Druck',
+      offerPrice: 'ab 3,00€',
+      offerDescription:
+          'FDM Druck mit verschiedenen Farben\nPLA und TPU, Preis je nach Objekt',
+      offerAuthor: 'Luca Beetz',
+      profileImage: 'https://thispersondoesnotexist.com/image',
+      offerImage:
+          'https://www.twopeasandtheirpod.com/wp-content/uploads/2021/03/Veggie-Pizza-8-500x375.jpg',
+      offerColor: Colors.amber,
     );
   }
 }

@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:reso/firebase/storage_state.dart';
-import 'package:reso/model/offert.dart';
+import 'package:reso/business_logic/firebase/storage_state.dart';
+import 'package:reso/model/offer.dart';
 import 'package:reso/ui/widgets/styled_form_elements.dart';
 
 /// A screen for creating a new offer
