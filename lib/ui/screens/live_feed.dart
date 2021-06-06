@@ -12,8 +12,14 @@ class LiveFeed extends StatelessWidget {
       body: SafeArea(
         child: Consumer<FeedManager>(
             builder: (BuildContext context, FeedManager feedManager, _) =>
-                ListView.builder(
+                ListView.separated(
                   itemCount: feedManager.offers.length,
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Divider(),
+                    );
+                  },
                   itemBuilder: (BuildContext context, int index) {
                     return OfferCard(
                       offerTitle: feedManager.offers[index].title,

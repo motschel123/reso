@@ -132,10 +132,6 @@ class OfferCard extends StatelessWidget {
                   )),
             ),
           ),
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-          child: Divider(),
-        ),
       ],
     );
   }
