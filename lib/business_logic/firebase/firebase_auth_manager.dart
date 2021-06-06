@@ -1,36 +1,27 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:reso/business_logic/auth_manager.dart';
 
-enum ApplicationLoginState {
-  loggedIn,
-  loggedOut,
-  emailAddress,
-  register,
-  password,
-}
+class FirebaseAuthManager extends AuthManager {
+  @override
+  ValueNotifier<User?> get currentUser => _currentUser;
+  final ValueNotifier<User?> _currentUser = ValueNotifier<User?>(null);
 
-class AuthenticationState extends ChangeNotifier {
-  AuthenticationState() {
-    FirebaseAuth.instance.userChanges().listen((User? user) {
-      if (user != null) {
-        _loginState = ApplicationLoginState.loggedIn;
-      } else {
-        _loginState = ApplicationLoginState.loggedOut;
-      }
-    });
-  }
+  @override
+  ValueNotifier<LoginState> get loginStateNotifier => _loginState;
+  final ValueNotifier<LoginState> _loginState =
+      ValueNotifier<LoginState>(LoginState.loggedOut);
 
-  ApplicationLoginState _loginState = ApplicationLoginState.loggedOut;
-  ApplicationLoginState get loginState => _loginState;
-
-  String? _email;
+  @override
   String? get email => _email;
+  String? _email;
 
+  @override
   void startLoginFlow() {
-    _loginState = ApplicationLoginState.emailAddress;
-    notifyListeners();
+    _loginState.value = LoginState.emailAddress;
   }
 
+  @override
   Future<void> verifyEmail(
     String email,
     void Function(FirebaseAuthException e) errorCallback,
@@ -40,17 +31,17 @@ class AuthenticationState extends ChangeNotifier {
           await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
 
       if (methods.contains('password')) {
-        _loginState = ApplicationLoginState.password;
+        _loginState.value = LoginState.password;
       } else {
-        _loginState = ApplicationLoginState.register;
+        _loginState.value = LoginState.register;
       }
       _email = email;
-      notifyListeners();
     } on FirebaseAuthException catch (e) {
       errorCallback(e);
     }
   }
 
+  @override
   Future<void> signInWithEmailAndPassword(
     String email,
     String password,
@@ -62,24 +53,22 @@ class AuthenticationState extends ChangeNotifier {
         password: password,
       );
       print('signed in');
-      _loginState = ApplicationLoginState.loggedIn;
-
-      notifyListeners();
     } on FirebaseAuthException catch (e) {
       errorCallback(e);
     }
   }
 
+  @override
   void cancelRegistration() {
-    _loginState = ApplicationLoginState.emailAddress;
-    notifyListeners();
+    _loginState.value = LoginState.emailAddress;
   }
 
+  @override
   void cancelLogin() {
-    _loginState = ApplicationLoginState.emailAddress;
-    notifyListeners();
+    _loginState.value = LoginState.emailAddress;
   }
 
+  @override
   Future<void> registerAccount(
       String email,
       String displayName,
@@ -89,13 +78,14 @@ class AuthenticationState extends ChangeNotifier {
       final UserCredential credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       await credential.user!.updateProfile(displayName: displayName);
-      _loginState = ApplicationLoginState.loggedIn;
     } on FirebaseAuthException catch (e) {
       errorCallback(e);
     }
   }
 
+  @override
   void signOut() {
+    _loginState.value = LoginState.loggedOut;
     FirebaseAuth.instance.signOut();
   }
 }

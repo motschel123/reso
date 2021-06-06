@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:reso/firebase/authentication_state.dart';
+import 'package:reso/business_logic/auth_manager.dart';
+import 'package:reso/business_logic/firebase/firebase_auth_manager.dart';
 import 'package:reso/consts/theme.dart';
-import 'package:reso/firebase/storage_state.dart';
+import 'package:reso/business_logic/firebase/storage_state.dart';
 import 'package:reso/initialize_app.dart';
 import 'package:reso/ui/screens/authentication.dart';
+import 'package:reso/ui/screens/navigation.dart';
 
 void main() {
   runApp(
     InitializeApp(
       app: const App(),
       providers: <SingleChildWidget>[
-        ChangeNotifierProvider<AuthenticationState>(
-            create: (BuildContext context) => AuthenticationState()),
+        Provider<AuthManager>(
+          create: (BuildContext context) => FirebaseAuthManager(),
+        ),
         ChangeNotifierProvider<StorageState>(
             create: (BuildContext context) => StorageState()),
       ],
@@ -41,19 +44,9 @@ class App extends StatelessWidget {
       //       'https://www.twopeasandtheirpod.com/wp-content/uploads/2021/03/Veggie-Pizza-8-500x375.jpg',
       //   offerColor: Colors.amber,
       // ),
-      home: Consumer<AuthenticationState>(
-        builder: (BuildContext context, AuthenticationState appState, _) =>
-            Authentication(
-          email: appState.email,
-          loginState: appState.loginState,
-          startLoginFlow: appState.startLoginFlow,
-          verifyEmail: appState.verifyEmail,
-          signInWithEmailAndPassword: appState.signInWithEmailAndPassword,
-          cancelRegistration: appState.cancelRegistration,
-          cancelLogin: appState.cancelLogin,
-          registerAccount: appState.registerAccount,
-          signOut: appState.signOut,
-        ),
+      home: Authentication(
+        child: const NavigationContainer(),
+        authenticationState: FirebaseAuthManager(),
       ),
     );
   }
