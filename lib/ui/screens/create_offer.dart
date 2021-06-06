@@ -35,18 +35,26 @@ class _CreateOfferState extends State<CreateOffer> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   void _createOffer(StorageState storageState) {
-    final DateTime dateTime = DateTime(
-        _selectedDate!.year,
-        _selectedDate!.month,
-        _selectedDate!.day,
-        _selectedTime!.hour,
-        _selectedTime!.minute);
+    DateTime? dateTime;
+
+    // Combine selected time and date into one DateTime object if both are set
+    if (_selectedDate != null && _selectedTime != null) {
+      dateTime = DateTime(_selectedDate!.year, _selectedDate!.month,
+          _selectedDate!.day, _selectedTime!.hour, _selectedTime!.minute);
+    } else if (_selectedTime != null) {
+      // Default to current date
+      final DateTime now = DateTime.now();
+      dateTime = DateTime(now.year, now.month, now.day, _selectedTime!.hour,
+          _selectedTime!.minute);
+    }
 
     storageState.addOffer(_titleController.text, _descriptionController.text,
         _priceController.text, (FirebaseException e) {
       print('Error creating offer, error: ${e.message}');
     }, _selectedOfferType,
-        image: _selectedImage, location: _selectedLocation, dateTime: dateTime);
+        image: _selectedImage,
+        location: _selectedLocation,
+        dateTime: dateTime ?? _selectedDate);
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -269,7 +277,6 @@ class _CreateOfferState extends State<CreateOffer> {
                           enabled: _checkboxSelected,
                           callback: () {
                             if (_formKey.currentState!.validate()) {
-                              print('Valid input');
                               _createOffer(storageState);
                             }
                           }),

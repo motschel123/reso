@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:reso/model/offert.dart';
 
 /// Helper class for adding and reading offers to and from Firebase
@@ -26,11 +27,20 @@ class StorageState extends ChangeNotifier {
     try {
       String? imageRef;
       if (image != null) {
-        print('uploading image');
-        imageRef =
-            '${FirebaseAuth.instance.currentUser!.uid}/${image.hashCode}';
+        final File? compressedImage =
+            await FlutterImageCompress.compressAndGetFile(
+                image.absolute.path, '${image.absolute.path}_comp.jpg',
+                quality: 5);
 
-        await storage.ref(imageRef).putFile(image);
+        if (compressedImage == null) {
+          print('Image null');
+          throw Exception('Unable to compress image');
+        }
+
+        imageRef =
+            '${FirebaseAuth.instance.currentUser!.uid}/${compressedImage.hashCode}';
+
+        await storage.ref(imageRef).putFile(compressedImage);
       }
 
       await offers.add(<String, dynamic>{
@@ -46,7 +56,7 @@ class StorageState extends ChangeNotifier {
     } on FirebaseException catch (e) {
       errorCallback(e);
     } catch (e) {
-      print('FireStore error: ${e.toString()}');
+      print('Exception during offer upload: ${e.toString()}');
     }
   }
 }
