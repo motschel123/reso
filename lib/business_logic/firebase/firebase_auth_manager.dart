@@ -4,10 +4,6 @@ import 'package:reso/business_logic/auth_manager.dart';
 
 class FirebaseAuthManager extends AuthManager {
   @override
-  ValueNotifier<User?> get currentUser => _currentUser;
-  final ValueNotifier<User?> _currentUser = ValueNotifier<User?>(null);
-
-  @override
   ValueNotifier<LoginState> get loginStateNotifier => _loginState;
   final ValueNotifier<LoginState> _loginState =
       ValueNotifier<LoginState>(LoginState.loggedOut);

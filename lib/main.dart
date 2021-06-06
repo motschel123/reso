@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:reso/business_logic/auth_manager.dart';
+import 'package:reso/business_logic/feed_manager.dart';
 import 'package:reso/business_logic/firebase/firebase_auth_manager.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/business_logic/firebase/storage_state.dart';
@@ -15,8 +16,9 @@ void main() {
       app: const App(),
       providers: <SingleChildWidget>[
         Provider<AuthManager>(
-          create: (BuildContext context) => FirebaseAuthManager(),
-        ),
+            create: (BuildContext context) => FirebaseAuthManager()),
+        ChangeNotifierProvider<FeedManager>(
+            create: (BuildContext context) => FeedManager()),
         ChangeNotifierProvider<StorageState>(
             create: (BuildContext context) => StorageState()),
       ],

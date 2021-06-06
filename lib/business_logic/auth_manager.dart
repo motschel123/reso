@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 enum LoginState {
@@ -10,7 +9,6 @@ enum LoginState {
 
 abstract class AuthManager {
   ValueNotifier<LoginState> get loginStateNotifier;
-  ValueNotifier<User?> get currentUser;
   String? get email;
 
   void startLoginFlow();

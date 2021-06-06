@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:reso/business_logic/feed_manager.dart';
 import 'package:reso/ui/widgets/offer_card.dart';
 
 class LiveFeed extends StatelessWidget {
@@ -6,18 +8,24 @@ class LiveFeed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-        body: SafeArea(
-            child: OfferCard(
-      offerTitle: '3D-Druck',
-      offerPrice: 'ab 3,00€',
-      offerDescription:
-          'FDM Druck mit verschiedenen Farben\nPLA und TPU, Preis je nach Objekt',
-      offerAuthor: 'Luca Beetz',
-      profileImage: 'https://thispersondoesnotexist.com/image',
-      offerImage:
-          'https://www.twopeasandtheirpod.com/wp-content/uploads/2021/03/Veggie-Pizza-8-500x375.jpg',
-      offerColor: Colors.amber,
-    )));
+    return Scaffold(
+      body: SafeArea(
+        child: Consumer<FeedManager>(
+            builder: (BuildContext context, FeedManager feedManager, _) =>
+                ListView.builder(
+                  itemCount: feedManager.offers.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return OfferCard(
+                      offerTitle: feedManager.offers[index].title,
+                      offerPrice: feedManager.offers[index].price,
+                      offerDescription: feedManager.offers[index].description,
+                      offerAuthor: feedManager.offers[index].authorUid,
+                      profileImage: 'https://thispersondoesnotexist.com/image',
+                      offerColor: Colors.blue,
+                    );
+                  },
+                )),
+      ),
+    );
   }
 }
