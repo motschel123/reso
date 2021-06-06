@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reso/business_logic/feed_manager.dart';
 import 'package:reso/consts/theme.dart';
+import 'package:reso/model/offer.dart';
+import 'package:reso/ui/screens/offer_detail.dart';
 import 'package:reso/ui/widgets/offer_card.dart';
 
 class LiveFeed extends StatelessWidget {
@@ -22,14 +24,24 @@ class LiveFeed extends StatelessWidget {
                     );
                   },
                   itemBuilder: (BuildContext context, int index) {
+                    final Offer offer = feedManager.offers[index];
+
                     return OfferCard(
-                      offerTitle: feedManager.offers[index].title,
-                      offerPrice: feedManager.offers[index].price,
-                      offerDescription: feedManager.offers[index].description,
-                      offerAuthor: feedManager.offers[index].authorUid,
+                      offerTitle: offer.title,
+                      offerPrice: offer.price,
+                      offerDescription: offer.description,
+                      offerAuthor: offer.authorUid,
                       profileImage: 'https://thispersondoesnotexist.com/image',
-                      offerColor:
-                          offerTypeToColor[feedManager.offers[index].type]!,
+                      offerColor: offerTypeToColor[offer.type]!,
+                      offerImage: offer.imageRef,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute<OfferDetail>(
+                              builder: (BuildContext context) =>
+                                  OfferDetail(offer: offer)),
+                        );
+                      },
                     );
                   },
                 )),

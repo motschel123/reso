@@ -3,20 +3,41 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
-import 'package:reso/business_logic/firebase/storage_state.dart';
+import 'package:reso/business_logic/firebase/offer_storage.dart';
 import 'package:reso/model/offer.dart';
 import 'package:reso/ui/widgets/styled_form_elements.dart';
 
 /// A screen for creating a new offer
 class CreateOffer extends StatefulWidget {
-  const CreateOffer({Key? key}) : super(key: key);
+  const CreateOffer({Key? key, this.editingOffer}) : super(key: key);
+
+  final Offer? editingOffer;
 
   @override
   _CreateOfferState createState() => _CreateOfferState();
 }
 
 class _CreateOfferState extends State<CreateOffer> {
+  _CreateOfferState() {
+    // Initialize values to those of the offer being edited
+    // if (widget.editingOffer != null) {
+    //   final Offer _offer = widget.editingOffer!;
+
+    //   _titleController.text = _offer.title;
+    //   _descriptionController.text = _offer.description;
+    //   _priceController.text = _offer.price;
+
+    //   _selectedOfferType = _offer.type;
+    //   _selectedLocation = _offer.location ?? 'Kein Ort';
+
+    //   if (_offer.time != null) {
+    //     _selectedDate = _offer.time;
+    //     _selectedTime =
+    //         TimeOfDay(hour: _selectedDate!.hour, minute: _selectedDate!.minute);
+    //   }
+    // }
+  }
+
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
@@ -34,7 +55,7 @@ class _CreateOfferState extends State<CreateOffer> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  void _createOffer(StorageState storageState) {
+  void _createOffer() {
     DateTime? dateTime;
 
     // Combine selected time and date into one DateTime object if both are set
@@ -48,13 +69,20 @@ class _CreateOfferState extends State<CreateOffer> {
           _selectedTime!.minute);
     }
 
-    storageState.addOffer(_titleController.text, _descriptionController.text,
-        _priceController.text, (FirebaseException e) {
-      print('Error creating offer, error: ${e.message}');
-    }, _selectedOfferType,
-        image: _selectedImage,
-        location: _selectedLocation,
-        dateTime: dateTime ?? _selectedDate);
+    if (widget.editingOffer == null) {
+      OfferStorage.storeOffer(
+          _titleController.text,
+          _descriptionController.text,
+          _priceController.text,
+          _selectedOfferType, (FirebaseException e) {
+        print('Error creating offer, error: ${e.message}');
+      },
+          image: _selectedImage,
+          location: _selectedLocation,
+          time: dateTime ?? _selectedDate);
+    } else {
+      // Update values of existing offer
+    }
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -97,8 +125,6 @@ class _CreateOfferState extends State<CreateOffer> {
 
   @override
   Widget build(BuildContext context) {
-    final StorageState storageState = Provider.of<StorageState>(context);
-
     return Scaffold(
         body: SafeArea(
             child: SingleChildScrollView(
@@ -277,7 +303,7 @@ class _CreateOfferState extends State<CreateOffer> {
                           enabled: _checkboxSelected,
                           callback: () {
                             if (_formKey.currentState!.validate()) {
-                              _createOffer(storageState);
+                              _createOffer();
                             }
                           }),
                     ],

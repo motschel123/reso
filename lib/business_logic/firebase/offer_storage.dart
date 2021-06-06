@@ -3,22 +3,20 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:reso/consts/firestore.dart';
 import 'package:reso/model/offer.dart';
 
-/// Helper class for adding and reading offers to and from Firebase
-class StorageState extends ChangeNotifier {
-  Future<void> addOffer(
+class OfferStorage {
+  static Future<void> storeOffer(
     String title,
     String description,
     String price,
-    void Function(FirebaseException e) errorCallback,
-    OfferType type, {
+    OfferType type,
+    void Function(FirebaseException e) errorCallback, {
     File? image,
     String? location,
-    DateTime? dateTime,
+    DateTime? time,
   }) async {
     final CollectionReference<Map<String, dynamic>> offers =
         FirebaseFirestore.instance.collection(OFFERS_COLLECTION);
@@ -42,20 +40,22 @@ class StorageState extends ChangeNotifier {
             '${FirebaseAuth.instance.currentUser!.uid}/${compressedImage.hashCode}';
 
         await storage.ref(imageRef).putFile(compressedImage);
+        imageRef =
+            await FirebaseStorage.instance.ref(imageRef).getDownloadURL();
       }
 
-      await offers.add(
-        Offer(
-          authorUid: FirebaseAuth.instance.currentUser!.uid,
-          description: description,
-          price: price,
-          title: title,
-          type: type,
-          imageRef: imageRef,
-          location: location,
-          time: dateTime,
-        ).toMap(),
+      final Offer newOffer = Offer(
+        title: title,
+        description: description,
+        price: price,
+        type: type,
+        authorUid: FirebaseAuth.instance.currentUser!.uid,
+        time: time,
+        location: location,
+        imageRef: imageRef,
       );
+
+      await offers.add(newOffer.toMap());
     } on FirebaseException catch (e) {
       errorCallback(e);
     } catch (e) {
