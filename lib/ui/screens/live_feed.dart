@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reso/business_logic/feed_manager.dart';
+import 'package:reso/consts/theme.dart';
 import 'package:reso/ui/widgets/offer_card.dart';
 
 class LiveFeed extends StatelessWidget {
@@ -27,7 +28,8 @@ class LiveFeed extends StatelessWidget {
                       offerDescription: feedManager.offers[index].description,
                       offerAuthor: feedManager.offers[index].authorUid,
                       profileImage: 'https://thispersondoesnotexist.com/image',
-                      offerColor: Colors.blue,
+                      offerColor:
+                          offerTypeToColor[feedManager.offers[index].type]!,
                     );
                   },
                 )),
