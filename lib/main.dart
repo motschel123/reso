@@ -34,6 +34,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'ReSo',
       theme: lightTheme,
+      darkTheme: darkTheme,
       // home: const CreateOffer(),
       // home: const OfferDetail(
       //   offerTitle: '3D-Druck',

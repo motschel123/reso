@@ -31,7 +31,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
     return Scaffold(
       body: _widgetOptions[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        unselectedItemColor: Theme.of(context).buttonColor,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.feed),

@@ -37,39 +37,18 @@ class StyledTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      cursorColor: Colors.black.withOpacity(0.5),
-      style: Theme.of(context).textTheme.bodyText1,
-      maxLines: multiline ? null : 1,
-      minLines: multiline ? 3 : 1,
-      keyboardType: multiline ? TextInputType.multiline : keyboardType,
-      controller: controller,
-      obscureText: obscureText,
-      validator: validator,
-      decoration: InputDecoration(
+        style: Theme.of(context).textTheme.bodyText1,
+        maxLines: multiline ? null : 1,
+        minLines: multiline ? 3 : 1,
+        keyboardType: multiline ? TextInputType.multiline : keyboardType,
+        controller: controller,
+        obscureText: obscureText,
+        validator: validator,
+        decoration: InputDecoration(
           suffixIcon: suffixIcon,
           hintText: hintText,
           hintStyle: Theme.of(context).textTheme.bodyText2,
-          isDense: true,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black.withOpacity(0.5)),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black.withOpacity(0.5)),
-            borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-            borderSide: BorderSide(color: Colors.black.withOpacity(0.1)),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black.withOpacity(0.1)),
-          ),
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          )),
-    );
+        ));
   }
 }
 
@@ -111,16 +90,9 @@ class StyledDropdownButtonFormField<T> extends StatelessWidget {
       elevation: 4,
       style: Theme.of(context).textTheme.bodyText2,
       validator: validator,
-      decoration: InputDecoration(
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black.withOpacity(0.5)),
-          ),
-          enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black.withOpacity(0.1))),
-          border: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(4.0)))),
+      decoration: const InputDecoration(
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      ),
       onChanged: onChanged,
       items: items.map<DropdownMenuItem<T>>((T value) {
         return DropdownMenuItem<T>(
@@ -186,13 +158,15 @@ class StyledIconButtonSmall extends StatelessWidget {
       {Key? key,
       required this.text,
       required this.icon,
+      required this.borderColor,
       required this.onTap,
       required this.iconOnTap})
       : super(key: key);
 
   final String text;
 
-  final IconData icon;
+  final Icon icon;
+  final Color borderColor;
 
   final void Function()? onTap;
   final void Function()? iconOnTap;
@@ -205,7 +179,7 @@ class StyledIconButtonSmall extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4.0),
-              border: Border.all(color: Colors.black.withOpacity(0.1))),
+              border: Border.all(color: borderColor)),
           child: Row(
             children: <Widget>[
               Expanded(
@@ -214,10 +188,7 @@ class StyledIconButtonSmall extends StatelessWidget {
                   child: Text(text),
                 ),
               ),
-              GestureDetector(
-                  onTap: iconOnTap,
-                  child: Icon(icon,
-                      size: 20.0, color: Colors.black.withOpacity(0.1))),
+              GestureDetector(onTap: iconOnTap, child: icon),
             ],
           )),
     );

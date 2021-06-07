@@ -293,7 +293,10 @@ class _CreateOfferState extends State<CreateOffer> {
                                 ? MaterialLocalizations.of(context)
                                     .formatShortDate(_selectedDate!)
                                 : 'Datum',
-                            icon: Icons.delete,
+                            icon: Icon(Icons.delete,
+                                size: 20.0,
+                                color: Theme.of(context).buttonColor),
+                            borderColor: Theme.of(context).buttonColor,
                             onTap: () => _selectDate(context),
                             iconOnTap: () => <void>{
                               setState(() {
@@ -308,7 +311,10 @@ class _CreateOfferState extends State<CreateOffer> {
                                       ? MaterialLocalizations.of(context)
                                           .formatTimeOfDay(_selectedTime!)
                                       : 'Uhrzeit',
-                                  icon: Icons.delete,
+                                  icon: Icon(Icons.delete,
+                                      size: 20.0,
+                                      color: Theme.of(context).buttonColor),
+                                  borderColor: Theme.of(context).buttonColor,
                                   onTap: () => _selectTime(context),
                                   iconOnTap: () => <void>{
                                         setState(() {

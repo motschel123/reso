@@ -28,7 +28,7 @@ class Profile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
+                      padding: const EdgeInsets.only(left: 16.0, bottom: 16.0),
                       child: Text('Deine Angebote',
                           style: Theme.of(context).textTheme.headline1),
                     ),
