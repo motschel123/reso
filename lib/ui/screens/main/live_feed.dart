@@ -45,7 +45,7 @@ class LiveFeed extends StatelessWidget {
                             profileImage:
                                 'https://thispersondoesnotexist.com/image',
                             offerColor: offerTypeToColor[offer.type]!,
-                            offerImage: offer.imageRef,
+                            offerImage: offer.imageUrl,
                             onTap: () {
                               Navigator.push(
                                 context,

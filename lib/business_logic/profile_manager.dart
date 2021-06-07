@@ -16,7 +16,7 @@ class ProfileManager extends ChangeNotifier {
       for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
           in qSnap.docs) {
         if (doc.exists && doc.data() != null) {
-          offers.add(Offer.fromMap(doc.data()));
+          offers.add(Offer.fromMap(doc.data(), offerUid: doc.id));
         }
       }
       return offers;

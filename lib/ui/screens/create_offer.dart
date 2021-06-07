@@ -56,7 +56,7 @@ class _CreateOfferState extends State<CreateOffer> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  void _createOffer() {
+  void _createOrUpdateOffer(BuildContext context) {
     DateTime? dateTime;
 
     // Combine selected time and date into one DateTime object if both are set
@@ -75,7 +75,9 @@ class _CreateOfferState extends State<CreateOffer> {
           _titleController.text,
           _descriptionController.text,
           _priceController.text,
-          _selectedOfferType, (FirebaseException e) {
+          _selectedOfferType, successCallback: () {
+        Navigator.of(context).pop();
+      }, errorCallback: (FirebaseException e) {
         print('Error creating offer, error: ${e.message}');
       },
           image: _selectedImage,
@@ -83,11 +85,30 @@ class _CreateOfferState extends State<CreateOffer> {
           time: dateTime ?? _selectedDate);
     } else {
       // Todo(motschel123): Update values of existing offer
+      OfferStorage.updateOffer(
+          widget.editingOffer!,
+          _titleController.text,
+          _descriptionController.text,
+          _priceController.text,
+          _selectedOfferType, successCallback: () {
+        Navigator.of(context).pop();
+      }, errorCallback: (FirebaseException e) {
+        print('Error creating offer, error: ${e.message}');
+      },
+          image: _selectedImage,
+          location: _selectedLocation,
+          time: dateTime ?? _selectedDate);
     }
   }
 
   // TODO(motschel123): Implement delete Offer method
-  void _deleteOffer() {}
+  void _deleteOffer(BuildContext context) {
+    OfferStorage.deleteOffer(widget.editingOffer!,
+        successCallback: () => Navigator.of(context).pop(),
+        errorCallback: (FirebaseException e) {
+          print('Error deleting offer, error: ${e.message}');
+        });
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -139,7 +160,7 @@ class _CreateOfferState extends State<CreateOffer> {
                   image: FileImage(_selectedImage!), fit: BoxFit.cover),
             )),
       );
-    } else if (widget.editingOffer?.imageRef != null) {
+    } else if (widget.editingOffer?.imageUrl != null) {
       return GestureDetector(
         onTap: () => _selectImage(ImageSource.gallery),
         child: Container(
@@ -147,13 +168,13 @@ class _CreateOfferState extends State<CreateOffer> {
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(8.0)),
               image: DecorationImage(
-                  image: NetworkImage(widget.editingOffer!.imageRef!),
+                  image: NetworkImage(widget.editingOffer!.imageUrl!),
                   fit: BoxFit.cover),
             )),
       );
     } else {
       return Container(
-        height: 240,
+        height: 120,
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(8.0)),
           border: Border.all(color: Theme.of(context).buttonColor),
@@ -326,7 +347,7 @@ class _CreateOfferState extends State<CreateOffer> {
                           enabled: _checkboxSelected,
                           callback: () {
                             if (_formKey.currentState!.validate()) {
-                              _createOffer();
+                              _createOrUpdateOffer(context);
                             }
                           }),
                       if (widget.editingOffer != null)
@@ -337,7 +358,7 @@ class _CreateOfferState extends State<CreateOffer> {
                               color: Colors.red,
                               callback: () {
                                 if (_formKey.currentState!.validate()) {
-                                  _deleteOffer();
+                                  _deleteOffer(context);
                                 }
                               }),
                         ),

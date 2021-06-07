@@ -29,7 +29,7 @@ class OfferDetail extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              if (offer.imageRef != null)
+              if (offer.imageUrl != null)
                 Container(
                   margin: const EdgeInsets.only(bottom: 16.0),
                   height: 240,
@@ -38,7 +38,7 @@ class OfferDetail extends StatelessWidget {
                           const BorderRadius.all(Radius.circular(8.0)),
                       image: DecorationImage(
                         fit: BoxFit.cover,
-                        image: NetworkImage(offer.imageRef ?? 'NULL'),
+                        image: NetworkImage(offer.imageUrl ?? 'NULL'),
                       )),
                 ),
               Text(offer.description,

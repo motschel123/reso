@@ -3,7 +3,8 @@ const String OFFERS_COLLECTION = 'offers';
 
 const String OFFER_DATE = 'date',
     OFFER_DESCRIPTION = 'description',
-    OFFER_IMAGE_REFERENCE = 'image',
+    OFFER_IMAGE_REFERENCE = 'imageRef',
+    OFFER_IMAGE_URL = 'imageUrl',
     OFFER_LOCATION = 'location',
     OFFER_PRICE = 'price',
     OFFER_TITLE = 'title',

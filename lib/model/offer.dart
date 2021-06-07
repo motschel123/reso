@@ -59,13 +59,16 @@ class Offer {
     this.time,
     this.location,
     this.imageRef,
+    this.imageUrl,
+    this.offerUid,
   });
 
   final OfferType type;
   final String title, price, description;
   final String authorUid;
   final DateTime? time;
-  final String? location, imageRef;
+  final String? location, imageRef, imageUrl;
+  final String? offerUid;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -76,11 +79,12 @@ class Offer {
       OFFER_AUTHOR_UID: authorUid,
       OFFER_TIME: time,
       OFFER_LOCATION: location,
-      OFFER_IMAGE_REFERENCE: imageRef
+      OFFER_IMAGE_REFERENCE: imageRef,
+      OFFER_IMAGE_URL: imageUrl,
     };
   }
 
-  static Offer fromMap(Map<String, dynamic> data) {
+  static Offer fromMap(Map<String, dynamic> data, {String? offerUid}) {
     assert(data[OFFER_TYPE] != null);
     assert(data[OFFER_TITLE] != null);
     assert(data[OFFER_DESCRIPTION] != null);
@@ -93,8 +97,10 @@ class Offer {
       price: data[OFFER_PRICE] as String,
       authorUid: data[OFFER_AUTHOR_UID] as String,
       imageRef: data[OFFER_IMAGE_REFERENCE] as String?,
+      imageUrl: data[OFFER_IMAGE_URL] as String?,
       location: data[OFFER_LOCATION] as String?,
       time: (data[OFFER_TIME] as Timestamp?)?.toDate(),
+      offerUid: offerUid,
     );
   }
 }

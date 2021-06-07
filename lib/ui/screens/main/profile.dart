@@ -52,7 +52,7 @@ class Profile extends StatelessWidget {
                             offerDescription: offer.description,
                             offerAuthor: offer.authorUid,
                             offerColor: offerTypeToColor[offer.type]!,
-                            offerImage: offer.imageRef,
+                            offerImage: offer.imageUrl,
                             imageIcon:
                                 const Icon(Icons.edit, color: Colors.white),
                             onTap: () {

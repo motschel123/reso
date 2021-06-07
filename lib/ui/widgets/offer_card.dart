@@ -91,6 +91,7 @@ class OfferCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Expanded(
+                          flex: 2,
                           child: Text(
                             offerTitle,
                             style: Theme.of(context).textTheme.headline3,
@@ -98,10 +99,14 @@ class OfferCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        Text(offerPrice,
-                            style: Theme.of(context).textTheme.bodyText2,
-                            maxLines: 1,
-                            overflow: TextOverflow.fade),
+                        Expanded(
+                          flex: 1,
+                          child: Text(offerPrice,
+                              style: Theme.of(context).textTheme.bodyText2,
+                              textAlign: TextAlign.right,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis),
+                        ),
                       ],
                     ),
                     Text(offerDescription,
