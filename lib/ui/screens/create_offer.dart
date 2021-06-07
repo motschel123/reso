@@ -18,24 +18,25 @@ class CreateOffer extends StatefulWidget {
 }
 
 class _CreateOfferState extends State<CreateOffer> {
-  _CreateOfferState() {
-    // Initialize values to those of the offer being edited
-    // if (widget.editingOffer != null) {
-    //   final Offer _offer = widget.editingOffer!;
+  @override
+  void initState() {
+    super.initState();
+    if (widget.editingOffer != null) {
+      final Offer _offer = widget.editingOffer!;
 
-    //   _titleController.text = _offer.title;
-    //   _descriptionController.text = _offer.description;
-    //   _priceController.text = _offer.price;
+      _titleController.text = _offer.title;
+      _descriptionController.text = _offer.description;
+      _priceController.text = _offer.price;
 
-    //   _selectedOfferType = _offer.type;
-    //   _selectedLocation = _offer.location ?? 'Kein Ort';
+      _selectedOfferType = _offer.type;
+      _selectedLocation = _offer.location ?? 'Kein Ort';
 
-    //   if (_offer.time != null) {
-    //     _selectedDate = _offer.time;
-    //     _selectedTime =
-    //         TimeOfDay(hour: _selectedDate!.hour, minute: _selectedDate!.minute);
-    //   }
-    // }
+      if (_offer.time != null) {
+        _selectedDate = _offer.time;
+        _selectedTime =
+            TimeOfDay(hour: _selectedDate!.hour, minute: _selectedDate!.minute);
+      }
+    }
   }
 
   final TextEditingController _titleController = TextEditingController();
@@ -81,9 +82,12 @@ class _CreateOfferState extends State<CreateOffer> {
           location: _selectedLocation,
           time: dateTime ?? _selectedDate);
     } else {
-      // Update values of existing offer
+      // Todo(motschel123): Update values of existing offer
     }
   }
+
+  // TODO(motschel123): Implement delete Offer method
+  void _deleteOffer() {}
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -123,6 +127,54 @@ class _CreateOfferState extends State<CreateOffer> {
     });
   }
 
+  Widget _buildImageSelection(BuildContext context) {
+    if (_selectedImage != null) {
+      return GestureDetector(
+        onTap: () => _selectImage(ImageSource.gallery),
+        child: Container(
+            height: 240.0,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+              image: DecorationImage(
+                  image: FileImage(_selectedImage!), fit: BoxFit.cover),
+            )),
+      );
+    } else if (widget.editingOffer?.imageRef != null) {
+      return GestureDetector(
+        onTap: () => _selectImage(ImageSource.gallery),
+        child: Container(
+            height: 240.0,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+              image: DecorationImage(
+                  image: NetworkImage(widget.editingOffer!.imageRef!),
+                  fit: BoxFit.cover),
+            )),
+      );
+    } else {
+      return Container(
+        height: 240,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+          border: Border.all(color: Theme.of(context).buttonColor),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.camera, color: Theme.of(context).buttonColor),
+              onPressed: () => _selectImage(ImageSource.camera),
+            ),
+            IconButton(
+              icon: Icon(Icons.image, color: Theme.of(context).buttonColor),
+              onPressed: () => _selectImage(ImageSource.gallery),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,47 +185,15 @@ class _CreateOfferState extends State<CreateOffer> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text('Angebot erstellen',
+              Text(
+                  widget.editingOffer == null
+                      ? 'Angebot erstellen'
+                      : 'Angebot bearbeiten',
                   style: Theme.of(context).textTheme.headline1),
               const SizedBox(height: 8.0),
               const Divider(height: 0),
               const SizedBox(height: 16.0),
-              if (_selectedImage == null)
-                Container(
-                  height: 120,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-                    border: Border.all(color: Theme.of(context).buttonColor),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(Icons.camera,
-                            color: Theme.of(context).buttonColor),
-                        onPressed: () => _selectImage(ImageSource.camera),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.image,
-                            color: Theme.of(context).buttonColor),
-                        onPressed: () => _selectImage(ImageSource.gallery),
-                      ),
-                    ],
-                  ),
-                ),
-              if (_selectedImage != null)
-                GestureDetector(
-                  onTap: () => _selectImage(ImageSource.gallery),
-                  child: Container(
-                      height: 120.0,
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(8.0)),
-                        image: DecorationImage(
-                            image: FileImage(_selectedImage!),
-                            fit: BoxFit.cover),
-                      )),
-                ),
+              _buildImageSelection(context),
               const SizedBox(height: 16.0),
               Form(
                   key: _formKey,
@@ -298,7 +318,9 @@ class _CreateOfferState extends State<CreateOffer> {
                       ),
                       const SizedBox(height: 16.0),
                       StyledButtonLarge(
-                          text: 'Angebot erstellen',
+                          text: widget.editingOffer == null
+                              ? 'Angebot erstellen'
+                              : 'Angebot bearbeiten',
                           color: Colors.amber,
                           disabledColor: Theme.of(context).buttonColor,
                           enabled: _checkboxSelected,
@@ -307,6 +329,18 @@ class _CreateOfferState extends State<CreateOffer> {
                               _createOffer();
                             }
                           }),
+                      if (widget.editingOffer != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: StyledButtonLarge(
+                              text: 'Angebot löschen',
+                              color: Colors.red,
+                              callback: () {
+                                if (_formKey.currentState!.validate()) {
+                                  _deleteOffer();
+                                }
+                              }),
+                        ),
                     ],
                   )),
               const SizedBox(height: 16.0),

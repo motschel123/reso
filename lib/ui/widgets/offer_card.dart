@@ -23,25 +23,26 @@ class OfferCard extends StatelessWidget {
       required this.offerPrice,
       required this.offerDescription,
       required this.offerAuthor,
-      required this.profileImage,
       required this.offerColor,
+      this.profileImage,
       this.offerTime,
       this.offerLocation,
       this.offerImage,
-      this.onTap})
+      this.onTap,
+      this.imageIcon,
+      this.onIconTap})
       : super(key: key);
 
-  final String offerTitle,
-      offerPrice,
-      offerDescription,
-      offerAuthor,
-      profileImage;
+  final String offerTitle, offerPrice, offerDescription, offerAuthor;
 
   final Color offerColor;
 
-  final String? offerTime, offerLocation, offerImage;
+  final String? offerTime, offerLocation, offerImage, profileImage;
 
   final void Function()? onTap;
+
+  final Icon? imageIcon;
+  final void Function()? onIconTap;
 
   @override
   Widget build(BuildContext context) {
@@ -57,17 +58,28 @@ class OfferCard extends StatelessWidget {
                 Stack(children: <Widget>[
                   Container(
                     height: 56.0,
-                    width: 40.0,
+                    width: 42.0,
                     color: offerColor,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16.0),
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(profileImage),
-                      backgroundColor: offerColor,
-                      radius: 28.0,
+                  if (profileImage != null)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0),
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(profileImage!),
+                        backgroundColor: offerColor,
+                        radius: 28.0,
+                      ),
                     ),
-                  ),
+                  if (profileImage == null)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0),
+                      child: CircleAvatar(
+                        child:
+                            IconButton(icon: imageIcon!, onPressed: onIconTap),
+                        backgroundColor: offerColor,
+                        radius: 28.0,
+                      ),
+                    ),
                 ]),
                 const SizedBox(width: 8.0),
                 Expanded(
@@ -152,20 +164,6 @@ class OfferCard extends StatelessWidget {
             ),
         ],
       ),
-    );
-  }
-
-  static OfferCard sample() {
-    return const OfferCard(
-      offerTitle: '3D-Druck',
-      offerPrice: 'ab 3,00€',
-      offerDescription:
-          'FDM Druck mit verschiedenen Farben\nPLA und TPU, Preis je nach Objekt',
-      offerAuthor: 'Luca Beetz',
-      profileImage: 'https://thispersondoesnotexist.com/image',
-      offerImage:
-          'https://www.twopeasandtheirpod.com/wp-content/uploads/2021/03/Veggie-Pizza-8-500x375.jpg',
-      offerColor: Colors.amber,
     );
   }
 }
