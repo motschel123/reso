@@ -13,7 +13,7 @@ class _MessagingState extends State<Messaging> {
     return Scaffold(
         body: SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
             Text('Nachrichten', style: Theme.of(context).textTheme.headline1),

@@ -56,9 +56,10 @@ class OfferHeading extends StatelessWidget {
             ))
           ],
         ),
+        const SizedBox(height: 16.0),
         const Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-          child: Divider(),
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          child: Divider(height: 0),
         ),
       ],
     );

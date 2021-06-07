@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:reso/model/message.dart';
+import 'package:reso/ui/screens/chat_dialogue.dart';
 import 'package:reso/ui/screens/main/live_feed.dart';
 import 'package:reso/ui/screens/main/messaging.dart';
 import 'package:reso/ui/screens/main/profile.dart';
@@ -13,10 +15,10 @@ class NavigationContainer extends StatefulWidget {
 
 class _NavigationContainerState extends State<NavigationContainer> {
   int _selectedIndex = 0;
-  static const List<Widget> _widgetOptions = <Widget>[
+  final List<Widget> _widgetOptions = <Widget>[
+    ChatDialogue(messages: sampleMessages),
     LiveFeed(),
     SearchOffers(),
-    Messaging(),
     Profile(),
   ];
 
