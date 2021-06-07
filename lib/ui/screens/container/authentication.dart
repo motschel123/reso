@@ -5,7 +5,7 @@ import 'package:reso/business_logic/auth_manager.dart';
 import 'package:reso/business_logic/firebase/firebase_auth_manager.dart';
 import 'package:reso/ui/widgets/styled_form_elements.dart';
 
-import 'loading_screen.dart';
+import '../loading_screen.dart';
 
 class Authentication extends StatelessWidget {
   const Authentication(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:reso/ui/screens/live_feed.dart';
-import 'package:reso/ui/screens/messaging.dart';
-import 'package:reso/ui/screens/profile.dart';
-import 'package:reso/ui/screens/search.dart';
+import 'package:reso/ui/screens/main/live_feed.dart';
+import 'package:reso/ui/screens/main/messaging.dart';
+import 'package:reso/ui/screens/main/profile.dart';
+import 'package:reso/ui/screens/main/search.dart';
 
 class NavigationContainer extends StatefulWidget {
   const NavigationContainer({Key? key}) : super(key: key);

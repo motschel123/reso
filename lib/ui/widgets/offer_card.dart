@@ -104,6 +104,7 @@ class OfferCard extends StatelessWidget {
                               const Icon(Icons.person, size: 16.0),
                               const SizedBox(width: 4.0),
                               Text(offerAuthor,
+                                  overflow: TextOverflow.fade,
                                   style: Theme.of(context).textTheme.bodyText1),
                             ],
                           ),
@@ -113,6 +114,7 @@ class OfferCard extends StatelessWidget {
                                 const Icon(Icons.timer, size: 16.0),
                                 const SizedBox(width: 4.0),
                                 Text(offerTime ?? 'NULL',
+                                    overflow: TextOverflow.fade,
                                     style:
                                         Theme.of(context).textTheme.bodyText1),
                               ],
@@ -123,6 +125,7 @@ class OfferCard extends StatelessWidget {
                                 const Icon(Icons.place, size: 16.0),
                                 const SizedBox(width: 4.0),
                                 Text(offerLocation ?? 'NULL',
+                                    overflow: TextOverflow.fade,
                                     style:
                                         Theme.of(context).textTheme.bodyText1),
                               ],

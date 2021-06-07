@@ -6,8 +6,8 @@ import 'package:reso/business_logic/feed_manager.dart';
 import 'package:reso/business_logic/firebase/firebase_auth_manager.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/initialize_app.dart';
-import 'package:reso/ui/screens/authentication.dart';
-import 'package:reso/ui/screens/navigation.dart';
+import 'package:reso/ui/screens/container/authentication.dart';
+import 'package:reso/ui/screens/container/navigation.dart';
 
 void main() {
   runApp(

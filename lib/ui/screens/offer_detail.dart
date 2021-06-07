@@ -54,8 +54,9 @@ class OfferDetail extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodyText2),
               ])),
               const SizedBox(height: 16.0),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Wrap(
+                  direction: Axis.horizontal,
+                  runSpacing: 8.0,
                   children: <Widget>[
                     Row(
                       children: <Widget>[
