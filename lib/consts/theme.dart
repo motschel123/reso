@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:reso/model/offer.dart';
 
 final ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
+  primaryColor: Colors.amber,
+  buttonColor: const Color(0xFFe6e6e6),
   textTheme: TextTheme(
     headline1: const TextStyle(
         fontSize: 24.0, color: Colors.black, fontWeight: FontWeight.w600),
@@ -13,3 +16,10 @@ final ThemeData lightTheme = ThemeData(
     button: const TextStyle(fontSize: 18.0, color: Colors.white),
   ),
 );
+
+final Map<OfferType, Color> offerTypeToColor = <OfferType, Color>{
+  OfferType.activity: Colors.amber,
+  OfferType.food: Colors.green,
+  OfferType.product: Colors.orange,
+  OfferType.service: Colors.blue,
+};
