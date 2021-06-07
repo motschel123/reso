@@ -32,7 +32,7 @@ class OfferDetail extends StatelessWidget {
               if (offer.imageRef != null)
                 Container(
                   margin: const EdgeInsets.only(bottom: 16.0),
-                  height: 120,
+                  height: 240,
                   decoration: BoxDecoration(
                       borderRadius:
                           const BorderRadius.all(Radius.circular(8.0)),

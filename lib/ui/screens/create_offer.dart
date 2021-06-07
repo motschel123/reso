@@ -131,6 +131,7 @@ class _CreateOfferState extends State<CreateOffer> {
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text('Angebot erstellen',
                   style: Theme.of(context).textTheme.headline1),

@@ -13,7 +13,7 @@ class _SearchOffersState extends State<SearchOffers> {
     return Scaffold(
         body: SafeArea(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
           children: <Widget>[
             Text('Suchen', style: Theme.of(context).textTheme.headline1),

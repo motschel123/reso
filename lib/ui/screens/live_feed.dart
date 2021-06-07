@@ -15,35 +15,50 @@ class LiveFeed extends StatelessWidget {
       body: SafeArea(
         child: Consumer<FeedManager>(
             builder: (BuildContext context, FeedManager feedManager, _) =>
-                ListView.separated(
-                  itemCount: feedManager.offers.length,
-                  separatorBuilder: (BuildContext context, int index) {
-                    return const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Divider(),
-                    );
-                  },
-                  itemBuilder: (BuildContext context, int index) {
-                    final Offer offer = feedManager.offers[index];
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
+                      child: Text('Dein Feed',
+                          style: Theme.of(context).textTheme.headline1),
+                    ),
+                    const Divider(height: 0),
+                    Expanded(
+                      child: ListView.separated(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        itemCount: feedManager.offers.length,
+                        separatorBuilder: (BuildContext context, int index) {
+                          return const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Divider(),
+                          );
+                        },
+                        itemBuilder: (BuildContext context, int index) {
+                          final Offer offer = feedManager.offers[index];
 
-                    return OfferCard(
-                      offerTitle: offer.title,
-                      offerPrice: offer.price,
-                      offerDescription: offer.description,
-                      offerAuthor: offer.authorUid,
-                      profileImage: 'https://thispersondoesnotexist.com/image',
-                      offerColor: offerTypeToColor[offer.type]!,
-                      offerImage: offer.imageRef,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute<OfferDetail>(
-                              builder: (BuildContext context) =>
-                                  OfferDetail(offer: offer)),
-                        );
-                      },
-                    );
-                  },
+                          return OfferCard(
+                            offerTitle: offer.title,
+                            offerPrice: offer.price,
+                            offerDescription: offer.description,
+                            offerAuthor: offer.authorUid,
+                            profileImage:
+                                'https://thispersondoesnotexist.com/image',
+                            offerColor: offerTypeToColor[offer.type]!,
+                            offerImage: offer.imageRef,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute<OfferDetail>(
+                                    builder: (BuildContext context) =>
+                                        OfferDetail(offer: offer)),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 )),
       ),
     );

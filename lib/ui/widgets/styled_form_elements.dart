@@ -40,6 +40,7 @@ class StyledTextFormField extends StatelessWidget {
       cursorColor: Colors.black.withOpacity(0.5),
       style: Theme.of(context).textTheme.bodyText1,
       maxLines: multiline ? null : 1,
+      minLines: multiline ? 3 : 1,
       keyboardType: multiline ? TextInputType.multiline : keyboardType,
       controller: controller,
       obscureText: obscureText,
