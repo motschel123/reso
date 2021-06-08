@@ -15,11 +15,11 @@ void main() {
     InitializeApp(
       app: const App(),
       providers: <SingleChildWidget>[
-        Provider<AuthManager>(
+        ChangeNotifierProvider<AuthManager>(
             create: (BuildContext context) => FirebaseAuthManager()),
         ChangeNotifierProvider<FeedManager>(
             create: (BuildContext context) => FirebaseFeedManager()),
-        Provider<ChatManager>(
+        ChangeNotifierProvider<ChatManager>(
             create: (BuildContext context) => FirebaseChatManager()),
         ChangeNotifierProvider<ProfileManager>(
             create: (BuildContext context) => ProfileManager()),
@@ -48,9 +48,8 @@ class App extends StatelessWidget {
       //       'https://www.twopeasandtheirpod.com/wp-content/uploads/2021/03/Veggie-Pizza-8-500x375.jpg',
       //   offerColor: Colors.amber,
       // ),
-      home: Authentication(
-        child: const NavigationContainer(),
-        authenticationState: FirebaseAuthManager(),
+      home: const Authentication(
+        child: NavigationContainer(),
       ),
     );
   }

@@ -13,9 +13,8 @@ class LiveFeed extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Consumer<FirebaseFeedManager>(
-            builder: (BuildContext context, FirebaseFeedManager feedManager,
-                    _) =>
+        child: Consumer<FeedManager>(
+            builder: (BuildContext context, FeedManager feedManager, _) =>
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[

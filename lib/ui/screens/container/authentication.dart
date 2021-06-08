@@ -8,12 +8,9 @@ import 'package:reso/ui/widgets/styled_form_elements.dart';
 import '../loading_screen.dart';
 
 class Authentication extends StatelessWidget {
-  const Authentication(
-      {Key? key, required this.child, required this.authenticationState})
-      : super(key: key);
+  const Authentication({Key? key, required this.child}) : super(key: key);
 
   final Widget child;
-  final FirebaseAuthManager authenticationState;
 
   @override
   Widget build(BuildContext context) {
@@ -50,20 +47,18 @@ class Authentication extends StatelessWidget {
 }
 
 class _AuthenticationScreen extends StatelessWidget {
-  final FirebaseAuthManager _authStateManager = FirebaseAuthManager();
-
   @override
   Widget build(BuildContext context) {
-    return Consumer<LoginState>(
-      builder: (BuildContext context, LoginState loginState, _) {
-        switch (loginState) {
+    return Consumer<AuthManager>(
+      builder: (BuildContext context, AuthManager authManager, _) {
+        switch (authManager.loginState) {
           case LoginState.loggedOut:
             return LoggedOut(
-                startLoginFlow: () => _authStateManager.startLoginFlow());
+                startLoginFlow: () => authManager.startLoginFlow());
 
           case LoginState.emailAddress:
             return EmailForm(
-              callback: (String email) => _authStateManager.verifyEmail(
+              callback: (String email) => authManager.verifyEmail(
                 email,
                 errorCallback: (FirebaseAuthException e, StackTrace s) =>
                     _showErrorDialog(context, 'Ungültige Email', e),
@@ -72,11 +67,11 @@ class _AuthenticationScreen extends StatelessWidget {
 
           case LoginState.register:
             return RegisterForm(
-                email: _authStateManager.email!,
-                cancel: _authStateManager.cancelRegistration,
+                email: authManager.email!,
+                cancel: authManager.cancelRegistration,
                 registerAccount: (String email, String displayName,
                         String password) =>
-                    _authStateManager.registerAccount(
+                    authManager.registerAccount(
                       email,
                       displayName,
                       password,
@@ -87,9 +82,9 @@ class _AuthenticationScreen extends StatelessWidget {
 
           case LoginState.password:
             return LoginForm(
-              email: _authStateManager.email!,
-              cancel: _authStateManager.cancelLogin,
-              loginAccount: (String email, String password) => _authStateManager
+              email: authManager.email!,
+              cancel: authManager.cancelLogin,
+              loginAccount: (String email, String password) => authManager
                   .signInWithEmailAndPassword(email, password, errorCallback:
                       (FirebaseAuthException e, StackTrace stackTrace) {
                 _showErrorDialog(context, 'Anmeldung nicht erfolgreich', e);

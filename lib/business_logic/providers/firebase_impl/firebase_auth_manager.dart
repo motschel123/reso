@@ -30,8 +30,10 @@ class FirebaseAuthManager extends AuthManager {
       }
       _email = email;
       notifyListeners();
-    }).onError<FirebaseAuthException>(
-            errorCallback as ErrorCallbackNull? ?? (_, __) => null);
+    }).onError<FirebaseAuthException>((FirebaseAuthException e, StackTrace s) {
+      errorCallback?.call(e, s);
+      return null;
+    });
   }
 
   @override
@@ -47,8 +49,10 @@ class FirebaseAuthManager extends AuthManager {
       notifyListeners();
       print('signed in');
       // ignore: prefer_void_to_null
-    }).onError<FirebaseAuthException>(
-            errorCallback as ErrorCallbackNull? ?? (_, __) => null);
+    }).onError<FirebaseAuthException>((FirebaseAuthException e, StackTrace s) {
+      errorCallback?.call(e, s);
+      return null;
+    });
   }
 
   @override
@@ -72,7 +76,10 @@ class FirebaseAuthManager extends AuthManager {
         .then((UserCredential credential) =>
             credential.user!.updateProfile(displayName: displayName))
         .onError<FirebaseAuthException>(
-            errorCallback as ErrorCallbackNull? ?? (_, __) => null);
+            (FirebaseAuthException e, StackTrace s) {
+      errorCallback?.call(e, s);
+      return null;
+    });
   }
 
   @override
