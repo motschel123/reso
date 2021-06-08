@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:reso/business_logic/auth_manager.dart';
+import 'package:reso/business_logic/chat_manager.dart';
 import 'package:reso/business_logic/feed_manager.dart';
-import 'package:reso/business_logic/firebase/firebase_auth_manager.dart';
+import 'package:reso/business_logic/firebase_auth_manager.dart';
 import 'package:reso/business_logic/profile_manager.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/initialize_app.dart';
@@ -19,6 +20,7 @@ void main() {
             create: (BuildContext context) => FirebaseAuthManager()),
         ChangeNotifierProvider<FeedManager>(
             create: (BuildContext context) => FeedManager()),
+        Provider<ChatManager>(create: (BuildContext context) => ChatManager()),
         ChangeNotifierProvider<ProfileManager>(
             create: (BuildContext context) => ProfileManager()),
       ],

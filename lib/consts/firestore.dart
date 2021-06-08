@@ -1,7 +1,14 @@
-/// Collection of all [Offer]'s at root ('/OFFER_COLLECTION') of firestore
-const String OFFERS_COLLECTION = 'offers';
+const String USERS_COLLECTIONS = 'users',
+    USER_DISPLAY_NAME = 'displayName',
+    USER_EMAIL = 'email',
+    USER_EMAIL_VERIFIED = 'emailVerified',
+    USER_UID = 'uid',
+    USER_IMAGE_URL = 'imageUrl',
+    USER_IMAGE_REF = 'imageRef';
 
-const String OFFER_DATE = 'date',
+/// Collection of all [Offer]'s at root ('/OFFER_COLLECTION') of firestore
+const String OFFERS_COLLECTION = 'offers',
+    OFFER_DATE = 'date',
     OFFER_DESCRIPTION = 'description',
     OFFER_IMAGE_REFERENCE = 'imageRef',
     OFFER_IMAGE_URL = 'imageUrl',
@@ -15,3 +22,20 @@ const String OFFER_DATE = 'date',
     OFFER_TYPE_PRODUCT = 'OfferType.product',
     OFFER_TYPE_FOOD = 'OfferType.food',
     OFFER_TYPE_ACTIVITY = 'OfferType.activity';
+
+const String MESSAGES_COLLECTION = 'messages',
+    MESSAGE_RECEIVER_UID = 'receiverUid',
+    MESSAGE_SENDER_UID = 'senderUid',
+    MESSAGE_TEXT = 'text',
+    MESSAGE_TIME_RECEIVED = 'timeReceived',
+    MESSAGE_TIME_SENT = 'timeSent',
+    MESSAGE_TIME_ONLINE = 'timeOnline';
+
+const String CHATS_COLLECTION = 'chats',
+    CHAT_DATE_CREATED = 'dateCreated',
+    CHAT_LATEST_DATE = 'latestDate',
+    CHAT_LATEST_MESSAGE_TEXT = 'latestMessageText',
+    CHAT_UIDS = 'uids',
+    CHAT_PEERS = 'peers',
+    CHAT_PEER_DATA = 'peerData',
+    CHAT_RELATED_OFFER = 'relatedOffer';
