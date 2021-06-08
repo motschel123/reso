@@ -17,14 +17,10 @@ class FirebaseAuthManager extends AuthManager {
   }
 
   @override
-  Future<void> verifyEmail(
-    String email,
-    void Function(FirebaseAuthException e) errorCallback,
-  ) async {
-    try {
-      final List<String> methods =
-          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
-
+  Future<void> verifyEmail(String email, {ErrorCallback? errorCallback}) async {
+    return FirebaseAuth.instance
+        .fetchSignInMethodsForEmail(email)
+        .then((List<String> methods) {
       if (methods.contains('password')) {
         _loginState = LoginState.password;
         notifyListeners();
@@ -34,26 +30,25 @@ class FirebaseAuthManager extends AuthManager {
       }
       _email = email;
       notifyListeners();
-    } on FirebaseAuthException catch (e) {
-      errorCallback(e);
-    }
+    }).onError<FirebaseAuthException>(
+            errorCallback as ErrorCallbackNull? ?? (_, __) => null);
   }
 
   @override
   Future<void> signInWithEmailAndPassword(
     String email,
-    String password,
-    void Function(FirebaseAuthException e) errorCallback,
-  ) async {
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+    String password, {
+    ErrorCallback? errorCallback,
+  }) {
+    return FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password)
+        .then((_) {
+      _loginState = LoginState.loggedIn;
+      notifyListeners();
       print('signed in');
-    } on FirebaseAuthException catch (e) {
-      errorCallback(e);
-    }
+      // ignore: prefer_void_to_null
+    }).onError<FirebaseAuthException>(
+            errorCallback as ErrorCallbackNull? ?? (_, __) => null);
   }
 
   @override
@@ -70,17 +65,14 @@ class FirebaseAuthManager extends AuthManager {
 
   @override
   Future<void> registerAccount(
-      String email,
-      String displayName,
-      String password,
-      void Function(FirebaseAuthException e) errorCallback) async {
-    try {
-      final UserCredential credential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
-      await credential.user!.updateProfile(displayName: displayName);
-    } on FirebaseAuthException catch (e) {
-      errorCallback(e);
-    }
+      String email, String displayName, String password,
+      {ErrorCallback? errorCallback}) async {
+    FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: password)
+        .then((UserCredential credential) =>
+            credential.user!.updateProfile(displayName: displayName))
+        .onError<FirebaseAuthException>(
+            errorCallback as ErrorCallbackNull? ?? (_, __) => null);
   }
 
   @override

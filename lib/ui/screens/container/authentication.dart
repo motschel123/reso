@@ -65,7 +65,7 @@ class _AuthenticationScreen extends StatelessWidget {
             return EmailForm(
               callback: (String email) => _authStateManager.verifyEmail(
                 email,
-                (Exception e) =>
+                errorCallback: (FirebaseAuthException e, StackTrace s) =>
                     _showErrorDialog(context, 'Ungültige Email', e),
               ),
             );
@@ -80,21 +80,23 @@ class _AuthenticationScreen extends StatelessWidget {
                       email,
                       displayName,
                       password,
-                      (Exception e) => _showErrorDialog(
-                          context, 'Account konnte nicht erstellt werden', e),
+                      errorCallback: (FirebaseAuthException e, StackTrace s) =>
+                          _showErrorDialog(context,
+                              'Account konnte nicht erstellt werden', e),
                     ));
 
           case LoginState.password:
             return LoginForm(
               email: _authStateManager.email!,
               cancel: _authStateManager.cancelLogin,
-              loginAccount: (String email, String password) =>
-                  _authStateManager.signInWithEmailAndPassword(
-                      email,
-                      password,
-                      (Exception e) => _showErrorDialog(
-                          context, 'Anmeldung nicht erfolgreich', e)),
+              loginAccount: (String email, String password) => _authStateManager
+                  .signInWithEmailAndPassword(email, password, errorCallback:
+                      (FirebaseAuthException e, StackTrace stackTrace) {
+                _showErrorDialog(context, 'Anmeldung nicht erfolgreich', e);
+              }),
             );
+          case LoginState.loggedIn:
+            return const Center(child: Text('Anmelden...'));
         }
       },
     );
