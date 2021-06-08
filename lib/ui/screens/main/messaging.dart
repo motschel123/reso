@@ -19,13 +19,15 @@ class _MessagingState extends State<Messaging> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: Text('Nachrichten',
                 style: Theme.of(context).textTheme.headline1),
           ),
           const Divider(),
           Expanded(
               child: ListView.separated(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
                   itemCount: 5,
                   separatorBuilder: (BuildContext context, int index) {
                     return const Padding(

@@ -23,11 +23,13 @@ class _ChatDialogueState extends State<ChatDialogue> {
         body: SafeArea(
             child: Column(
       children: <Widget>[
-        const OfferHeading(
-            offerTitle: 'Programmieren',
-            offerAuthor: 'Luca Beetz',
-            profileImage: 'https://thispersondoesnotexist.com/image',
-            offerColor: Colors.blue),
+        OfferHeading(
+          offerTitle: 'Programmieren',
+          offerAuthor: 'Luca Beetz',
+          profileImage: 'https://thispersondoesnotexist.com/image',
+          offerColor: Colors.blue,
+          onTap: () {},
+        ),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
