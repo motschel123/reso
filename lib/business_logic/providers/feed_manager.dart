@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:reso/model/offer.dart';
 export './firebase_impl/firebase_feed_manager.dart';
 
-typedef ErrorCallback = void Function(Object error, StackTrace stackTrace);
+typedef ErrorCallback = void Function(
+    FirebaseAuthException error, StackTrace stackTrace);
 
 /// call [initFeedForUser] to set the currentUser
 ///
