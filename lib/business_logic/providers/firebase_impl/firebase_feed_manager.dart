@@ -26,10 +26,11 @@ class FirebaseFeedManager extends FeedManager {
   bool _fetching = false;
 
   @override
-  void initFeedForUser(User currenUser, {ErrorCallback? errorCallback}) {
+  void initFeedForUser(User currentUser, {ErrorCallback? errorCallback}) {
+    print('no');
     _fetching = true;
     _offers.clear();
-    _currentUser = currenUser;
+    _currentUser = currentUser;
     _baseQuery
         .get()
         // ignore: always_specify_types

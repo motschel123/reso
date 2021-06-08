@@ -16,7 +16,7 @@ abstract class FeedManager extends ChangeNotifier {
   /// Updates [offers] if new data is received, notifying listeners
   ///
   /// Calling [initFeedForUser] with a new [User] erases previous feed data
-  void initFeedForUser(User currenUser, {ErrorCallback? errorCallback});
+  void initFeedForUser(User currentUser, {ErrorCallback? errorCallback});
 
   /// Must only be called after [initFeedForUser]
   ///
