@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+export './firebase_impl/firebase_auth_manager.dart';
 
 enum LoginState {
   loggedOut,
@@ -7,8 +8,8 @@ enum LoginState {
   password,
 }
 
-abstract class AuthManager {
-  ValueNotifier<LoginState> get loginStateNotifier;
+abstract class AuthManager extends ChangeNotifier {
+  LoginState get loginState;
   String? get email;
 
   void startLoginFlow();

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reso/business_logic/feed_manager.dart';
+import 'package:reso/business_logic/providers/feed_manager.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/model/offer.dart';
 import 'package:reso/ui/screens/offer_detail.dart';
@@ -13,8 +13,9 @@ class LiveFeed extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Consumer<FeedManager>(
-            builder: (BuildContext context, FeedManager feedManager, _) =>
+        child: Consumer<FirebaseFeedManager>(
+            builder: (BuildContext context, FirebaseFeedManager feedManager,
+                    _) =>
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[

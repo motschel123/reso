@@ -56,17 +56,17 @@ class Offer {
     required this.description,
     required this.price,
     required this.authorUid,
-    this.time,
+    this.dateCreated,
     this.location,
     this.imageRef,
     this.imageUrl,
     this.offerUid,
   });
-
+  // TODO: Add dateEvent
   final OfferType type;
   final String title, price, description;
   final String authorUid;
-  final DateTime? time;
+  final DateTime? dateCreated;
   final String? location, imageRef, imageUrl;
   final String? offerUid;
 
@@ -77,7 +77,7 @@ class Offer {
       OFFER_DESCRIPTION: description,
       OFFER_PRICE: price,
       OFFER_AUTHOR_UID: authorUid,
-      OFFER_TIME: time,
+      OFFER_DATE_CREATED: dateCreated,
       OFFER_LOCATION: location,
       OFFER_IMAGE_REFERENCE: imageRef,
       OFFER_IMAGE_URL: imageUrl,
@@ -99,7 +99,7 @@ class Offer {
       imageRef: data[OFFER_IMAGE_REFERENCE] as String?,
       imageUrl: data[OFFER_IMAGE_URL] as String?,
       location: data[OFFER_LOCATION] as String?,
-      time: (data[OFFER_TIME] as Timestamp?)?.toDate(),
+      dateCreated: (data[OFFER_DATE_CREATED] as Timestamp?)?.toDate(),
       offerUid: offerUid,
     );
   }

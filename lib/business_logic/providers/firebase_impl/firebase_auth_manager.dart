@@ -1,12 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:reso/business_logic/auth_manager.dart';
+import 'package:reso/business_logic/providers/auth_manager.dart';
 
 class FirebaseAuthManager extends AuthManager {
   @override
-  ValueNotifier<LoginState> get loginStateNotifier => _loginState;
-  final ValueNotifier<LoginState> _loginState =
-      ValueNotifier<LoginState>(LoginState.loggedOut);
+  LoginState get loginState => _loginState;
+  LoginState _loginState = LoginState.loggedOut;
 
   @override
   String? get email => _email;
@@ -14,7 +12,8 @@ class FirebaseAuthManager extends AuthManager {
 
   @override
   void startLoginFlow() {
-    _loginState.value = LoginState.emailAddress;
+    _loginState = LoginState.emailAddress;
+    notifyListeners();
   }
 
   @override
@@ -27,11 +26,14 @@ class FirebaseAuthManager extends AuthManager {
           await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
 
       if (methods.contains('password')) {
-        _loginState.value = LoginState.password;
+        _loginState = LoginState.password;
+        notifyListeners();
       } else {
-        _loginState.value = LoginState.register;
+        _loginState = LoginState.register;
+        notifyListeners();
       }
       _email = email;
+      notifyListeners();
     } on FirebaseAuthException catch (e) {
       errorCallback(e);
     }
@@ -56,12 +58,14 @@ class FirebaseAuthManager extends AuthManager {
 
   @override
   void cancelRegistration() {
-    _loginState.value = LoginState.emailAddress;
+    _loginState = LoginState.emailAddress;
+    notifyListeners();
   }
 
   @override
   void cancelLogin() {
-    _loginState.value = LoginState.emailAddress;
+    _loginState = LoginState.emailAddress;
+    notifyListeners();
   }
 
   @override
@@ -81,7 +85,8 @@ class FirebaseAuthManager extends AuthManager {
 
   @override
   void signOut() {
-    _loginState.value = LoginState.loggedOut;
+    _loginState = LoginState.loggedOut;
+    notifyListeners();
     FirebaseAuth.instance.signOut();
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reso/business_logic/profile_manager.dart';
+import 'package:reso/business_logic/firebase_impl/firebase_profile_manager.dart';
 import 'package:reso/ui/screens/create_offer.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/model/offer.dart';

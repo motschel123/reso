@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:reso/business_logic/auth_manager.dart';
-import 'package:reso/business_logic/chat_manager.dart';
-import 'package:reso/business_logic/feed_manager.dart';
-import 'package:reso/business_logic/firebase_auth_manager.dart';
-import 'package:reso/business_logic/profile_manager.dart';
+import 'package:reso/business_logic/providers/auth_manager.dart';
+import 'package:reso/business_logic/providers/chat_manager.dart';
+import 'package:reso/business_logic/providers/feed_manager.dart';
+import 'package:reso/business_logic/providers/profile_manager.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/initialize_app.dart';
 import 'package:reso/ui/screens/container/authentication.dart';
@@ -19,8 +18,9 @@ void main() {
         Provider<AuthManager>(
             create: (BuildContext context) => FirebaseAuthManager()),
         ChangeNotifierProvider<FeedManager>(
-            create: (BuildContext context) => FeedManager()),
-        Provider<ChatManager>(create: (BuildContext context) => ChatManager()),
+            create: (BuildContext context) => FirebaseFeedManager()),
+        Provider<ChatManager>(
+            create: (BuildContext context) => FirebaseChatManager()),
         ChangeNotifierProvider<ProfileManager>(
             create: (BuildContext context) => ProfileManager()),
       ],

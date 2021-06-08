@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reso/business_logic/auth_manager.dart';
-import 'package:reso/business_logic/firebase_auth_manager.dart';
+import 'package:reso/business_logic/providers/auth_manager.dart';
+import 'package:reso/business_logic/providers/firebase_impl/firebase_auth_manager.dart';
 import 'package:reso/ui/widgets/styled_form_elements.dart';
 
 import '../loading_screen.dart';
@@ -54,8 +54,7 @@ class _AuthenticationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<LoginState>(
-      valueListenable: _authStateManager.loginStateNotifier,
+    return Consumer<LoginState>(
       builder: (BuildContext context, LoginState loginState, _) {
         switch (loginState) {
           case LoginState.loggedOut:

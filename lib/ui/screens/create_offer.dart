@@ -31,8 +31,8 @@ class _CreateOfferState extends State<CreateOffer> {
       _selectedOfferType = _offer.type;
       _selectedLocation = _offer.location ?? 'Kein Ort';
 
-      if (_offer.time != null) {
-        _selectedDate = _offer.time;
+      if (_offer.dateCreated != null) {
+        _selectedDate = _offer.dateCreated;
         _selectedTime =
             TimeOfDay(hour: _selectedDate!.hour, minute: _selectedDate!.minute);
       }

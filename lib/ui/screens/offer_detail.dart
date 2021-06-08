@@ -66,12 +66,12 @@ class OfferDetail extends StatelessWidget {
                             style: Theme.of(context).textTheme.bodyText1),
                       ],
                     ),
-                    if (offer.time != null)
+                    if (offer.dateCreated != null)
                       Row(
                         children: <Widget>[
                           const Icon(Icons.timer, size: 16.0),
                           const SizedBox(width: 4.0),
-                          Text(DateFormat('kk:mm').format(offer.time!),
+                          Text(DateFormat('kk:mm').format(offer.dateCreated!),
                               style: Theme.of(context).textTheme.bodyText1),
                         ],
                       ),
