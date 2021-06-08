@@ -13,7 +13,7 @@ abstract class FeedManager extends ChangeNotifier {
 
   /// Initialized a personalized feed for a given [User]
   ///
-  /// Updates [feedNotifier.value] if new data is received, notifying listeners
+  /// Updates [offers] if new data is received, notifying listeners
   ///
   /// Calling [initFeedForUser] with a new [User] erases previous feed data
   void initFeedForUser(User currenUser, {ErrorCallback? errorCallback});

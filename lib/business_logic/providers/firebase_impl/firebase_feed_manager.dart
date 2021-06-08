@@ -50,6 +50,7 @@ class FirebaseFeedManager extends FeedManager {
       _fetching = true;
       _baseQuery
           .startAfterDocument(_lastDocSnap)
+          .limit(amount)
           .get()
           // ignore: always_specify_types
           .then((qSnap) => _mapAndAddOffer(qSnap))
