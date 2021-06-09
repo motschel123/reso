@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:reso/consts/firestore.dart';
 import 'package:reso/model/chat.dart';
+import 'package:reso/model/offer.dart';
 
 class ChatManager with ChangeNotifier {
   ChatManager() : _currentUser = FirebaseAuth.instance.currentUser! {
@@ -15,7 +16,7 @@ class ChatManager with ChangeNotifier {
   List<Chat> get chats => _chats;
   List<Chat> _chats = <Chat>[];
 
-  User _currentUser;
+  final User _currentUser;
   StreamSubscription<List<Chat>>? _streamSub;
 
   void init() {

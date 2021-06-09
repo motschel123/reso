@@ -21,21 +21,17 @@ class AuthManager with ChangeNotifier {
   }
   late final FirebaseAuth _auth;
 
-  @override
   LoginState get loginState => _loginState;
   LoginState _loginState = LoginState.loggedOut;
 
-  @override
   String? get email => _email;
   String? _email;
 
-  @override
   void startLoginFlow() {
     _loginState = LoginState.emailAddress;
     notifyListeners();
   }
 
-  @override
   Future<void> verifyEmail(String email, {ErrorCallback? errorCallback}) async {
     return _auth.fetchSignInMethodsForEmail(email).then((List<String> methods) {
       if (methods.contains('password')) {
@@ -53,7 +49,6 @@ class AuthManager with ChangeNotifier {
     });
   }
 
-  @override
   Future<void> signInWithEmailAndPassword(
     String email,
     String password, {
@@ -72,19 +67,16 @@ class AuthManager with ChangeNotifier {
     });
   }
 
-  @override
   void cancelRegistration() {
     _loginState = LoginState.emailAddress;
     notifyListeners();
   }
 
-  @override
   void cancelLogin() {
     _loginState = LoginState.emailAddress;
     notifyListeners();
   }
 
-  @override
   Future<void> registerAccount(
       String email, String displayName, String password,
       {ErrorCallback? errorCallback}) async {
@@ -99,7 +91,6 @@ class AuthManager with ChangeNotifier {
     });
   }
 
-  @override
   void signOut() {
     _loginState = LoginState.loggedOut;
     notifyListeners();
