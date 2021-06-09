@@ -28,18 +28,7 @@ class Authentication extends StatelessWidget {
               /**
              * USER IS LOGGED IN
              */
-              // Provide the currentUser
-              // Provide UserDataService
-              Provider.of<FeedManager>(context, listen: false).initFeedForUser(
-                userSnapshot.data!,
-                errorCallback: (FirebaseAuthException error, stackTrace) {
-                  print('Init Error: ' + (error.message ?? ''));
-                },
-              );
-              return Provider<User>.value(
-                value: userSnapshot.data!,
-                child: child,
-              );
+              return child;
             } else {
               /**
              * user is NOT LOGGED IN 
