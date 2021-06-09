@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:reso/consts/firestore.dart';
 
 enum OfferType { product, service, food, activity }
@@ -57,18 +58,19 @@ class Offer {
     required this.price,
     required this.authorUid,
     this.dateCreated,
+    this.dateEvent,
     this.location,
     this.imageRef,
     this.imageUrl,
-    this.offerUid,
+    this.offerId,
   });
   // TODO(motschel123): Add dateEvent
   final OfferType type;
   final String title, price, description;
   final String authorUid;
-  final DateTime? dateCreated;
-  final String? location, imageRef, imageUrl;
-  final String? offerUid;
+  final DateTime? dateCreated, dateEvent;
+  final String? location, imageUrl, imageRef;
+  final String? offerId;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -100,7 +102,7 @@ class Offer {
       imageUrl: data[OFFER_IMAGE_URL] as String?,
       location: data[OFFER_LOCATION] as String?,
       dateCreated: (data[OFFER_DATE_CREATED] as Timestamp?)?.toDate(),
-      offerUid: offerUid,
+      offerId: offerUid,
     );
   }
 }

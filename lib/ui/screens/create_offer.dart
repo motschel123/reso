@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_image/firebase_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:reso/business_logic/offer_storage.dart';
+import 'package:reso/business_logic/services/offer_service.dart';
 import 'package:reso/consts/firestore.dart';
 import 'package:reso/model/offer.dart';
 import 'package:reso/ui/widgets/styled_form_elements.dart';
@@ -73,7 +73,7 @@ class _CreateOfferState extends State<CreateOffer> {
     }
 
     if (widget.editingOffer == null) {
-      OfferStorage.storeOffer(
+      OfferService.createOffer(
           _titleController.text,
           _descriptionController.text,
           _priceController.text,
@@ -87,7 +87,7 @@ class _CreateOfferState extends State<CreateOffer> {
           time: dateTime ?? _selectedDate);
     } else {
       // Todo(motschel123): Update values of existing offer
-      OfferStorage.updateOffer(
+      OfferService.updateOffer(
           widget.editingOffer!,
           _titleController.text,
           _descriptionController.text,
@@ -105,7 +105,7 @@ class _CreateOfferState extends State<CreateOffer> {
 
   // TODO(motschel123): Implement delete Offer method
   void _deleteOffer(BuildContext context) {
-    OfferStorage.deleteOffer(widget.editingOffer!,
+    OfferService.deleteOffer(widget.editingOffer!,
         successCallback: () => Navigator.of(context).pop(),
         errorCallback: (FirebaseException e) {
           print('Error deleting offer, error: ${e.message}');
