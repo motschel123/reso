@@ -65,7 +65,16 @@ class FeedManager with ChangeNotifier {
     final List<Offer> mappedOffers = <Offer>[];
     for (final QueryDocumentSnapshot<Map<String, dynamic>> doc in qSnap.docs) {
       if (doc.exists && doc.data() != null) {
-        mappedOffers.add(Offer.fromMap(doc.data()));
+        try {
+          final Offer newOffer = Offer.fromMap(doc.data(), offerId: doc.id);
+          mappedOffers.add(newOffer);
+        } on Exception catch (e) {
+          print(e);
+          print('Related doc data: ' + doc.data().toString());
+        } on Error catch (e) {
+          print(e);
+          print('Related doc data: ' + doc.data().toString());
+        }
       }
     }
 
