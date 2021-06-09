@@ -1,3 +1,4 @@
+import 'package:firebase_image/firebase_image.dart';
 import 'package:flutter/material.dart';
 
 class OfferCard extends StatelessWidget {
@@ -163,7 +164,7 @@ class OfferCard extends StatelessWidget {
                     borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: NetworkImage(offerImage ?? 'NULL'),
+                      image: FirebaseImage(offerImage!),
                     )),
               ),
             ),
