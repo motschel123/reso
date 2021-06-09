@@ -10,7 +10,9 @@ void main() {
           title: 'Outdoor walk',
           description: 'Short group walk',
           price: 'free',
-          authorUid: '1a3');
+          authorUid: '1a3',
+          authorDisplayName: 'Luca',
+          authorImageUrl: 'imageUrl');
 
       expect(offer.toMap(), <String, dynamic>{
         OFFER_TYPE: OFFER_TYPE_ACTIVITY,
@@ -18,6 +20,8 @@ void main() {
         OFFER_DESCRIPTION: 'Short group walk',
         OFFER_PRICE: 'free',
         OFFER_AUTHOR_UID: '1a3',
+        OFFER_AUTHOR_DISPLAY_NAME: 'Luca',
+        OFFER_AUTHOR_IMAGE_URL: 'imageUrl',
         OFFER_DATE_CREATED: null,
         OFFER_LOCATION: null,
         OFFER_IMAGE_REFERENCE: null,
@@ -32,6 +36,8 @@ void main() {
         OFFER_DESCRIPTION: 'Short group walk',
         OFFER_PRICE: 'free',
         OFFER_AUTHOR_UID: '1a3',
+        OFFER_AUTHOR_DISPLAY_NAME: 'Luca',
+        OFFER_AUTHOR_IMAGE_URL: 'imageUrl',
       };
 
       final Offer offer = Offer.fromMap(offerMap);
@@ -41,6 +47,8 @@ void main() {
       expect(offer.description, 'Short group walk');
       expect(offer.price, 'free');
       expect(offer.authorUid, '1a3');
+      expect(offer.authorDisplayName, 'Luca');
+      expect(offer.authorImageUrl, 'imageUrl');
     });
 
     test('should not create Offer if Map misses required elements', () {

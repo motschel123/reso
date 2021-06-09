@@ -20,6 +20,8 @@ void main() {
           OFFER_DESCRIPTION: 'Short group walk',
           OFFER_PRICE: 'free',
           OFFER_AUTHOR_UID: '1a3',
+          OFFER_AUTHOR_DISPLAY_NAME: 'Luca',
+          OFFER_AUTHOR_IMAGE_URL: 'https://thispersondoesnotexist.com/image',
         });
 
         await tester.pumpWidget(ChangeNotifierProvider<FeedManager>(

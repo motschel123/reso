@@ -52,8 +52,8 @@ class OfferCard extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Container(
-            height: 80.0,
-            padding: const EdgeInsets.only(bottom: 8.0, right: 16.0),
+            height: 90.0,
+            padding: const EdgeInsets.only(bottom: 0.0, right: 16.0),
             child: Row(
               children: <Widget>[
                 Stack(children: <Widget>[
