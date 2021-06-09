@@ -62,7 +62,7 @@ class Chat {
         () => UserProfile(
           uid: uid,
           displayName: displayName,
-          profileImageUrl: imageUrl,
+          imageUrl: imageUrl,
         ),
       );
     }
