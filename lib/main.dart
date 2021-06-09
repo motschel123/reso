@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -33,13 +34,12 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'ReSo',
       theme: lightTheme,
-      builder: (_, Widget? child) => Authentication(
+      home: Authentication(
         child: MultiProvider(
           providers: _globalProviders,
-          builder: child != null ? (_, __) => child : null,
+          builder: (_, __) => const NavigationContainer(),
         ),
       ),
-      home: const NavigationContainer(),
     );
   }
 }

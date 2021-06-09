@@ -29,9 +29,12 @@ class FeedManager with ChangeNotifier {
   List<Offer> get offers => _offers;
   late final List<Offer> _offers;
 
-  late User _currentUser;
-  late final Query<Map<String, dynamic>> _baseQuery =
-      _firebaseFirestore.collection(OFFERS_COLLECTION).limit(_defaultAmount);
+  // ignore: unused_field
+  final User _currentUser;
+
+  final Query<Map<String, dynamic>> _baseQuery = FirebaseFirestore.instance
+      .collection(OFFERS_COLLECTION)
+      .limit(_defaultAmount);
 
   /// Stores the last [DocumentSnapshot] to query for documents after this
   DocumentSnapshot<Map<String, dynamic>>? _lastDocSnap;

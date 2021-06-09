@@ -97,7 +97,7 @@ class OfferService {
   static Future<void> deleteOffer(Offer offer,
       {void Function()? successCallback,
       void Function(FirebaseException e)? errorCallback}) async {
-    List<Future<dynamic>> futures = <Future<dynamic>>[];
+    final List<Future<dynamic>> futures = <Future<dynamic>>[];
 
     try {
       if (offer.imageRef != null) {

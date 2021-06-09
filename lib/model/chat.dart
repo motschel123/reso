@@ -4,7 +4,7 @@ import 'package:reso/model/user_profile.dart';
 
 class Chat {
   const Chat({
-    required this.chatDocRef,
+    required this.chatId,
     required this.relatedOffer,
     required this.latestDate,
     required this.latestMessageText,
@@ -12,7 +12,7 @@ class Chat {
     required this.peers,
   });
 
-  final DocumentReference<Map<String, dynamic>> chatDocRef;
+  final String chatId;
   final DateTime latestDate;
   final String latestMessageText;
   final DateTime dateCreated;
@@ -34,13 +34,25 @@ class Chat {
         as DocumentReference<Map<String, dynamic>>;
 
     return Chat(
-      chatDocRef: docSnap.reference,
+      chatId: docSnap.id,
       relatedOffer: relatedOffer,
       latestDate: latestDate,
       latestMessageText: latestMessageText,
       dateCreated: dateCreated,
       peers: peers,
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      CHAT_RELATED_OFFER: relatedOffer,
+      CHAT_LATEST_DATE: latestDate,
+      CHAT_LATEST_MESSAGE_TEXT: latestMessageText,
+      CHAT_DATE_CREATED: dateCreated,
+      CHAT_PEER_DATA: peers.map<String, Map<String, dynamic>>(
+          (String key, UserProfile peerData) =>
+              MapEntry<String, Map<String, dynamic>>(key, peerData.toMap())),
+    };
   }
 
   static Map<String, UserProfile> _getPeersData(
