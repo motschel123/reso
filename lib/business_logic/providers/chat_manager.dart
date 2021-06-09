@@ -7,20 +7,20 @@ import 'package:reso/consts/firestore.dart';
 import 'package:reso/model/chat.dart';
 
 class ChatManager with ChangeNotifier {
-  ChatManager() : _currentUser = FirebaseAuth.instance.currentUser! {}
+  ChatManager() : _currentUser = FirebaseAuth.instance.currentUser! {
+    init();
+  }
 
   @override
   List<Chat> get chats => _chats;
   List<Chat> _chats = <Chat>[];
 
-  StreamSubscription<List<Chat>>? _prevStreamSub;
   User _currentUser;
+  StreamSubscription<List<Chat>>? _streamSub;
 
   void init() {
     // ignore: always_put_control_body_on_new_line
-    if (_prevStreamSub != null) _prevStreamSub!.cancel();
-
-    _prevStreamSub = FirebaseFirestore.instance
+    _streamSub = FirebaseFirestore.instance
         .collection(CHATS_COLLECTION)
         .where(CHAT_PEERS, arrayContains: _currentUser.uid)
         .orderBy(CHAT_LATEST_DATE)
@@ -38,5 +38,11 @@ class ChatManager with ChangeNotifier {
       _chats = newChats;
       notifyListeners();
     });
+  }
+
+  @override
+  void dispose() {
+    _streamSub?.cancel();
+    super.dispose();
   }
 }
