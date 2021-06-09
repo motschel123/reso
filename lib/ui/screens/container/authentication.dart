@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reso/business_logic/providers/auth_manager.dart';
-import 'package:reso/business_logic/providers/feed_manager.dart';
 import 'package:reso/ui/widgets/styled_form_elements.dart';
 
 import '../loading_screen.dart';
@@ -14,30 +13,33 @@ class Authentication extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (BuildContext context, AsyncSnapshot<User?> userSnapshot) {
-          if (userSnapshot.connectionState == ConnectionState.active ||
-              userSnapshot.connectionState == ConnectionState.done) {
-            if (userSnapshot.hasError) {
-              /**
-             * FirebaseAuth ERROR 
-             */
-              throw userSnapshot.error!;
-            } else if (userSnapshot.hasData) {
-              /**
-             * USER IS LOGGED IN
-             */
-              return child;
-            } else {
-              /**
-             * user is NOT LOGGED IN 
-             */
-              return _AuthenticationScreen();
+    return ChangeNotifierProvider<AuthManager>(
+      create: (BuildContext context) => AuthManager(),
+      child: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (BuildContext context, AsyncSnapshot<User?> userSnapshot) {
+            if (userSnapshot.connectionState == ConnectionState.active ||
+                userSnapshot.connectionState == ConnectionState.done) {
+              if (userSnapshot.hasError) {
+                /**
+               * FirebaseAuth ERROR 
+               */
+                throw userSnapshot.error!;
+              } else if (userSnapshot.hasData) {
+                /**
+               * USER IS LOGGED IN
+               */
+                return child;
+              } else {
+                /**
+               * user is NOT LOGGED IN 
+               */
+                return _AuthenticationScreen();
+              }
             }
-          }
-          return const LoadingScreen();
-        });
+            return const LoadingScreen();
+          }),
+    );
   }
 }
 

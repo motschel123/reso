@@ -16,6 +16,7 @@ class FeedManager with ChangeNotifier {
   List<Offer> get offers => _offers;
   late final List<Offer> _offers;
 
+  // ignore: unused_field
   final User _currentUser;
 
   final Query<Map<String, dynamic>> _baseQuery = FirebaseFirestore.instance
