@@ -7,20 +7,31 @@ import 'package:reso/consts/firestore.dart';
 import 'package:reso/model/offer.dart';
 
 class FeedManager with ChangeNotifier {
-  FeedManager() : _currentUser = FirebaseAuth.instance.currentUser! {
+  FeedManager({FirebaseFirestore? firebaseFirestore})
+      : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance,
+        _currentUser = FirebaseAuth.instance.currentUser! {
     _initFeed();
   }
+
+  /// Provide mock Firestore instance for testing
+  // FeedManager({FirebaseFirestore firebaseFirestore})
+  //     : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance,
+  //     _currentUser = FirebaseAuth.instance.currentUser!;
+  //     {
+
+  //   _initFeed();
+  // }
+
+  late FirebaseFirestore _firebaseFirestore;
 
   static const int _defaultAmount = 20;
 
   List<Offer> get offers => _offers;
   late final List<Offer> _offers;
 
-  final User _currentUser;
-
-  final Query<Map<String, dynamic>> _baseQuery = FirebaseFirestore.instance
-      .collection(OFFERS_COLLECTION)
-      .limit(_defaultAmount);
+  late User _currentUser;
+  late final Query<Map<String, dynamic>> _baseQuery =
+      _firebaseFirestore.collection(OFFERS_COLLECTION).limit(_defaultAmount);
 
   /// Stores the last [DocumentSnapshot] to query for documents after this
   DocumentSnapshot<Map<String, dynamic>>? _lastDocSnap;
