@@ -1,4 +1,4 @@
-const String USERS_COLLECTIONS = 'users',
+const String USERS_COLLECTION = 'users',
     USER_DISPLAY_NAME = 'displayName',
     USER_EMAIL = 'email',
     USER_EMAIL_VERIFIED = 'emailVerified',
