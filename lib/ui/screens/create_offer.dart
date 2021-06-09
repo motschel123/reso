@@ -74,17 +74,19 @@ class _CreateOfferState extends State<CreateOffer> {
 
     if (widget.editingOffer == null) {
       OfferService.createOffer(
-          _titleController.text,
-          _descriptionController.text,
-          _priceController.text,
-          _selectedOfferType, successCallback: () {
-        Navigator.of(context).pop();
-      }, errorCallback: (FirebaseException e) {
-        print('Error creating offer, error: ${e.message}');
-      },
-          image: _selectedImage,
-          location: _selectedLocation,
-          time: dateTime ?? _selectedDate);
+        _titleController.text,
+        _descriptionController.text,
+        _priceController.text,
+        _selectedOfferType,
+        successCallback: () {
+          Navigator.of(context).pop();
+        },
+        errorCallback: (FirebaseException e) {
+          print('Error creating offer, error: ${e.message}');
+        },
+        image: _selectedImage,
+        location: _selectedLocation,
+      );
     } else {
       // Todo(motschel123): Update values of existing offer
       OfferService.updateOffer(
@@ -99,7 +101,7 @@ class _CreateOfferState extends State<CreateOffer> {
       },
           image: _selectedImage,
           location: _selectedLocation,
-          time: dateTime ?? _selectedDate);
+          dateEvent: dateTime ?? _selectedDate);
     }
   }
 

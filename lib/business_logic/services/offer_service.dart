@@ -16,9 +16,9 @@ class OfferService {
     String description,
     String price,
     OfferType type, {
+    DateTime? dateEvent,
     File? image,
     String? location,
-    DateTime? time,
     void Function()? successCallback,
     void Function(FirebaseException e)? errorCallback,
   }) async {
@@ -29,19 +29,27 @@ class OfferService {
         imageUrl = await StorageService.getDownloadURL(imageRef);
       }
 
-      final Offer newOffer = Offer(
+      final Map<String, dynamic> offerData = Offer(
         title: title,
         description: description,
         price: price,
         type: type,
         authorUid: FirebaseAuth.instance.currentUser!.uid,
-        dateCreated: time,
+        authorDisplayName: FirebaseAuth.instance.currentUser!.displayName ??
+            'NO DISPLAYNAME IN USER',
+        authorImageUrl: FirebaseAuth.instance.currentUser!.photoURL ??
+            'https://i.pinimg.com/originals/b6/5c/d4/b65cd4b543da7bafc9b0878cce843416.jpg',
+        dateCreated: null,
+        dateEvent: dateEvent,
         location: location,
         imageRef: imageRef,
         imageUrl: imageUrl,
-      );
+      ).toMap();
 
-      await _offersCollection.add(newOffer.toMap());
+      offerData.update(
+          OFFER_DATE_CREATED, (dynamic _) => FieldValue.serverTimestamp());
+
+      await _offersCollection.add(offerData);
       successCallback?.call();
     } on FirebaseException catch (e) {
       errorCallback?.call(e);
@@ -56,11 +64,16 @@ class OfferService {
     OfferType type, {
     File? image,
     String? location,
-    DateTime? time,
+    DateTime? dateEvent,
     void Function()? successCallback,
     void Function(FirebaseException e)? errorCallback,
   }) async {
     String? imageUrl, imageRef;
+
+    if (oldOffer.offerId == null) {
+      print('Can update offer that is not created!');
+      return;
+    }
 
     try {
       if (image != null) {
@@ -73,21 +86,27 @@ class OfferService {
         }
       }
 
-      final Offer updatedOffer = Offer(
+      final Map<String, dynamic> offerData = Offer(
         title: title,
         description: description,
         price: price,
         type: type,
         authorUid: FirebaseAuth.instance.currentUser!.uid,
-        dateCreated: time,
+        authorDisplayName: FirebaseAuth.instance.currentUser!.displayName ??
+            'NO DISPlAYNAME IN USER',
+        authorImageUrl: FirebaseAuth.instance.currentUser!.photoURL ??
+            'https://i.pinimg.com/originals/b6/5c/d4/b65cd4b543da7bafc9b0878cce843416.jpg',
+        dateCreated: oldOffer.dateCreated,
+        dateEvent: dateEvent,
         location: location,
         imageRef: imageRef ?? oldOffer.imageRef,
         imageUrl: imageUrl ?? oldOffer.imageUrl,
-      );
+      ).toMap();
 
-      await _offersCollection
-          .doc(oldOffer.offerId)
-          .update(updatedOffer.toMap());
+      offerData.update(OFFER_DATE_CREATED,
+          (dynamic old) => old ?? FieldValue.serverTimestamp());
+
+      await _offersCollection.doc(oldOffer.offerId).update(offerData);
       successCallback?.call();
     } on FirebaseException catch (e) {
       errorCallback?.call(e);
