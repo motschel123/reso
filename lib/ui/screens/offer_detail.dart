@@ -65,7 +65,7 @@ class OfferDetail extends StatelessWidget {
                       children: <Widget>[
                         const Icon(Icons.person, size: 16.0),
                         const SizedBox(width: 4.0),
-                        Text(offer.authorUid,
+                        Text(offer.authorDisplayName,
                             style: Theme.of(context).textTheme.bodyText1),
                       ],
                     ),

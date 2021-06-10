@@ -6,8 +6,6 @@ import 'package:provider/single_child_widget.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/ui/screens/container/authentication.dart';
 import 'package:reso/ui/screens/container/navigation.dart';
-import 'package:reso/ui/screens/main/live_feed.dart';
-
 import 'business_logic/providers/chat_manager.dart';
 import 'business_logic/providers/feed_manager.dart';
 import 'business_logic/providers/profile_manager.dart';
@@ -35,15 +33,11 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'ReSo',
       theme: lightTheme,
-      // home: Authentication(
-      //   child: MultiProvider(
-      //     providers: _globalProviders,
-      //     builder: (_, __) => const NavigationContainer(),
-      //   ),
-      // ),
-      home: MultiProvider(
-        providers: _globalProviders,
-        builder: (_, __) => const LiveFeed(),
+      home: Authentication(
+        child: MultiProvider(
+          providers: _globalProviders,
+          builder: (_, __) => const NavigationContainer(),
+        ),
       ),
     );
   }
