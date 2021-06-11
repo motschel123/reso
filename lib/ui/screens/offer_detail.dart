@@ -31,19 +31,18 @@ class OfferDetail extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              if (offer.imageRef != null)
-                Container(
-                  margin: const EdgeInsets.only(bottom: 16.0),
-                  height: 240,
-                  decoration: BoxDecoration(
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(8.0)),
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image:
-                            FirebaseImage(STORAGE_BUCKET_URL + offer.imageRef!),
-                      )),
-                ),
+              if (offer.imageRef != null) const SizedBox(height: 8.0),
+              Container(
+                height: 240,
+                decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image:
+                          FirebaseImage(STORAGE_BUCKET_URL + offer.imageRef!),
+                    )),
+              ),
+              const SizedBox(height: 16.0),
               Text(offer.description,
                   style: Theme.of(context).textTheme.bodyText2),
               const SizedBox(height: 16.0),
