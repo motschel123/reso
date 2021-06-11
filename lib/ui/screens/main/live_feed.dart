@@ -41,8 +41,8 @@ class LiveFeed extends StatelessWidget {
                   offerTitle: offer.title,
                   offerPrice: offer.price,
                   offerDescription: offer.description,
-                  offerAuthor: offer.authorUid,
-                  profileImage: 'https://thispersondoesnotexist.com/image',
+                  offerAuthor: offer.authorDisplayName,
+                  profileImage: offer.authorImageUrl,
                   offerColor: offerTypeToColor[offer.type]!,
                   offerImage: offer.imageUrl,
                   onTap: () {

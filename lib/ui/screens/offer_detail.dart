@@ -20,8 +20,8 @@ class OfferDetail extends StatelessWidget {
       children: <Widget>[
         OfferHeading(
           offerTitle: offer.title,
-          offerAuthor: offer.authorUid,
-          profileImage: 'https://thispersondoesnotexist.com/image',
+          offerAuthor: offer.authorDisplayName,
+          profileImage: offer.authorImageUrl,
           offerColor: offerTypeToColor[offer.type]!,
         ),
         Padding(
@@ -62,7 +62,7 @@ class OfferDetail extends StatelessWidget {
                       children: <Widget>[
                         const Icon(Icons.person, size: 16.0),
                         const SizedBox(width: 4.0),
-                        Text(offer.authorUid,
+                        Text(offer.authorDisplayName,
                             style: Theme.of(context).textTheme.bodyText1),
                       ],
                     ),
@@ -96,7 +96,7 @@ class OfferDetail extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      '${offer.authorUid} anschreiben',
+                      '${offer.authorDisplayName} anschreiben',
                       style: Theme.of(context).textTheme.button,
                     ),
                   )),
