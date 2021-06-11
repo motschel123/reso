@@ -1,3 +1,4 @@
+import 'package:firebase_image/firebase_image.dart';
 import 'package:flutter/material.dart';
 
 class OfferCard extends StatelessWidget {
@@ -51,8 +52,8 @@ class OfferCard extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Container(
-            height: 80.0,
-            padding: const EdgeInsets.only(bottom: 8.0, right: 16.0),
+            height: 90.0,
+            padding: const EdgeInsets.only(bottom: 0.0, right: 16.0),
             child: Row(
               children: <Widget>[
                 Stack(children: <Widget>[
@@ -163,7 +164,7 @@ class OfferCard extends StatelessWidget {
                     borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: NetworkImage(offerImage ?? 'NULL'),
+                      image: FirebaseImage(offerImage!),
                     )),
               ),
             ),

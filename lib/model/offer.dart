@@ -65,7 +65,7 @@ class Offer {
     this.imageUrl,
     this.offerId,
   });
-  // TODO: Add dateEvent
+  // TODO(motschel123): Add dateEvent
   final OfferType type;
   final String title, price, description;
   final String authorUid, authorImageUrl, authorDisplayName;

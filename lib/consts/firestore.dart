@@ -41,3 +41,5 @@ const String CHATS_COLLECTION = 'chats',
     CHAT_PEERS = 'peers',
     CHAT_PEER_DATA = 'peerData',
     CHAT_RELATED_OFFER = 'relatedOffer';
+
+const String STORAGE_BUCKET_URL = 'gs://reso-83572.appspot.com/';

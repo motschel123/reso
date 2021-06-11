@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reso/business_logic/providers/feed_manager.dart';
+import 'package:reso/consts/firestore.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/model/offer.dart';
 import 'package:reso/ui/screens/offer_detail.dart';
@@ -44,7 +45,9 @@ class LiveFeed extends StatelessWidget {
                   offerAuthor: offer.authorDisplayName,
                   profileImage: offer.authorImageUrl,
                   offerColor: offerTypeToColor[offer.type]!,
-                  offerImage: offer.imageUrl,
+                  offerImage: offer.imageRef != null
+                      ? STORAGE_BUCKET_URL + offer.imageRef!
+                      : null,
                   onTap: () {
                     Navigator.push(
                       context,

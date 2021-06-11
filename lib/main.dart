@@ -6,7 +6,6 @@ import 'package:provider/single_child_widget.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/ui/screens/container/authentication.dart';
 import 'package:reso/ui/screens/container/navigation.dart';
-
 import 'business_logic/providers/chat_manager.dart';
 import 'business_logic/providers/feed_manager.dart';
 import 'business_logic/providers/profile_manager.dart';
