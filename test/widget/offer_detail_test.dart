@@ -31,7 +31,7 @@ void main() {
                 widget is RichText &&
                 widget.text.toPlainText() == 'Preis: free'),
             findsOneWidget);
-        expect(find.text('Luca'), findsOneWidget);
+        expect(find.text('Luca'), findsWidgets);
       });
     });
   });
