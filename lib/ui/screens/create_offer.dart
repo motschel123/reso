@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:reso/business_logic/firebase/offer_storage.dart';
+import 'package:reso/business_logic/services/offer_service.dart';
 import 'package:reso/model/offer.dart';
 import 'package:reso/ui/widgets/styled_form_elements.dart';
 
@@ -31,8 +31,8 @@ class _CreateOfferState extends State<CreateOffer> {
       _selectedOfferType = _offer.type;
       _selectedLocation = _offer.location ?? 'Kein Ort';
 
-      if (_offer.time != null) {
-        _selectedDate = _offer.time;
+      if (_offer.dateCreated != null) {
+        _selectedDate = _offer.dateCreated;
         _selectedTime =
             TimeOfDay(hour: _selectedDate!.hour, minute: _selectedDate!.minute);
       }
@@ -71,21 +71,23 @@ class _CreateOfferState extends State<CreateOffer> {
     }
 
     if (widget.editingOffer == null) {
-      OfferStorage.storeOffer(
-          _titleController.text,
-          _descriptionController.text,
-          _priceController.text,
-          _selectedOfferType, successCallback: () {
-        Navigator.of(context).pop();
-      }, errorCallback: (FirebaseException e) {
-        print('Error creating offer, error: ${e.message}');
-      },
-          image: _selectedImage,
-          location: _selectedLocation,
-          time: dateTime ?? _selectedDate);
+      OfferService.createOffer(
+        _titleController.text,
+        _descriptionController.text,
+        _priceController.text,
+        _selectedOfferType,
+        successCallback: () {
+          Navigator.of(context).pop();
+        },
+        errorCallback: (FirebaseException e) {
+          print('Error creating offer, error: ${e.message}');
+        },
+        image: _selectedImage,
+        location: _selectedLocation,
+      );
     } else {
       // Todo(motschel123): Update values of existing offer
-      OfferStorage.updateOffer(
+      OfferService.updateOffer(
           widget.editingOffer!,
           _titleController.text,
           _descriptionController.text,
@@ -97,13 +99,13 @@ class _CreateOfferState extends State<CreateOffer> {
       },
           image: _selectedImage,
           location: _selectedLocation,
-          time: dateTime ?? _selectedDate);
+          dateEvent: dateTime ?? _selectedDate);
     }
   }
 
   // TODO(motschel123): Implement delete Offer method
   void _deleteOffer(BuildContext context) {
-    OfferStorage.deleteOffer(widget.editingOffer!,
+    OfferService.deleteOffer(widget.editingOffer!,
         successCallback: () => Navigator.of(context).pop(),
         errorCallback: (FirebaseException e) {
           print('Error deleting offer, error: ${e.message}');

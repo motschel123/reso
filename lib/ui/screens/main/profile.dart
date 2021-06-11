@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reso/business_logic/profile_manager.dart';
+import 'package:reso/business_logic/providers/auth_manager.dart';
+import 'package:reso/business_logic/providers/profile_manager.dart';
 import 'package:reso/ui/screens/create_offer.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/model/offer.dart';
@@ -32,6 +33,12 @@ class Profile extends StatelessWidget {
                       child: Text('Deine Angebote',
                           style: Theme.of(context).textTheme.headline1),
                     ),
+                    TextButton(
+                        onPressed: () {
+                          Provider.of<AuthManager>(context, listen: false)
+                              .signOut();
+                        },
+                        child: const Text('Sign Out')),
                     const Divider(height: 0),
                     Expanded(
                       child: ListView.separated(

@@ -1,101 +1,94 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reso/business_logic/auth_manager.dart';
-import 'package:reso/business_logic/firebase/firebase_auth_manager.dart';
+import 'package:reso/business_logic/providers/auth_manager.dart';
 import 'package:reso/ui/widgets/styled_form_elements.dart';
 
 import '../loading_screen.dart';
 
 class Authentication extends StatelessWidget {
-  const Authentication(
-      {Key? key, required this.child, required this.authenticationState})
-      : super(key: key);
+  const Authentication({Key? key, required this.child}) : super(key: key);
 
   final Widget child;
-  final FirebaseAuthManager authenticationState;
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (BuildContext context, AsyncSnapshot<User?> userSnapshot) {
-          if (userSnapshot.connectionState == ConnectionState.active ||
-              userSnapshot.connectionState == ConnectionState.done) {
-            if (userSnapshot.hasError) {
-              /**
-             * FirebaseAuth ERROR 
-             */
-              throw userSnapshot.error!;
-            } else if (userSnapshot.hasData) {
-              /**
-             * USER IS LOGGED IN
-             */
-              // Provide the currentUser
-              // Provide UserDataService
-              return Provider<User>.value(
-                value: userSnapshot.data!,
-                child: child,
-              );
-            } else {
-              /**
-             * user is NOT LOGGED IN 
-             */
-              return _AuthenticationScreen();
+    return ChangeNotifierProvider<AuthManager>(
+      create: (BuildContext context) => AuthManager(),
+      child: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (BuildContext context, AsyncSnapshot<User?> userSnapshot) {
+            if (userSnapshot.connectionState == ConnectionState.active ||
+                userSnapshot.connectionState == ConnectionState.done) {
+              if (userSnapshot.hasError) {
+                /**
+               * FirebaseAuth ERROR 
+               */
+                throw userSnapshot.error!;
+              } else if (userSnapshot.hasData) {
+                /**
+               * USER IS LOGGED IN
+               */
+                return child;
+              } else {
+                /**
+               * user is NOT LOGGED IN 
+               */
+                return _AuthenticationScreen();
+              }
             }
-          }
-          return const LoadingScreen();
-        });
+            return const LoadingScreen();
+          }),
+    );
   }
 }
 
 class _AuthenticationScreen extends StatelessWidget {
-  final FirebaseAuthManager _authStateManager = FirebaseAuthManager();
-
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<LoginState>(
-      valueListenable: _authStateManager.loginStateNotifier,
-      builder: (BuildContext context, LoginState loginState, _) {
-        switch (loginState) {
+    return Consumer<AuthManager>(
+      builder: (BuildContext context, AuthManager authManager, _) {
+        switch (authManager.loginState) {
           case LoginState.loggedOut:
             return LoggedOut(
-                startLoginFlow: () => _authStateManager.startLoginFlow());
+                startLoginFlow: () => authManager.startLoginFlow());
 
           case LoginState.emailAddress:
             return EmailForm(
-              callback: (String email) => _authStateManager.verifyEmail(
+              callback: (String email) => authManager.verifyEmail(
                 email,
-                (Exception e) =>
+                errorCallback: (FirebaseAuthException e, StackTrace s) =>
                     _showErrorDialog(context, 'Ungültige Email', e),
               ),
             );
 
           case LoginState.register:
             return RegisterForm(
-                email: _authStateManager.email!,
-                cancel: _authStateManager.cancelRegistration,
+                email: authManager.email!,
+                cancel: authManager.cancelRegistration,
                 registerAccount: (String email, String displayName,
                         String password) =>
-                    _authStateManager.registerAccount(
+                    authManager.registerAccount(
                       email,
                       displayName,
                       password,
-                      (Exception e) => _showErrorDialog(
-                          context, 'Account konnte nicht erstellt werden', e),
+                      errorCallback: (FirebaseAuthException e, StackTrace s) =>
+                          _showErrorDialog(context,
+                              'Account konnte nicht erstellt werden', e),
                     ));
 
           case LoginState.password:
             return LoginForm(
-              email: _authStateManager.email!,
-              cancel: _authStateManager.cancelLogin,
-              loginAccount: (String email, String password) =>
-                  _authStateManager.signInWithEmailAndPassword(
-                      email,
-                      password,
-                      (Exception e) => _showErrorDialog(
-                          context, 'Anmeldung nicht erfolgreich', e)),
+              email: authManager.email!,
+              cancel: authManager.cancelLogin,
+              loginAccount: (String email, String password) => authManager
+                  .signInWithEmailAndPassword(email, password, errorCallback:
+                      (FirebaseAuthException e, StackTrace stackTrace) {
+                _showErrorDialog(context, 'Anmeldung nicht erfolgreich', e);
+              }),
             );
+          case LoginState.loggedIn:
+            return const Center(child: Text('Anmelden...'));
         }
       },
     );
