@@ -293,7 +293,7 @@ class _CreateOfferState extends State<CreateOffer> {
                       Row(
                         children: <Widget>[
                           Expanded(
-                              child: StyledIconButtonSmall(
+                              child: StyledTextIconButtonSmall(
                             text: _selectedDate != null
                                 ? MaterialLocalizations.of(context)
                                     .formatShortDate(_selectedDate!)
@@ -308,7 +308,7 @@ class _CreateOfferState extends State<CreateOffer> {
                           )),
                           const SizedBox(width: 8.0),
                           Expanded(
-                              child: StyledIconButtonSmall(
+                              child: StyledTextIconButtonSmall(
                                   text: _selectedTime != null
                                       ? MaterialLocalizations.of(context)
                                           .formatTimeOfDay(_selectedTime!)

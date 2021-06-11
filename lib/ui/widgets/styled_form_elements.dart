@@ -151,7 +151,7 @@ class StyledButtonLarge extends StatelessWidget {
   final String text;
   final Color color;
   final Color disabledColor;
-  final void Function()? callback;
+  final void Function() callback;
   final bool enabled;
 
   @override
@@ -181,8 +181,8 @@ class StyledButtonLarge extends StatelessWidget {
 ///
 /// The parameters [text] and [icon] set the text and icon of the button and
 /// callbacks for both can be set using [onTap] and [iconOnTap].
-class StyledIconButtonSmall extends StatelessWidget {
-  const StyledIconButtonSmall(
+class StyledTextIconButtonSmall extends StatelessWidget {
+  const StyledTextIconButtonSmall(
       {Key? key,
       required this.text,
       required this.icon,
@@ -194,8 +194,8 @@ class StyledIconButtonSmall extends StatelessWidget {
 
   final IconData icon;
 
-  final void Function()? onTap;
-  final void Function()? iconOnTap;
+  final void Function() onTap;
+  final void Function() iconOnTap;
 
   @override
   Widget build(BuildContext context) {

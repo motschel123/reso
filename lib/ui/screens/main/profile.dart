@@ -29,17 +29,18 @@ class Profile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 8.0),
                       child: Text('Deine Angebote',
                           style: Theme.of(context).textTheme.headline1),
                     ),
+                    const Divider(height: 0),
                     TextButton(
                         onPressed: () {
                           Provider.of<AuthManager>(context, listen: false)
                               .signOut();
                         },
                         child: const Text('Sign Out')),
-                    const Divider(height: 0),
                     Expanded(
                       child: ListView.separated(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
