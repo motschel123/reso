@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:reso/business_logic/services/chat_service.dart';
 import 'package:reso/consts/theme.dart';
+import 'package:reso/model/chat.dart';
 import 'package:reso/model/offer.dart';
 import 'package:reso/ui/widgets/offer_heading.dart';
 
@@ -95,9 +98,17 @@ class OfferDetail extends StatelessWidget {
                     borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                   ),
                   child: Center(
-                    child: Text(
-                      '${offer.authorDisplayName} anschreiben',
-                      style: Theme.of(context).textTheme.button,
+                    child: TextButton(
+                      child: Text(
+                        '${offer.authorDisplayName} anschreiben',
+                        style: Theme.of(context).textTheme.button,
+                      ),
+                      onPressed: () async {
+                        Chat? chat = await ChatService.getChat(
+                          FirebaseAuth.instance.currentUser!,
+                          offer,
+                        );
+                      },
                     ),
                   )),
             ],
