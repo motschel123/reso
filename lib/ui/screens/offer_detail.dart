@@ -108,6 +108,8 @@ class OfferDetail extends StatelessWidget {
                           FirebaseAuth.instance.currentUser!,
                           offer,
                         );
+                        ChatService.openChat(
+                            context: context, chat: chat, offer: offer);
                       },
                     ),
                   )),

@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:reso/consts/firestore.dart';
 import 'package:reso/model/chat.dart';
 import 'package:reso/model/message.dart';
 import 'package:reso/model/offer.dart';
+import 'package:reso/ui/screens/chat_dialogue.dart';
 
 export 'package:reso/model/chat.dart';
 
@@ -17,7 +19,7 @@ class ChatService {
   /// Calls the backend to create a new Chat
   ///
   /// returns the documentId of the newly created ChatDocument
-  static Future<String?> _newChat(
+  static Future<String> _newChat(
       final User currentUser, final Offer offer, final Message message) async {
     if (currentUser.uid == offer.authorUid) {
       throw Exception("Can't create chat with self");
@@ -40,6 +42,9 @@ class ChatService {
 
   static Future<Chat?> getChat(
       final User currentUser, final Offer offer) async {
+    if (currentUser.uid == offer.authorUid) {
+      throw Exception("Can't create chat with self");
+    }
     QuerySnapshot<Map<String, dynamic>> qSnap = await FirebaseFirestore.instance
         .collection(CHATS_COLLECTION)
         .where(CHAT_PEERS, arrayContains: currentUser.uid)
@@ -50,5 +55,32 @@ class ChatService {
     } else {
       return Chat.fromChatDoc(qSnap.docs.first);
     }
+  }
+
+  static Future<void> openChat(
+      {required BuildContext context,
+      required Chat? chat,
+      required Offer offer}) {
+    return Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) => ChatDialogue(
+          chat: chat,
+          offer: offer,
+        ),
+      ),
+    );
+  }
+
+  static Future<Chat> sendMessage(
+      {required User currentUser,
+      required Chat? chat,
+      required Message message,
+      required Offer offer}) async {
+    if (chat == null) {
+      String chatDocId = await _newChat(currentUser, offer, message);
+      chat = (await getChat(currentUser, offer))!;
+      return chat;
+    }
+    return chat;
   }
 }
