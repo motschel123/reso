@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:reso/consts/firestore.dart';
 
 class Message {
@@ -17,21 +18,25 @@ class Message {
     return <String, dynamic>{
       MESSAGE_TEXT: text,
       MESSAGE_SENDER_UID: senderUid,
-      MESSAGE_TIME_SENT: timeSent,
+      MESSAGE_TIME_SENT: timeSent.toIso8601String(),
     };
   }
 
-  static Message fromDocSnap(DocumentSnapshot<Map<String, dynamic>> docSnap) {
-    final String text = docSnap.data()?[MESSAGE_TEXT] as String;
-    final String senderUid = docSnap.data()?[MESSAGE_SENDER_UID] as String;
-    final DateTime timeSent =
-        (docSnap.data()?[MESSAGE_TIME_SENT] as Timestamp).toDate();
-
+  static Message fromMap(Map<Object?, Object?> map) {
+    print(map);
+    if (!map.containsKey(MESSAGE_TEXT)) {
+      throw Exception("Couldn't parse text");
+    }
+    if (!map.containsKey(MESSAGE_SENDER_UID)) {
+      throw Exception("Couldn't parse senderUid");
+    }
+    if (!map.containsKey(MESSAGE_TIME_SENT)) {
+      throw Exception("Couldn't parse timeSent");
+    }
     return Message(
-      id: docSnap.id,
-      text: text,
-      senderUid: senderUid,
-      timeSent: timeSent,
+      text: map[MESSAGE_TEXT]! as String,
+      senderUid: map[MESSAGE_SENDER_UID]! as String,
+      timeSent: DateTime.parse(map[MESSAGE_TIME_SENT]! as String),
     );
   }
 }

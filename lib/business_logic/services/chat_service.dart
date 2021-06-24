@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:reso/consts/database.dart';
 import 'package:reso/consts/firestore.dart';
 import 'package:reso/model/chat.dart';
 import 'package:reso/model/message.dart';
@@ -31,7 +33,7 @@ class ChatService {
       'offerId': offer.offerId!,
       'messageText': message.text,
       'messageSenderUid': message.senderUid,
-      'messageTimeSent': Timestamp.fromDate(message.timeSent).toString(),
+      'messageTimeSent': message.timeSent.toIso8601String(),
     }).onError((Object? error, StackTrace stackTrace) {
       print(error.toString());
       print(stackTrace);
@@ -78,9 +80,19 @@ class ChatService {
       required Offer offer}) async {
     if (chat == null) {
       String chatDocId = await _newChat(currentUser, offer, message);
-      chat = (await getChat(currentUser, offer))!;
-      return chat;
+      chat = await getChat(currentUser, offer);
     }
+    final FirebaseDatabase _database = FirebaseDatabase(
+        databaseURL:
+            'https://reso-83572-default-rtdb.europe-west1.firebasedatabase.app/');
+
+    _database
+        .reference()
+        .child(CHATS_PATH)
+        .child(chat!.databaseRef)
+        .push()
+        .set(message.toMap());
+
     return chat;
   }
 }
