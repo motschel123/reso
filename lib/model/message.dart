@@ -2,6 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:reso/consts/firestore.dart';
 
+extension MinuteOnlyCompare on DateTime {
+  bool isSameDate(DateTime other) {
+    return year == other.year &&
+        month == other.month &&
+        day == other.day &&
+        hour == other.hour &&
+        minute == other.minute;
+  }
+}
+
 class Message {
   Message({
     this.id,

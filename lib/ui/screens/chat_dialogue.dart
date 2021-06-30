@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:reso/business_logic/providers/message_manager.dart';
 import 'package:reso/business_logic/services/chat_service.dart';
 import 'package:reso/model/message.dart';
@@ -61,10 +62,12 @@ class _ChatDialogueState extends State<ChatDialogue> {
 
                     // Do not display time sent if last message was sent by current
                     // user and sent at the same time
-                    final bool dontDisplayTime = index != 0 &&
+                    final bool dontDisplayTime =
                         index < (messages.length - 1) &&
-                        messages[index + 1].timeSent == message.timeSent &&
-                        messages[index + 1].senderUid == currentUserUid;
+                            messages[index + 1]
+                                .timeSent
+                                .isSameDate(message.timeSent) &&
+                            messages[index + 1].senderUid == message.senderUid;
 
                     return Align(
                         alignment: ownMessage
@@ -94,7 +97,8 @@ class _ChatDialogueState extends State<ChatDialogue> {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 4.0),
                                     child: Text(
-                                      '18:37',
+                                      DateFormat('kk:mm')
+                                          .format(message.timeSent),
                                       style:
                                           Theme.of(context).textTheme.caption,
                                     ),
