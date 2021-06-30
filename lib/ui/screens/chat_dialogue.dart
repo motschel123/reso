@@ -20,7 +20,7 @@ class ChatDialogue extends StatefulWidget {
 
 class _ChatDialogueState extends State<ChatDialogue> {
   final TextEditingController _messageController = TextEditingController();
-  final String currentUserUid = '1';
+  final String currentUserUid = FirebaseAuth.instance.currentUser!.uid;
 
   MessageManager? messageManager;
   Chat? chat;
