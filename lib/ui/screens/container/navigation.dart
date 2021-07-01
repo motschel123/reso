@@ -34,7 +34,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
         unselectedItemColor: Theme.of(context).buttonColor,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.feed),
+            icon: Icon(Icons.dynamic_feed),
             label: 'Feed',
           ),
           BottomNavigationBarItem(
