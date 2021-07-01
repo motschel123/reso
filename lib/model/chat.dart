@@ -23,6 +23,7 @@ class Chat {
     DateTime latestDate;
     String latestMessageText;
     DateTime dateCreated;
+    final CollectionReference<Map<String, dynamic>> messages;
     DocumentReference<Map<String, dynamic>> relatedOffer;
     final Map<String, UserProfile> peers = _getPeersData(docSnap);
 

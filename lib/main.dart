@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:reso/business_logic/providers/search_manager.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/ui/screens/container/authentication.dart';
 import 'package:reso/ui/screens/container/navigation.dart';
@@ -13,6 +14,8 @@ import 'business_logic/providers/profile_manager.dart';
 final List<SingleChildWidget> _globalProviders = <SingleChildWidget>[
   ChangeNotifierProvider<FeedManager>(
       create: (BuildContext context) => FeedManager()),
+  ChangeNotifierProvider<SearchManager>(
+      create: (BuildContext context) => SearchManager()),
   ChangeNotifierProvider<ChatManager>(
       create: (BuildContext context) => ChatManager()),
   ChangeNotifierProvider<ProfileManager>(
