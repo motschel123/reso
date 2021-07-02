@@ -39,7 +39,9 @@ class _SearchOffersState extends State<SearchOffers> {
                     ),
                     const SizedBox(width: 8.0),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        searchManager.searchOffers(_searchTextController.text);
+                      },
                       icon: const Icon(Icons.category),
                     )
                   ],
