@@ -106,7 +106,7 @@ class Offer {
       imageRef: data[OFFER_IMAGE_REFERENCE] as String?,
       imageUrl: data[OFFER_IMAGE_URL] as String?,
       location: data[OFFER_LOCATION] as String?,
-      dateCreated: (data[OFFER_DATE_CREATED] as Timestamp?)?.toDate(),
+      dateCreated: DateTime.parse(data[OFFER_DATE_CREATED] as String),
       offerId: offerId,
     );
   }
