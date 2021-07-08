@@ -82,7 +82,7 @@ class Offer {
       OFFER_AUTHOR_UID: authorUid,
       OFFER_AUTHOR_DISPLAY_NAME: authorDisplayName,
       OFFER_AUTHOR_IMAGE_URL: authorImageUrl,
-      OFFER_DATE_CREATED: dateCreated,
+      OFFER_DATE_CREATED: dateCreated?.toIso8601String(),
       OFFER_LOCATION: location,
       OFFER_IMAGE_REFERENCE: imageRef,
       OFFER_IMAGE_URL: imageUrl,

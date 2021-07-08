@@ -39,15 +39,12 @@ class OfferService {
             'NO DISPLAYNAME IN USER',
         authorImageUrl: FirebaseAuth.instance.currentUser!.photoURL ??
             'https://i.pinimg.com/originals/b6/5c/d4/b65cd4b543da7bafc9b0878cce843416.jpg',
-        dateCreated: null,
+        dateCreated: DateTime.now(),
         dateEvent: dateEvent,
         location: location,
         imageRef: imageRef,
         imageUrl: imageUrl,
       ).toMap();
-
-      offerData.update(
-          OFFER_DATE_CREATED, (dynamic _) => FieldValue.serverTimestamp());
 
       await _offersCollection.add(offerData);
       successCallback?.call();
@@ -104,7 +101,7 @@ class OfferService {
       ).toMap();
 
       offerData.update(OFFER_DATE_CREATED,
-          (dynamic old) => old ?? FieldValue.serverTimestamp());
+          (dynamic old) => old ?? DateTime.now().toIso8601String());
 
       await _offersCollection.doc(oldOffer.offerId).update(offerData);
       successCallback?.call();
