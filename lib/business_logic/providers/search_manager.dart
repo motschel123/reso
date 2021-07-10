@@ -22,7 +22,7 @@ class SearchManager with ChangeNotifier {
   //   _initFeed();
   // }
 
-  late FirebaseFirestore _firebaseFirestore;
+  late final FirebaseFirestore _firebaseFirestore;
 
   static const int _defaultAmount = 20;
 

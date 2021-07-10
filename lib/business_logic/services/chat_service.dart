@@ -47,7 +47,8 @@ class ChatService {
     if (currentUser.uid == offer.authorUid) {
       throw Exception("Can't create chat with self");
     }
-    QuerySnapshot<Map<String, dynamic>> qSnap = await FirebaseFirestore.instance
+    final QuerySnapshot<Map<String, dynamic>> qSnap = await FirebaseFirestore
+        .instance
         .collection(CHATS_COLLECTION)
         .where(CHAT_PEERS, arrayContains: currentUser.uid)
         .where(CHAT_OFFER_ID, isEqualTo: offer.offerId)
@@ -78,10 +79,6 @@ class ChatService {
       required Chat? chat,
       required Message message,
       required Offer offer}) async {
-    if (chat == null) {
-      String chatDocId = await _newChat(currentUser, offer, message);
-      chat = await getChat(currentUser, offer);
-    }
     final FirebaseDatabase _database = FirebaseDatabase(
         databaseURL:
             'https://reso-83572-default-rtdb.europe-west1.firebasedatabase.app/');

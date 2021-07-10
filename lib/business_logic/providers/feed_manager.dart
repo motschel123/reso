@@ -7,7 +7,8 @@ import 'package:reso/consts/firestore.dart';
 import 'package:reso/model/offer.dart';
 
 class FeedManager with ChangeNotifier {
-  FeedManager() : _currentUser = FirebaseAuth.instance.currentUser! {
+  FeedManager({User? currentUser})
+      : _currentUser = currentUser ?? FirebaseAuth.instance.currentUser! {
     _initFeed();
   }
 

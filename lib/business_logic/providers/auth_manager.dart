@@ -83,7 +83,7 @@ class AuthManager with ChangeNotifier {
     _auth
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((UserCredential credential) =>
-            credential.user!.updateProfile(displayName: displayName))
+            credential.user!.updateDisplayName(displayName))
         .onError<FirebaseAuthException>(
             (FirebaseAuthException e, StackTrace s) {
       errorCallback?.call(e, s);

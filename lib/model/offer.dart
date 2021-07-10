@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reso/consts/firestore.dart';
 
 enum OfferType { product, service, food, activity }
@@ -65,7 +64,6 @@ class Offer {
     this.imageUrl,
     this.offerId,
   });
-  // TODO: Add dateEvent
   final OfferType type;
   final String title, price, description;
   final String authorUid, authorImageUrl, authorDisplayName;

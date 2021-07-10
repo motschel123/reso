@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reso/business_logic/providers/chat_manager.dart';
 import 'package:reso/business_logic/services/chat_service.dart';
-import 'package:reso/business_logic/services/offer_service.dart';
 import 'package:reso/consts/firestore.dart';
 import 'package:reso/model/offer.dart';
 
@@ -22,7 +21,7 @@ class _MessagingState extends State<Messaging> {
             child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Consumer<ChatManager>(
-        builder: (context, value, child) => Column(
+        builder: (BuildContext context, ChatManager value, _) => Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Text('Nachrichten', style: Theme.of(context).textTheme.headline1),
@@ -30,19 +29,19 @@ class _MessagingState extends State<Messaging> {
               child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: value.chats.length,
-                  itemBuilder: (context, index) => TextButton(
+                  itemBuilder: (BuildContext context, int index) => TextButton(
                         onPressed: () async {
-                          DocumentSnapshot<Map<String, dynamic>> offerDoc =
-                              await FirebaseFirestore.instance
+                          final DocumentSnapshot<Map<String, dynamic>>
+                              offerDoc = await FirebaseFirestore.instance
                                   .doc(OFFERS_COLLECTION +
                                       '/' +
                                       value.chats[index].offerId)
                                   .get();
                           if (offerDoc.data() == null) {
                             throw Exception(
-                                "offerDoc (${offerDoc.id}) has no data");
+                                'offerDoc (${offerDoc.id}) has no data');
                           } else {
-                            Offer offer = Offer.fromMap(offerDoc.data()!);
+                            final Offer offer = Offer.fromMap(offerDoc.data()!);
 
                             ChatService.openChat(
                                 context: context,
