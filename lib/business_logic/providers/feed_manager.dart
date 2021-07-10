@@ -13,16 +13,7 @@ class FeedManager with ChangeNotifier {
     _initFeed();
   }
 
-  /// Provide mock Firestore instance for testing
-  // FeedManager({FirebaseFirestore firebaseFirestore})
-  //     : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance,
-  //     _currentUser = FirebaseAuth.instance.currentUser!;
-  //     {
-
-  //   _initFeed();
-  // }
-
-  late FirebaseFirestore _firebaseFirestore;
+  final FirebaseFirestore _firebaseFirestore;
 
   static const int _defaultAmount = 20;
 
