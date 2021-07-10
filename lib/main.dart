@@ -10,15 +10,6 @@ import 'business_logic/providers/chat_manager.dart';
 import 'business_logic/providers/feed_manager.dart';
 import 'business_logic/providers/profile_manager.dart';
 
-final List<SingleChildWidget> _globalProviders = <SingleChildWidget>[
-  ChangeNotifierProvider<FeedManager>(
-      create: (BuildContext context) => FeedManager()),
-  ChangeNotifierProvider<ChatManager>(
-      create: (BuildContext context) => ChatManager()),
-  ChangeNotifierProvider<ProfileManager>(
-      create: (BuildContext context) => ProfileManager()),
-];
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -35,7 +26,15 @@ class App extends StatelessWidget {
       theme: lightTheme,
       home: Authentication(
         child: MultiProvider(
-          providers: _globalProviders,
+          providers: <SingleChildWidget>[
+            // Global Providers
+            ChangeNotifierProvider<FeedManager>(
+                create: (BuildContext context) => FeedManager()),
+            ChangeNotifierProvider<ChatManager>(
+                create: (BuildContext context) => ChatManager()),
+            ChangeNotifierProvider<ProfileManager>(
+                create: (BuildContext context) => ProfileManager()),
+          ],
           builder: (_, __) => const NavigationContainer(),
         ),
       ),

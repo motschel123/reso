@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reso/consts/firestore.dart';
 
 enum OfferType { product, service, food, activity }
@@ -65,7 +64,6 @@ class Offer {
     this.imageUrl,
     this.offerId,
   });
-  // TODO(motschel123): Add dateEvent
   final OfferType type;
   final String title, price, description;
   final String authorUid, authorImageUrl, authorDisplayName;
@@ -82,7 +80,7 @@ class Offer {
       OFFER_AUTHOR_UID: authorUid,
       OFFER_AUTHOR_DISPLAY_NAME: authorDisplayName,
       OFFER_AUTHOR_IMAGE_URL: authorImageUrl,
-      OFFER_DATE_CREATED: dateCreated,
+      OFFER_DATE_CREATED: dateCreated?.toIso8601String(),
       OFFER_LOCATION: location,
       OFFER_IMAGE_REFERENCE: imageRef,
       OFFER_IMAGE_URL: imageUrl,
@@ -106,7 +104,7 @@ class Offer {
       imageRef: data[OFFER_IMAGE_REFERENCE] as String?,
       imageUrl: data[OFFER_IMAGE_URL] as String?,
       location: data[OFFER_LOCATION] as String?,
-      dateCreated: (data[OFFER_DATE_CREATED] as Timestamp?)?.toDate(),
+      dateCreated: DateTime.parse(data[OFFER_DATE_CREATED] as String),
       offerId: offerId,
     );
   }

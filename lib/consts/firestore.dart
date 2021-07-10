@@ -35,11 +35,8 @@ const String MESSAGES_COLLECTION = 'messages',
 
 const String CHATS_COLLECTION = 'chats',
     CHAT_DATE_CREATED = 'dateCreated',
-    CHAT_LATEST_DATE = 'latestDate',
-    CHAT_LATEST_MESSAGE_TEXT = 'latestMessageText',
-    CHAT_UIDS = 'uids',
-    CHAT_PEERS = 'peers',
-    CHAT_PEER_DATA = 'peerData',
-    CHAT_RELATED_OFFER = 'relatedOffer';
+    CHAT_PEERS = 'peerUids',
+    CHAT_OFFER_ID = 'offerId',
+    CHAT_DATABASE_REF = 'databaseRef';
 
 const String STORAGE_BUCKET_URL = 'gs://reso-83572.appspot.com/';
