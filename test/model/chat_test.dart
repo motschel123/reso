@@ -39,7 +39,7 @@ void main() {
       expect(mappedChat.peers, equals(chat.peers));
     });
 
-    test('From Map: Illegal data should throw Exceptions', () {
+    test('From Map: Illegal data should throw FormatExceptions', () {
       // try different illegal map data
       for (final MapEntry<String, dynamic> mapEntry
           in <MapEntry<String, dynamic>>{

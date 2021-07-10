@@ -41,7 +41,8 @@ class _MessagingState extends State<Messaging> {
                             throw Exception(
                                 'offerDoc (${offerDoc.id}) has no data');
                           } else {
-                            final Offer offer = Offer.fromMap(offerDoc.data()!);
+                            final Offer offer =
+                                Offer.fromMap(offerDoc.data()!, offerDoc.id);
 
                             ChatService.openChat(
                                 context: context,

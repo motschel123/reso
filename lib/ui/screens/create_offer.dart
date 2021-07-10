@@ -268,7 +268,7 @@ class _CreateOfferState extends State<CreateOffer> {
                               });
                             },
                             toDisplayString: (OfferType value) {
-                              return value.displayString;
+                              return value.toDisplayString;
                             },
                           )),
                           const SizedBox(width: 8.0),
