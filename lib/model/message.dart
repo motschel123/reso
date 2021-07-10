@@ -48,3 +48,23 @@ class Message {
     );
   }
 }
+
+final List<Message> sampleMessages = <Message>[
+  Message(
+    text:
+        'Luca: Lorem ipsum dolor sit amet, consectetur adipiscing elit.\nAliquam risus nisi, placerat et tempor sit amet, porttitor vitae ...',
+    senderUid: '2',
+    timeSent: DateTime(2021, 6, 7, 18, 35),
+  ),
+  Message(
+    text:
+        'Ich: Lorem ipsum dolor sit amet, consectetur adipiscing elit.\nAliquam risus nisi, placerat et tempor sit amet, porttitor vitae ...',
+    senderUid: '1',
+    timeSent: DateTime(2021, 6, 7, 18, 35),
+  ),
+  Message(
+    text: 'Hey',
+    senderUid: '1',
+    timeSent: DateTime(2021, 6, 7, 18, 35),
+  ),
+];

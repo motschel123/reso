@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_image/firebase_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reso/business_logic/services/offer_service.dart';
+import 'package:reso/consts/firestore.dart';
 import 'package:reso/model/offer.dart';
 import 'package:reso/ui/widgets/styled_form_elements.dart';
 
@@ -162,7 +164,7 @@ class _CreateOfferState extends State<CreateOffer> {
                   image: FileImage(_selectedImage!), fit: BoxFit.cover),
             )),
       );
-    } else if (widget.editingOffer?.imageUrl != null) {
+    } else if (widget.editingOffer?.imageRef != null) {
       return GestureDetector(
         onTap: () => _selectImage(ImageSource.gallery),
         child: Container(
@@ -170,7 +172,8 @@ class _CreateOfferState extends State<CreateOffer> {
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(8.0)),
               image: DecorationImage(
-                  image: NetworkImage(widget.editingOffer!.imageUrl!),
+                  image: FirebaseImage(
+                      STORAGE_BUCKET_URL + (widget.editingOffer!).imageRef!),
                   fit: BoxFit.cover),
             )),
       );
@@ -290,7 +293,7 @@ class _CreateOfferState extends State<CreateOffer> {
                       Row(
                         children: <Widget>[
                           Expanded(
-                              child: StyledIconButtonSmall(
+                              child: StyledTextIconButtonSmall(
                             text: _selectedDate != null
                                 ? MaterialLocalizations.of(context)
                                     .formatShortDate(_selectedDate!)
@@ -305,7 +308,7 @@ class _CreateOfferState extends State<CreateOffer> {
                           )),
                           const SizedBox(width: 8.0),
                           Expanded(
-                              child: StyledIconButtonSmall(
+                              child: StyledTextIconButtonSmall(
                                   text: _selectedTime != null
                                       ? MaterialLocalizations.of(context)
                                           .formatTimeOfDay(_selectedTime!)

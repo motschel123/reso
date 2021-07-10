@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:reso/business_logic/services/chat_service.dart';
+import 'package:firebase_image/firebase_image.dart';
+import 'package:intl/intl.dart';
+import 'package:reso/consts/firestore.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/model/chat.dart';
 import 'package:reso/model/offer.dart';
@@ -32,18 +34,20 @@ class OfferDetail extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              if (offer.imageUrl != null)
+              if (offer.imageRef != null)
                 Container(
-                  margin: const EdgeInsets.only(bottom: 16.0),
                   height: 240,
+                  margin: const EdgeInsets.only(top: 8.0),
                   decoration: BoxDecoration(
                       borderRadius:
                           const BorderRadius.all(Radius.circular(8.0)),
                       image: DecorationImage(
                         fit: BoxFit.cover,
-                        image: NetworkImage(offer.imageUrl ?? 'NULL'),
+                        image:
+                            FirebaseImage(STORAGE_BUCKET_URL + offer.imageRef!),
                       )),
                 ),
+              const SizedBox(height: 16.0),
               Text(offer.description,
                   style: Theme.of(context).textTheme.bodyText2),
               const SizedBox(height: 16.0),

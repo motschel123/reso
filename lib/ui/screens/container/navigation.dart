@@ -13,11 +13,11 @@ class NavigationContainer extends StatefulWidget {
 
 class _NavigationContainerState extends State<NavigationContainer> {
   int _selectedIndex = 0;
-  static const List<Widget> _widgetOptions = <Widget>[
-    LiveFeed(),
-    SearchOffers(),
-    Messaging(),
-    Profile(),
+  final List<Widget> _widgetOptions = <Widget>[
+    const LiveFeed(),
+    const SearchOffers(),
+    const Messaging(),
+    const Profile(),
   ];
 
   void _onItemTapped(int index) {

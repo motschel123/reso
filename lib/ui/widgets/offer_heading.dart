@@ -11,17 +11,22 @@ class OfferHeading extends StatelessWidget {
   ///
   /// [offerColor] is the background color of the Container behind the profile image
   /// and must not be null.
-  const OfferHeading({
-    Key? key,
-    required this.offerTitle,
-    required this.offerAuthor,
-    required this.profileImage,
-    required this.offerColor,
-  }) : super(key: key);
+  ///
+  /// [onTap] is an optional callback
+  const OfferHeading(
+      {Key? key,
+      required this.offerTitle,
+      required this.offerAuthor,
+      required this.profileImage,
+      required this.offerColor,
+      this.onTap})
+      : super(key: key);
 
   final String offerTitle, offerAuthor, profileImage;
 
   final Color offerColor;
+
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -46,19 +51,25 @@ class OfferHeading extends StatelessWidget {
             ]),
             const SizedBox(width: 8.0),
             Expanded(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(offerTitle, style: Theme.of(context).textTheme.headline2),
-                Text(offerAuthor, style: Theme.of(context).textTheme.subtitle1)
-              ],
-            ))
+                child: GestureDetector(
+              onTap: onTap,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(offerTitle,
+                      style: Theme.of(context).textTheme.headline2),
+                  Text(offerAuthor,
+                      style: Theme.of(context).textTheme.subtitle1)
+                ],
+              ),
+            )),
           ],
         ),
+        const SizedBox(height: 16.0),
         const Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-          child: Divider(),
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          child: Divider(height: 0),
         ),
       ],
     );
