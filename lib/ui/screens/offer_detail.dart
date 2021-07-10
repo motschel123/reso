@@ -104,7 +104,7 @@ class OfferDetail extends StatelessWidget {
                         style: Theme.of(context).textTheme.button,
                       ),
                       onPressed: () async {
-                        Chat? chat = await ChatService.getChat(
+                        final Chat? chat = await ChatService.getChat(
                           FirebaseAuth.instance.currentUser!,
                           offer,
                         );
