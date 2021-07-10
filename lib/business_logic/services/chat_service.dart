@@ -56,7 +56,7 @@ class ChatService {
     if (qSnap.docs.isEmpty) {
       return null;
     } else {
-      return Chat.fromChatDoc(qSnap.docs.first);
+      return Chat.fromMap(qSnap.docs.first.data(), qSnap.docs.first.id);
     }
   }
 

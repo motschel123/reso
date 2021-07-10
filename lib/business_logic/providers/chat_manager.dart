@@ -27,7 +27,7 @@ class ChatManager with ChangeNotifier {
         final List<Chat> chats = <Chat>[];
         for (final QueryDocumentSnapshot<Map<String, dynamic>> docSnap
             in qSnap.docs) {
-          chats.add(Chat.fromChatDoc(docSnap));
+          chats.add(Chat.fromMap(docSnap.data(), docSnap.id));
         }
         return chats;
       },
