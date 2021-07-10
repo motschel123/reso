@@ -45,7 +45,8 @@ class MessageManager {
         for (final Object? key
             in (event.snapshot.value as Map<Object?, Object?>).keys) {
           final Message message = Message.fromMap(
-              event.snapshot.value[key] as Map<Object?, Object?>);
+              event.snapshot.value[key] as Map<Object?, dynamic>,
+              event.snapshot.key);
           newMessages.add(message);
         }
         messages.value = newMessages;

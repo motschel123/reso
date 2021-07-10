@@ -30,21 +30,35 @@ class Message {
     };
   }
 
-  static Message fromMap(Map<Object?, Object?> map) {
+  static Message fromMap(Map<Object?, dynamic> map, String? id) {
     print(map);
-    if (!map.containsKey(MESSAGE_TEXT)) {
-      throw Exception("Couldn't parse text");
+
+    String text;
+    try {
+      text = map[MESSAGE_TEXT] as String;
+    } catch (e) {
+      throw FormatException("Couldn't parse message text: $e");
     }
-    if (!map.containsKey(MESSAGE_SENDER_UID)) {
-      throw Exception("Couldn't parse senderUid");
+
+    String senderUid;
+    try {
+      senderUid = map[MESSAGE_SENDER_UID] as String;
+    } catch (e) {
+      throw FormatException("Couldn't parse senderUid: $e");
     }
-    if (!map.containsKey(MESSAGE_TIME_SENT)) {
-      throw Exception("Couldn't parse timeSent");
+
+    DateTime timeSent;
+    try {
+      timeSent = DateTime.parse(map[MESSAGE_SENDER_UID] as String);
+    } catch (e) {
+      throw FormatException("Couldn't parse senderUid: $e");
     }
+
     return Message(
-      text: map[MESSAGE_TEXT]! as String,
-      senderUid: map[MESSAGE_SENDER_UID]! as String,
-      timeSent: DateTime.parse(map[MESSAGE_TIME_SENT]! as String),
+      id: id,
+      text: text,
+      senderUid: senderUid,
+      timeSent: timeSent,
     );
   }
 }
