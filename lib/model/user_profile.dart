@@ -33,7 +33,7 @@ class UserProfile {
       throw Exception("User Document doesn't exist");
     }
     if (docSnap.data() == null || docSnap.data()!.isEmpty)
-      throw Exception('User Document has no data: ' + docSnap.id);
+      throw Exception('User Document has no data: ${docSnap.id}');
 
     final Map<String, dynamic> dataMap = docSnap.data()!;
     dataMap.addAll(<String, dynamic>{USER_UID: docSnap.id});

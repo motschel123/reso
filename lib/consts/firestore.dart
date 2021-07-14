@@ -26,12 +26,9 @@ const String OFFERS_COLLECTION = 'offers',
     OFFER_TYPE_ACTIVITY = 'OfferType.activity';
 
 const String MESSAGES_COLLECTION = 'messages',
-    MESSAGE_RECEIVER_UID = 'receiverUid',
     MESSAGE_SENDER_UID = 'senderUid',
     MESSAGE_TEXT = 'text',
-    MESSAGE_TIME_RECEIVED = 'timeReceived',
-    MESSAGE_TIME_SENT = 'timeSent',
-    MESSAGE_TIME_ONLINE = 'timeOnline';
+    MESSAGE_TIME_SENT = 'timeSent';
 
 const String CHATS_COLLECTION = 'chats',
     CHAT_DATE_CREATED = 'dateCreated',

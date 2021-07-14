@@ -49,7 +49,7 @@ class Message {
 
     DateTime timeSent;
     try {
-      timeSent = DateTime.parse(map[MESSAGE_SENDER_UID] as String);
+      timeSent = DateTime.parse(map[MESSAGE_TIME_SENT] as String);
     } catch (e) {
       throw FormatException("Couldn't parse senderUid: $e");
     }

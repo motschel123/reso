@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:reso/business_logic/services/storage_service.dart';
 import 'package:reso/consts/firestore.dart';
 import 'package:reso/model/offer.dart';
@@ -11,6 +10,18 @@ final CollectionReference<Map<String, dynamic>> _offersCollection =
     FirebaseFirestore.instance.collection(OFFERS_COLLECTION);
 
 class OfferService {
+  static Future<Offer?> getOffer(final String offerId) async {
+    DocumentSnapshot<Map<String, dynamic>> docSnap = await FirebaseFirestore
+        .instance
+        .collection(OFFERS_COLLECTION)
+        .doc(offerId)
+        .get();
+    if (docSnap.exists && docSnap.data() != null) {
+      return Offer.fromMap(docSnap.data()!, docSnap.id);
+    }
+    return null;
+  }
+
   static Future<void> createOffer(
     String title,
     String description,

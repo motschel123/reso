@@ -43,7 +43,7 @@ extension StringExtension on OfferType {
       case OFFER_TYPE_ACTIVITY:
         return OfferType.activity;
       default:
-        throw Exception(
+        throw FormatException(
             'Parsing OfferType from String went wrong: String == $offerString');
     }
   }
@@ -90,11 +90,11 @@ class Offer {
   }
 
   static Offer fromMap(Map<String, dynamic> data, String? offerId) {
-    assert(data[OFFER_TYPE] != null);
+    /*assert(data[OFFER_TYPE] != null);
     assert(data[OFFER_TITLE] != null);
     assert(data[OFFER_DESCRIPTION] != null);
     assert(data[OFFER_PRICE] != null);
-    assert(data[OFFER_AUTHOR_UID] != null);
+    assert(data[OFFER_AUTHOR_UID] != null);*/
 
     final String? dateCreatedString =
         _parse<String?>(data, OFFER_DATE_CREATED, 'dateCreated');

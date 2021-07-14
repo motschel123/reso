@@ -93,7 +93,7 @@ void main() {
           didThrow = true;
         }
 
-        expect(didThrow, equals(false));
+        expect(didThrow, equals(true));
       }
     });
   });

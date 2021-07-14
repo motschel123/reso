@@ -3,6 +3,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:reso/business_logic/services/offer_service.dart';
 import 'package:reso/consts/database.dart';
 import 'package:reso/consts/firestore.dart';
 import 'package:reso/model/chat.dart';
@@ -63,15 +64,15 @@ class ChatService {
   static Future<void> openChat(
       {required BuildContext context,
       required Chat? chat,
-      required Offer offer}) {
-    return Navigator.of(context).push<void>(
-      MaterialPageRoute<void>(
-        builder: (BuildContext context) => ChatDialogue(
-          chat: chat,
-          offer: offer,
-        ),
-      ),
-    );
+      Offer? offer}) async {
+    if (chat == null && offer == null) {
+      throw Exception('No Offer Provided to chat');
+    }
+    offer = offer ?? await OfferService.getOffer(chat!.offerId);
+    return Navigator.of(context).push<void>(MaterialPageRoute<void>(
+      builder: (BuildContext context) =>
+          ChatDialogue(chat: chat, offer: offer!),
+    ));
   }
 
   static Future<Chat> sendMessage(
