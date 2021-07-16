@@ -56,14 +56,7 @@ class Profile extends StatelessWidget {
                           final Offer offer = profileManager.offers[index];
 
                           return OfferCard(
-                            offerTitle: offer.title,
-                            offerPrice: offer.price,
-                            offerDescription: offer.description,
-                            offerAuthor: offer.authorUid,
-                            offerColor: offerTypeToColor[offer.type]!,
-                            offerImage: offer.imageRef != null
-                                ? STORAGE_BUCKET_URL + offer.imageRef!
-                                : null,
+                            offer: offer,
                             imageIcon:
                                 const Icon(Icons.edit, color: Colors.white),
                             onTap: () {

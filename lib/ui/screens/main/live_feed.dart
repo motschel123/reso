@@ -39,15 +39,7 @@ class LiveFeed extends StatelessWidget {
                     final Offer offer = feedManager.offers[index];
 
                     return OfferCard(
-                      offerTitle: offer.title,
-                      offerPrice: offer.price,
-                      offerDescription: offer.description,
-                      offerAuthor: offer.authorDisplayName,
-                      profileImage: offer.authorImageUrl,
-                      offerColor: offerTypeToColor[offer.type]!,
-                      offerImage: offer.imageRef != null
-                          ? STORAGE_BUCKET_URL + offer.imageRef!
-                          : null,
+                      offer: offer,
                       onTap: () {
                         Navigator.push(
                           context,
