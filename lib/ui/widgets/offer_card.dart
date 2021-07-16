@@ -5,6 +5,7 @@ import 'package:reso/consts/theme.dart';
 import 'package:reso/model/offer.dart';
 
 class OfferCard extends StatelessWidget {
+  // TODO: rewrite doc
   /// A Card-like widget to display information about an offer
   ///
   /// The [offerTitle], [offerPrice], [offerDescription] and [offerAuthor] arguments
@@ -51,11 +52,12 @@ class OfferCard extends StatelessWidget {
               children: <Widget>[
                 Stack(children: <Widget>[
                   Container(height: 56.0, width: 42.0, color: offerColor),
-                  if (offer.authorImageUrl != null)
+                  if (imageIcon != null)
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0),
                       child: CircleAvatar(
-                        backgroundImage: NetworkImage(offer.authorImageUrl),
+                        child:
+                            IconButton(icon: imageIcon!, onPressed: onIconTap),
                         backgroundColor: offerColor,
                         radius: 28.0,
                       ),
@@ -64,8 +66,7 @@ class OfferCard extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0),
                       child: CircleAvatar(
-                        child:
-                            IconButton(icon: imageIcon!, onPressed: onIconTap),
+                        backgroundImage: NetworkImage(offer.authorImageUrl),
                         backgroundColor: offerColor,
                         radius: 28.0,
                       ),

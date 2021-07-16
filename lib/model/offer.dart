@@ -72,6 +72,15 @@ class Offer {
   final String? location, imageUrl, imageRef;
   final String? offerId;
 
+  static const Offer sample = Offer(
+      type: OfferType.activity,
+      title: 'Sample Title',
+      description: 'Sample Description',
+      price: 'Sample Price',
+      authorUid: '123456789',
+      authorImageUrl: 'https://thispersondoesnotexist.com/image',
+      authorDisplayName: 'Sample Name');
+
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       OFFER_TYPE: type.toConst,
@@ -129,16 +138,5 @@ class Offer {
     } catch (e) {
       throw FormatException("Couldn't parse $errName: $e");
     }
-  }
-
-  static Offer sample() {
-    return const Offer(
-        type: OfferType.activity,
-        title: 'Sample Title',
-        description: 'Sample Description',
-        price: 'Sample Price',
-        authorUid: '123456789',
-        authorImageUrl: 'Sample imageUrl',
-        authorDisplayName: 'Sample Name');
   }
 }
