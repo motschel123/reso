@@ -22,23 +22,6 @@ class MessageManager {
         _database.reference().child(CHATS_PATH).child(_chat!.databaseRef);
     _databaseRef.keepSynced(true);
 
-    /*_database
-        .reference()
-        .child(CHATS_PATH)
-        .child(chat!.databaseRef)
-        .get()
-        .then((DataSnapshot? dataSnap) {
-      if (dataSnap != null) {
-        final List<Message> newMessages = <Message>[];
-        for (Object? key in (dataSnap.value as Map<Object?, Object?>).keys) {
-          Message message =
-              Message.fromMap(dataSnap.value[key] as Map<Object?, Object?>);
-          newMessages.add(message);
-        }
-        messages.value = newMessages;
-      }
-    });*/
-
     _databaseRef.onValue.listen((Event event) {
       if (event.snapshot != null) {
         final List<Message> newMessages = <Message>[];
@@ -47,7 +30,7 @@ class MessageManager {
           final Message message = Message.fromMap(
               event.snapshot.value[key] as Map<Object?, dynamic>,
               event.snapshot.key);
-          newMessages.add(message);
+          newMessages.insert(0, message);
         }
         messages.value = newMessages;
       }

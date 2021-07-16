@@ -19,6 +19,7 @@ class OfferCard extends StatelessWidget {
   /// in large beneath the rest.
   ///
   const OfferCard(
+      // TODO: offer parameter
       {Key? key,
       required this.offerTitle,
       required this.offerPrice,
@@ -41,7 +42,6 @@ class OfferCard extends StatelessWidget {
   final String? offerTime, offerLocation, offerImage, profileImage;
 
   final void Function()? onTap;
-
   final Icon? imageIcon;
   final void Function()? onIconTap;
 

@@ -22,7 +22,7 @@ class ChatService {
   /// Calls the backend to create a new Chat
   ///
   /// returns the documentId of the newly created ChatDocument
-  static Future<String> _newChat(
+  /*static Future<String> _newChat(
       final User currentUser, final Offer offer, final Message message) async {
     if (currentUser.uid == offer.authorUid) {
       throw Exception("Can't create chat with self");
@@ -42,7 +42,7 @@ class ChatService {
     });
     return result.data;
   }
-
+*/
   static Future<Chat?> getChat(
       final User currentUser, final Offer offer) async {
     if (currentUser.uid == offer.authorUid) {

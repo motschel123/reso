@@ -52,10 +52,10 @@ class _ChatDialogueState extends State<ChatDialogue> {
               valueListenable: messageManager!.messages,
               builder: (BuildContext context, List<Message> messages, _) =>
                   ListView.builder(
+                      reverse: true,
                       itemCount: messages.length,
                       itemBuilder: (BuildContext context, int index) {
                         final Message message = messages[index];
-
                         // Determine if the previous message was sent by same user
                         final bool ownMessage =
                             message.senderUid == currentUserUid;

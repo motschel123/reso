@@ -6,6 +6,7 @@ import 'package:reso/model/offer.dart';
 
 class ProfileManager extends ChangeNotifier {
   ProfileManager() {
+    // TODO: outsource
     FirebaseFirestore.instance
         .collection(OFFERS_COLLECTION)
         .where(OFFER_AUTHOR_UID,

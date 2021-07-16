@@ -31,8 +31,6 @@ class Message {
   }
 
   static Message fromMap(Map<Object?, dynamic> map, String? id) {
-    print(map);
-
     String text;
     try {
       text = map[MESSAGE_TEXT] as String;
