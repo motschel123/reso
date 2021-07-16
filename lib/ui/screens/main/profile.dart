@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reso/business_logic/providers/auth_manager.dart';
 import 'package:reso/business_logic/providers/profile_manager.dart';
+import 'package:reso/consts/firestore.dart';
 import 'package:reso/ui/screens/create_offer.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/model/offer.dart';
@@ -60,7 +61,9 @@ class Profile extends StatelessWidget {
                             offerDescription: offer.description,
                             offerAuthor: offer.authorUid,
                             offerColor: offerTypeToColor[offer.type]!,
-                            offerImage: offer.imageUrl,
+                            offerImage: offer.imageRef != null
+                                ? STORAGE_BUCKET_URL + offer.imageRef!
+                                : null,
                             imageIcon:
                                 const Icon(Icons.edit, color: Colors.white),
                             onTap: () {
