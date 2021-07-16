@@ -130,4 +130,15 @@ class Offer {
       throw FormatException("Couldn't parse $errName: $e");
     }
   }
+
+  static Offer sample() {
+    return const Offer(
+        type: OfferType.activity,
+        title: 'Sample Title',
+        description: 'Sample Description',
+        price: 'Sample Price',
+        authorUid: '123456789',
+        authorImageUrl: 'Sample imageUrl',
+        authorDisplayName: 'Sample Name');
+  }
 }
