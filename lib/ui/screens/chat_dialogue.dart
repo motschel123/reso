@@ -12,6 +12,8 @@ class ChatDialogue extends StatefulWidget {
   const ChatDialogue({Key? key, required this.chat, required this.offer})
       : super(key: key);
 
+  static const String routeId = 'chat_dialogue';
+
   final Chat? chat;
   final Offer offer;
 
