@@ -9,8 +9,8 @@ void main() {
     testWidgets('should display offer infos', (WidgetTester tester) async {
       const Offer sampleOffer = Offer.sample;
       await mockNetworkImagesFor(() async {
-        await tester
-            .pumpWidget(MaterialApp(home: OfferCard(offer: sampleOffer)));
+        await tester.pumpWidget(
+            MaterialApp(home: Scaffold(body: OfferCard(offer: sampleOffer))));
 
         await tester.idle();
         await tester.pump();
