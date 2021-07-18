@@ -3,6 +3,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:reso/business_logic/providers/message_manager.dart';
 import 'package:reso/business_logic/services/offer_service.dart';
 import 'package:reso/consts/database.dart';
 import 'package:reso/consts/firestore.dart';
@@ -22,7 +23,7 @@ class ChatService {
   /// Calls the backend to create a new Chat
   ///
   /// returns the documentId of the newly created ChatDocument
-  /*static Future<String> _newChat(
+  static Future<String> _newChat(
       final User currentUser, final Offer offer, final Message message) async {
     if (currentUser.uid == offer.authorUid) {
       throw Exception("Can't create chat with self");
@@ -42,7 +43,7 @@ class ChatService {
     });
     return result.data;
   }
-*/
+
   static Future<Chat?> getChat(
       final User currentUser, final Offer offer) async {
     if (currentUser.uid == offer.authorUid) {
@@ -64,14 +65,11 @@ class ChatService {
   static Future<void> openChat(
       {required BuildContext context,
       required Chat? chat,
-      Offer? offer}) async {
-    if (chat == null && offer == null) {
-      throw Exception('No Offer Provided to chat');
-    }
-    offer = offer ?? await OfferService.getOffer(chat!.offerId);
+      required Offer offer}) async {
     return Navigator.of(context).push<void>(MaterialPageRoute<void>(
-      builder: (BuildContext context) =>
-          ChatDialogue(chat: chat, offer: offer!),
+      builder: (BuildContext context) => ChatDialogue(
+        messageManager: MessageManager(chat, offer),
+      ),
     ));
   }
 
@@ -84,10 +82,18 @@ class ChatService {
         databaseURL:
             'https://reso-83572-default-rtdb.europe-west1.firebasedatabase.app/');
 
+    if (chat == null) {
+      await _newChat(currentUser, offer, message);
+      chat = await ChatService.getChat(currentUser, offer);
+      if (chat == null) {
+        throw const FormatException("Can't create chat");
+      }
+    }
+
     _database
         .reference()
         .child(CHATS_PATH)
-        .child(chat!.databaseRef)
+        .child(chat.databaseRef)
         .push()
         .set(message.toMap());
 

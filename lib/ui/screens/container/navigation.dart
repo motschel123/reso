@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:reso/business_logic/providers/message_manager.dart';
 import 'package:reso/model/chat.dart';
 import 'package:reso/model/offer.dart';
 import 'package:reso/ui/screens/chat_dialogue.dart';
@@ -84,7 +85,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
             }
 
             builder = (BuildContext context) =>
-                ChatDialogue(chat: chat, offer: offer);
+                ChatDialogue(messageManager: MessageManager(chat, offer));
             break;
           default:
             throw const FormatException('Unknown route');
