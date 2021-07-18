@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:reso/consts/firestore.dart';
 import 'package:reso/model/offer.dart';
@@ -71,7 +70,8 @@ void main() {
     });
 
     test('From Map: Illegal data should throw FormatExceptions', () {
-      for (MapEntry<String, dynamic> mapEntry in <MapEntry<String, dynamic>>{
+      for (final MapEntry<String, dynamic> mapEntry
+          in <MapEntry<String, dynamic>>{
         const MapEntry<String, dynamic>(OFFER_TYPE, 'NoOfferType'),
         const MapEntry<String, dynamic>(OFFER_TYPE, null),
         const MapEntry<String, dynamic>(OFFER_TITLE, 1337),

@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:reso/business_logic/providers/message_manager.dart';
-import 'package:reso/business_logic/services/offer_service.dart';
 import 'package:reso/consts/database.dart';
 import 'package:reso/consts/firestore.dart';
 import 'package:reso/model/chat.dart';

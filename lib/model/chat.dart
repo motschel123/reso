@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reso/consts/firestore.dart';
 
 class Chat {

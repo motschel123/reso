@@ -75,7 +75,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
             Chat chat;
             Offer offer;
             try {
-              HashMap<String, dynamic> args =
+              final HashMap<String, dynamic> args =
                   settings.arguments! as HashMap<String, dynamic>;
               chat = args['chat'] as Chat;
               offer = args['offer'] as Offer;

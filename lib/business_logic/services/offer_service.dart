@@ -11,11 +11,11 @@ final CollectionReference<Map<String, dynamic>> _offersCollection =
 
 class OfferService {
   static Future<Offer?> getOffer(final String offerId) async {
-    DocumentSnapshot<Map<String, dynamic>> docSnap = await FirebaseFirestore
-        .instance
-        .collection(OFFERS_COLLECTION)
-        .doc(offerId)
-        .get();
+    final DocumentSnapshot<Map<String, dynamic>> docSnap =
+        await FirebaseFirestore.instance
+            .collection(OFFERS_COLLECTION)
+            .doc(offerId)
+            .get();
     if (docSnap.exists && docSnap.data() != null) {
       return Offer.fromMap(docSnap.data()!, docSnap.id);
     }
