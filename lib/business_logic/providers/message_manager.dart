@@ -45,7 +45,7 @@ class MessageManager {
     _databaseRef.keepSynced(true);
 
     _prevStreamSub = _databaseRef.onValue.listen((Event event) {
-      if (event.snapshot != null) {
+      if (event.snapshot != null && event.snapshot.value != null) {
         final List<Message> newMessages = <Message>[];
         for (final Object? key
             in (event.snapshot.value as Map<Object?, Object?>).keys) {

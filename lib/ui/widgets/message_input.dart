@@ -35,18 +35,19 @@ class _MessageInputState extends State<MessageInput> {
               else
                 IconButton(
                   onPressed: () async {
-                    _messageController.text = _messageController.text.trim();
-                    if (_messageController.text.isNotEmpty) {
+                    final String text;
+                    if ((text = _messageController.text.trim()).isNotEmpty) {
                       setState(() {
                         sending = true;
                       });
-                      widget.onSendButtonPressed
-                          ?.call(_messageController.text)
-                          .whenComplete(() => setState(() {
-                                sending = false;
-                              }));
-                      _messageController.clear();
+                      widget.onSendButtonPressed?.call(text).whenComplete(() {
+                        setState(() {
+                          sending = false;
+                        });
+                        _messageController.clear();
+                      });
                     }
+                    _messageController.clear();
                   },
                   icon: const Icon(Icons.send),
                 )
