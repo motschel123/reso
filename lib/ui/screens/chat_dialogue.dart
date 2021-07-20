@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:reso/business_logic/providers/message_manager.dart';
 import 'package:reso/model/message.dart';
+import 'package:reso/ui/widgets/message_input.dart';
 import 'package:reso/ui/widgets/offer_heading.dart';
-import 'package:reso/ui/widgets/styled_form_elements.dart';
 
 class ChatDialogue extends StatelessWidget {
   ChatDialogue({Key? key, required this.messageManager}) : super(key: key);
@@ -12,7 +12,6 @@ class ChatDialogue extends StatelessWidget {
   static const String routeId = 'chat_dialogue';
 
   final MessageManager messageManager;
-  final TextEditingController _messageController = TextEditingController();
   final User currentUser = FirebaseAuth.instance.currentUser!;
 
   @override
@@ -101,38 +100,14 @@ class ChatDialogue extends StatelessWidget {
             ),
           ),
           const Divider(height: 0),
-          Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Form(
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: StyledTextFormField(
-                        hintText: 'Nachricht',
-                        controller: _messageController,
-                      ),
-                    ),
-                    const SizedBox(width: 8.0),
-                    IconButton(
-                      onPressed: () async {
-                        _messageController.text =
-                            _messageController.text.trim();
-                        if (_messageController.text.isNotEmpty) {
-                          final Message message = Message(
-                            text: _messageController.text,
-                            senderUid: FirebaseAuth.instance.currentUser!.uid,
-                            timeSent: DateTime.now(),
-                          );
-                          _messageController.clear();
-                          await messageManager.sendMessage(message);
-                        }
-                      },
-                      icon: const Icon(Icons.send),
-                    )
-                  ],
-                ),
-              )),
+          MessageInput(onSendButtonPressed: (String text) {
+            final Message message = Message(
+              text: text,
+              senderUid: FirebaseAuth.instance.currentUser!.uid,
+              timeSent: DateTime.now(),
+            );
+            return messageManager.sendMessage(message);
+          }),
         ],
       )),
     );

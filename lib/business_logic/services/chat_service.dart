@@ -65,6 +65,7 @@ class ChatService {
       {required BuildContext context,
       required Chat? chat,
       required Offer offer}) async {
+    // TODO: impl second lvl navigator
     return Navigator.of(context).push<void>(MaterialPageRoute<void>(
       builder: (BuildContext context) => ChatDialogue(
         messageManager: MessageManager(chat, offer),
