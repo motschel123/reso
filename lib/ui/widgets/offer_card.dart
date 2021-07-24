@@ -1,5 +1,6 @@
 import 'package:firebase_image/firebase_image.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:reso/consts/firestore.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/model/offer.dart';
@@ -121,7 +122,9 @@ class OfferCard extends StatelessWidget {
                               children: <Widget>[
                                 const Icon(Icons.timer, size: 16.0),
                                 const SizedBox(width: 4.0),
-                                Text((offer.dateEvent ?? 'NULL').toString(),
+                                Text(
+                                    DateFormat.MMMd()
+                                        .format(offer.dateEvent!.toLocal()),
                                     overflow: TextOverflow.fade,
                                     style:
                                         Theme.of(context).textTheme.bodyText1),
