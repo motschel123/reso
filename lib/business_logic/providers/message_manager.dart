@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:reso/business_logic/services/chat_service.dart';
 import 'package:reso/consts/database.dart';
+import 'package:reso/consts/firestore.dart';
 import 'package:reso/model/chat.dart';
 import 'package:reso/model/message.dart';
 import 'package:reso/model/offer.dart';
@@ -37,11 +38,11 @@ class MessageManager {
   }
 
   void _init() {
-    // ignore: always_put_control_body_on_new_line
+    // ignore: always_put_control_body_ on_new_line
     if (_chat == null) return;
 
     _databaseRef =
-        _database.reference().child(CHATS_PATH).child(_chat!.databaseRef);
+        _database.reference().child(CHATS_COLLECTION).child(_chat!.databaseRef);
     _databaseRef.keepSynced(true);
 
     _prevStreamSub = _databaseRef.onValue.listen((Event event) {

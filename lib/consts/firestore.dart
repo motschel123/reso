@@ -30,10 +30,10 @@ const String MESSAGES_COLLECTION = 'messages',
     MESSAGE_TEXT = 'text',
     MESSAGE_TIME_SENT = 'timeSent';
 
-const String FS_CHATS_COLLECTION = 'chats',
-    FS_CHAT_DATE_CREATED = 'dateCreated',
-    FS_CHAT_PEERS = 'peerUids',
-    FS_CHAT_OFFER_ID = 'offerId',
-    FS_CHAT_DATABASE_REF = 'databaseRef';
+const String CHATS_COLLECTION = 'chats',
+    CHAT_DATE_CREATED = 'dateCreated',
+    CHAT_PEERS = 'peerUids',
+    CHAT_OFFER_ID = 'offerId',
+    CHAT_DATABASE_REF = 'databaseRef';
 
 const String STORAGE_BUCKET_URL = 'gs://reso-83572.appspot.com/';

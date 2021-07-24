@@ -39,7 +39,7 @@ class _MessagingState extends State<Messaging> {
                                       chat: value.chats[index],
                                       offer: offer));
                         },
-                        child: Text(value.chats[index].chatId),
+                        child: Text(value.chats[index].key),
                       )),
             ),
           ],

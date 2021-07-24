@@ -11,7 +11,7 @@ void main() {
     const String testDatabaseRef = 'niceRef';
 
     final Chat chat = Chat(
-      chatId: testChatId,
+      key: testChatId,
       offerId: testOfferId,
       dateCreated: testDateCreated,
       peers: testPeers,
@@ -30,9 +30,9 @@ void main() {
     });
 
     test('From Map', () {
-      final Chat mappedChat = Chat.fromMap(chat.toMap(), chat.chatId);
+      final Chat mappedChat = Chat.fromMap(chat.toMap(), chat.key);
 
-      expect(mappedChat.chatId, equals(chat.chatId));
+      expect(mappedChat.key, equals(chat.key));
       expect(mappedChat.databaseRef, equals(chat.databaseRef));
       expect(mappedChat.dateCreated, equals(chat.dateCreated));
       expect(mappedChat.offerId, equals(chat.offerId));
@@ -58,7 +58,7 @@ void main() {
         chatMap.update(mapEntry.key, (dynamic _) => mapEntry.value);
 
         try {
-          Chat.fromMap(chatMap, chat.chatId);
+          Chat.fromMap(chatMap, chat.key);
         } on FormatException catch (_) {
           didThrow = true;
         }

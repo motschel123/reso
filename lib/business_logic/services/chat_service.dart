@@ -18,12 +18,24 @@ final HttpsCallable _createChatCallable =
         'createChat',
         options: HttpsCallableOptions(timeout: const Duration(seconds: 10)));
 
+final FirebaseDatabase _database = FirebaseDatabase(
+    databaseURL:
+        'https://reso-83572-default-rtdb.europe-west1.firebasedatabase.app/');
+
 class ChatService {
   /// Calls the backend to create a new Chat
   ///
   /// returns the documentId of the newly created ChatDocument
   static Future<String> _newChat(
       final User currentUser, final Offer offer, final Message message) async {
+    final DatabaseReference ref =
+        _database.reference().child(CHATS_COLLECTION).push();
+    ref.keepSynced(true);
+
+    await ref.set(NewDatabaseChat(currentUser, offer).toMap());
+    DataSnapshot? snap = await ref.get();
+    //  Chat.fromMap(snap.value as Map<Object?, Object?>, snap.key));
+
     if (currentUser.uid == offer.authorUid) {
       throw Exception("Can't create chat with self");
     }
@@ -78,10 +90,6 @@ class ChatService {
       required Chat? chat,
       required Message message,
       required Offer offer}) async {
-    final FirebaseDatabase _database = FirebaseDatabase(
-        databaseURL:
-            'https://reso-83572-default-rtdb.europe-west1.firebasedatabase.app/');
-
     if (chat == null) {
       await _newChat(currentUser, offer, message);
       chat = await ChatService.getChat(currentUser, offer);
@@ -92,7 +100,7 @@ class ChatService {
 
     _database
         .reference()
-        .child(CHATS_PATH)
+        .child(CHATS_COLLECTION)
         .child(chat.databaseRef)
         .push()
         .set(message.toMap());
