@@ -1,18 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:reso/consts/firestore.dart';
+import 'package:reso/business_logic/services/offer_service.dart';
 import 'package:reso/model/offer.dart';
 
 class ProfileManager extends ChangeNotifier {
   ProfileManager() {
-    // TODO: outsource
-    FirebaseFirestore.instance
-        .collection(OFFERS_COLLECTION)
-        .where(OFFER_AUTHOR_UID,
-            isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .snapshots()
-        .map<List<Offer>>((QuerySnapshot<Map<String, dynamic>> qSnap) {
+    getUserOffers.map<List<Offer>>((QuerySnapshot<Map<String, dynamic>> qSnap) {
       final List<Offer> offers = <Offer>[];
       for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
           in qSnap.docs) {

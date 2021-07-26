@@ -14,7 +14,7 @@ final CollectionReference<Map<String, dynamic>> _offersCollection =
 final HashMap<String, Future<Offer?>> _offers =
     HashMap<String, Future<Offer?>>();
 
-Future<DocumentSnapshot<Map<String, dynamic>>> getOfferDoc(String offerId) =>
+Future<DocumentSnapshot<Map<String, dynamic>>> _getOfferDoc(String offerId) =>
     FirebaseFirestore.instance.collection(OFFERS_COLLECTION).doc(offerId).get();
 
 Offer? mapOfferDoc(DocumentSnapshot<Map<String, dynamic>> docSnap) =>
@@ -22,8 +22,15 @@ Offer? mapOfferDoc(DocumentSnapshot<Map<String, dynamic>> docSnap) =>
         ? Offer.fromMap(docSnap.data()!, docSnap.id)
         : null;
 
+Stream<QuerySnapshot<Map<String, dynamic>>> get getUserOffers =>
+    FirebaseFirestore.instance
+        .collection(OFFERS_COLLECTION)
+        .where(OFFER_AUTHOR_UID,
+            isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .snapshots();
+
 Future<Offer?> getOffer(final String offerId) => _offers.putIfAbsent(
-    offerId, () => getOfferDoc(offerId).then<Offer?>(mapOfferDoc));
+    offerId, () => _getOfferDoc(offerId).then<Offer?>(mapOfferDoc));
 
 Future<void> createOffer(
   String title,
