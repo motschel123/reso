@@ -1,7 +1,11 @@
+import 'dart:async';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:reso/business_logic/providers/search_manager.dart';
 import 'package:reso/consts/theme.dart';
@@ -22,11 +26,33 @@ final List<SingleChildWidget> _globalProviders = <SingleChildWidget>[
       create: (BuildContext context) => ProfileManager()),
 ];
 
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const App());
+
+  /*
+   * Manage Crashlytics
+   */
+  if (kDebugMode) {
+    // Force disable Crashlytics collection while doing every day development.
+    // Temporarily toggle this to true if you want to test crash reporting in your app.
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+  } else {
+    // Handle Crashlytics enabled status when not in Debug,
+    // e.g. allow your users to opt-in to crash reporting.
+    // TODO: add opt-in
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+  }
+  runZonedGuarded<Future<void>>(() async {
+    // Pass all uncaught errors from the framework to Crashlytics.
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+
+    runApp(const App());
+  }, FirebaseCrashlytics.instance.recordError);
 }
+
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);

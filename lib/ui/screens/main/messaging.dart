@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:reso/model/message.dart';
-import 'package:reso/ui/screens/chat_dialogue.dart';
-import 'package:reso/ui/widgets/offer_card.dart';
+import 'package:provider/provider.dart';
+import 'package:reso/business_logic/providers/chat_manager.dart';
+import 'package:reso/business_logic/services/chat_service.dart';
+import 'package:reso/business_logic/services/offer_service.dart';
+import 'package:reso/model/offer.dart';
 
 class Messaging extends StatefulWidget {
   const Messaging({Key? key}) : super(key: key);
@@ -15,44 +17,34 @@ class _MessagingState extends State<Messaging> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Text('Nachrichten',
-                style: Theme.of(context).textTheme.headline1),
-          ),
-          const Divider(height: 0),
-          Expanded(
-              child: ListView.separated(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  itemCount: 5,
-                  separatorBuilder: (BuildContext context, int index) {
-                    return const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Divider(),
-                    );
-                  },
-                  itemBuilder: (BuildContext context, int index) {
-                    return OfferCard(
-                      offerTitle: 'Vegetarische Pizza',
-                      offerPrice: '3,00€',
-                      offerDescription: 'Du: Hey',
-                      offerAuthor: 'Luca Beetz',
-                      profileImage: 'https://thispersondoesnotexist.com/image',
-                      offerColor: Colors.amber,
-                      onTap: () {
-                        Navigator.of(context).push<ChatDialogue>(
-                            MaterialPageRoute<ChatDialogue>(
-                                builder: (BuildContext context) =>
-                                    ChatDialogue(messages: sampleMessages)));
-                      },
-                    );
-                  }))
-        ],
+            child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Consumer<ChatManager>(
+        builder: (BuildContext context, ChatManager value, _) => Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Text('Nachrichten', style: Theme.of(context).textTheme.headline1),
+            Expanded(
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: value.chats.length,
+                  itemBuilder: (BuildContext context, int index) => TextButton(
+                        onPressed: () {
+                          OfferService.getOffer(value.chats[index].offerId)
+                              .then((Offer? offer) => offer == null
+                                  ? throw const FormatException(
+                                      "Offer doesn't exist or has no data")
+                                  : ChatService.openChat(
+                                      context: context,
+                                      chat: value.chats[index],
+                                      offer: offer));
+                        },
+                        child: Text(value.chats[index].key),
+                      )),
+            ),
+          ],
+        ),
       ),
-    ));
+    )));
   }
 }

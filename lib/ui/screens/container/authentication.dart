@@ -44,6 +44,7 @@ class Authentication extends StatelessWidget {
 }
 
 class _AuthenticationScreen extends StatelessWidget {
+  // TODO: trim string in email (spaces)
   @override
   Widget build(BuildContext context) {
     return Consumer<AuthManager>(

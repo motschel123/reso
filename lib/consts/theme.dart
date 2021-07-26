@@ -21,7 +21,7 @@ final ThemeData lightTheme = ThemeData(
       caption: TextStyle(fontSize: 10.0, color: Colors.black.withOpacity(0.5))),
 );
 
-final Map<OfferType, Color> offerTypeToColor = <OfferType, Color>{
+const Map<OfferType, Color> offerTypeToColor = <OfferType, Color>{
   OfferType.activity: Colors.amber,
   OfferType.food: Colors.green,
   OfferType.product: Colors.orange,

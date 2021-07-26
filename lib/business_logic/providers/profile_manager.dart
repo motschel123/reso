@@ -6,6 +6,7 @@ import 'package:reso/model/offer.dart';
 
 class ProfileManager extends ChangeNotifier {
   ProfileManager() {
+    // TODO: outsource
     FirebaseFirestore.instance
         .collection(OFFERS_COLLECTION)
         .where(OFFER_AUTHOR_UID,
@@ -16,7 +17,7 @@ class ProfileManager extends ChangeNotifier {
       for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
           in qSnap.docs) {
         if (doc.exists && doc.data() != null) {
-          offers.add(Offer.fromMap(doc.data(), offerId: doc.id));
+          offers.add(Offer.fromMap(doc.data(), doc.id));
         }
       }
       return offers;

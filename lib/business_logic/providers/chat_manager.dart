@@ -21,14 +21,13 @@ class ChatManager with ChangeNotifier {
     _streamSub = FirebaseFirestore.instance
         .collection(CHATS_COLLECTION)
         .where(CHAT_PEERS, arrayContains: _currentUser.uid)
-        .orderBy(CHAT_LATEST_DATE)
         .snapshots()
         .map<List<Chat>>(
       (QuerySnapshot<Map<String, dynamic>> qSnap) {
         final List<Chat> chats = <Chat>[];
         for (final QueryDocumentSnapshot<Map<String, dynamic>> docSnap
             in qSnap.docs) {
-          chats.add(Chat.fromChatDoc(docSnap));
+          chats.add(Chat.fromMap(docSnap.data(), docSnap.id));
         }
         return chats;
       },

@@ -26,20 +26,14 @@ const String OFFERS_COLLECTION = 'offers',
     OFFER_TYPE_ACTIVITY = 'OfferType.activity';
 
 const String MESSAGES_COLLECTION = 'messages',
-    MESSAGE_RECEIVER_UID = 'receiverUid',
     MESSAGE_SENDER_UID = 'senderUid',
     MESSAGE_TEXT = 'text',
-    MESSAGE_TIME_RECEIVED = 'timeReceived',
-    MESSAGE_TIME_SENT = 'timeSent',
-    MESSAGE_TIME_ONLINE = 'timeOnline';
+    MESSAGE_TIME_SENT = 'timeSent';
 
 const String CHATS_COLLECTION = 'chats',
     CHAT_DATE_CREATED = 'dateCreated',
-    CHAT_LATEST_DATE = 'latestDate',
-    CHAT_LATEST_MESSAGE_TEXT = 'latestMessageText',
-    CHAT_UIDS = 'uids',
-    CHAT_PEERS = 'peers',
-    CHAT_PEER_DATA = 'peerData',
-    CHAT_RELATED_OFFER = 'relatedOffer';
+    CHAT_PEERS = 'peerUids',
+    CHAT_OFFER_ID = 'offerId',
+    CHAT_DATABASE_REF = 'databaseRef';
 
 const String STORAGE_BUCKET_URL = 'gs://reso-83572.appspot.com/';
