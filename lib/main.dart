@@ -10,6 +10,7 @@ import 'package:provider/single_child_widget.dart';
 import 'package:reso/business_logic/providers/chat_manager.dart';
 import 'package:reso/business_logic/providers/feed_manager.dart';
 import 'package:reso/business_logic/providers/profile_manager.dart';
+import 'package:reso/business_logic/providers/search_manager.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/ui/screens/container/authentication.dart';
 import 'package:reso/ui/screens/container/navigation.dart';
@@ -53,12 +54,12 @@ class App extends StatelessWidget {
         child: MultiProvider(
           providers: <SingleChildWidget>[
             // Global Providers
-            ChangeNotifierProvider<FeedManager>(
-                create: (BuildContext context) => FeedManager()),
-            ChangeNotifierProvider<ChatManager>(
-                create: (BuildContext context) => ChatManager()),
+            ChangeNotifierProvider<FeedManager>(create: (_) => FeedManager()),
+            ChangeNotifierProvider<ChatManager>(create: (_) => ChatManager()),
             ChangeNotifierProvider<ProfileManager>(
-                create: (BuildContext context) => ProfileManager()),
+                create: (_) => ProfileManager()),
+            ChangeNotifierProvider<SearchManager>(
+                create: (_) => SearchManager()),
           ],
           builder: (_, __) => const NavigationContainer(),
         ),
