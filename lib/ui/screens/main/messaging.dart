@@ -30,8 +30,8 @@ class _MessagingState extends State<Messaging> {
                   itemCount: value.chats.length,
                   itemBuilder: (BuildContext context, int index) => TextButton(
                         onPressed: () {
-                          OfferService.getOffer(value.chats[index].offerId)
-                              .then((Offer? offer) => offer == null
+                          getOffer(value.chats[index].offerId).then(
+                              (Offer? offer) => offer == null
                                   ? throw const FormatException(
                                       "Offer doesn't exist or has no data")
                                   : ChatService.openChat(

@@ -73,7 +73,7 @@ class _CreateOfferState extends State<CreateOffer> {
     }
 
     if (widget.editingOffer == null) {
-      OfferService.createOffer(
+      createOffer(
         _titleController.text,
         _descriptionController.text,
         _priceController.text,
@@ -89,7 +89,7 @@ class _CreateOfferState extends State<CreateOffer> {
       );
     } else {
       // Todo(motschel123): Update values of existing offer
-      OfferService.updateOffer(
+      updateOffer(
           widget.editingOffer!,
           _titleController.text,
           _descriptionController.text,
@@ -107,7 +107,7 @@ class _CreateOfferState extends State<CreateOffer> {
 
   // TODO(motschel123): Implement delete Offer method
   void _deleteOffer(BuildContext context) {
-    OfferService.deleteOffer(widget.editingOffer!,
+    deleteOffer(widget.editingOffer!,
         successCallback: () => Navigator.of(context).pop(),
         errorCallback: (FirebaseException e) {
           print('Error deleting offer, error: ${e.message}');
