@@ -1,5 +1,3 @@
-import 'package:reso/consts/firestore.dart';
-
 const String DB_CHATS_COLLECTION = 'chats',
     FS_CHAT_DATE_CREATED = 'dateCreated',
     FS_CHAT_PEERS = 'peerUids',
