@@ -1,9 +1,10 @@
 import 'package:firebase_image/firebase_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:reso/consts/firestore.dart';
-import 'package:reso/consts/theme.dart';
+import 'package:reso/business_logic/services/user_data_service.dart';
 import 'package:reso/model/offer.dart';
+import 'package:reso/model/user_profile.dart';
+import 'package:reso/ui/widgets/storage_image.dart';
 
 class OfferCard extends StatelessWidget {
   // TODO: rewrite doc
@@ -11,7 +12,7 @@ class OfferCard extends StatelessWidget {
   ///
   /// The [offerTitle], [offerPrice], [offerDescription] and [offerAuthor] arguments
   /// are required and display general information about the offer.
-  /// The [profileImage] is the network path to the profile image of the author and
+  /// The [profileImageRef] is the network path to the profile image of the author and
   /// must not be null.
   ///
   /// [offerColor] is the background color of the Container behind the profile image
@@ -23,15 +24,14 @@ class OfferCard extends StatelessWidget {
   /// Using [offerImage], an addition image can be provided which is displayed
   /// in large beneath the rest.
   ///
-  OfferCard(
+  const OfferCard(
       {Key? key,
       required this.offer,
+      required this.offerColor,
       this.onTap,
       this.imageIcon,
       this.onIconTap})
-      : offerColor = offerTypeToColor[offer.type]!,
-        assert(offer.authorImageUrl != null || imageIcon != null),
-        super(key: key);
+      : super(key: key);
 
   final Offer offer;
   final Color offerColor;
@@ -66,10 +66,10 @@ class OfferCard extends StatelessWidget {
                   else
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0),
-                      child: CircleAvatar(
-                        backgroundImage: NetworkImage(offer.authorImageUrl),
-                        backgroundColor: offerColor,
-                        radius: 28.0,
+                      child: FutureStorageCircleAvatar(
+                        UserDataService.getUserProfile(offer.authorUid)
+                            .then<String>(
+                                (UserProfile value) => value.imageRef),
                       ),
                     ),
                 ]),
@@ -112,9 +112,19 @@ class OfferCard extends StatelessWidget {
                             children: <Widget>[
                               const Icon(Icons.person, size: 16.0),
                               const SizedBox(width: 4.0),
-                              Text(offer.authorDisplayName,
-                                  overflow: TextOverflow.fade,
-                                  style: Theme.of(context).textTheme.bodyText1),
+                              FutureBuilder<String>(
+                                future: UserDataService.getUserProfile(
+                                        offer.authorUid)
+                                    .then<String>((UserProfile value) =>
+                                        value.displayName),
+                                builder: (BuildContext context,
+                                        AsyncSnapshot<String> snap) =>
+                                    Text(snap.hasData ? snap.data! : 'Lädt...',
+                                        overflow: TextOverflow.fade,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1),
+                              ),
                             ],
                           ),
                           if (offer.dateEvent != null)
@@ -157,8 +167,7 @@ class OfferCard extends StatelessWidget {
                     borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image:
-                          FirebaseImage(STORAGE_BUCKET_URL + offer.imageRef!),
+                      image: FirebaseImage(offer.imageRef!),
                     )),
               ),
             ),

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:reso/business_logic/providers/message_manager.dart';
+import 'package:reso/consts/theme.dart';
 import 'package:reso/model/message.dart';
 import 'package:reso/ui/widgets/message_input.dart';
 import 'package:reso/ui/widgets/offer_heading.dart';
@@ -21,10 +22,8 @@ class ChatDialogue extends StatelessWidget {
           child: Column(
         children: <Widget>[
           OfferHeading(
-            offerTitle: messageManager.offer.title,
-            offerAuthor: messageManager.offer.authorDisplayName,
-            profileImage: 'https://thispersondoesnotexist.com/image',
-            offerColor: Colors.blue,
+            offer: messageManager.offer,
+            offerColor: offerTypeToColor[messageManager.offer.type]!,
           ),
           Expanded(
             child: Padding(

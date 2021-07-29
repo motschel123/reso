@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reso/business_logic/providers/feed_manager.dart';
 import 'package:reso/business_logic/providers/search_manager.dart';
-import 'package:reso/consts/firestore.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/model/offer.dart';
 import 'package:reso/ui/screens/offer_detail.dart';
@@ -63,6 +61,7 @@ class _SearchOffersState extends State<SearchOffers> {
 
                     return OfferCard(
                       offer: offer,
+                      offerColor: offerTypeToColor[offer.type]!,
                       onTap: () {
                         Navigator.push(
                           context,

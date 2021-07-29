@@ -10,7 +10,7 @@ class Authentication extends StatelessWidget {
   const Authentication({Key? key, required this.child}) : super(key: key);
 
   final Widget child;
-
+  // TODO: signIn with no passwort throws excption pls fix
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AuthManager>(

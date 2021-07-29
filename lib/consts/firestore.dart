@@ -3,8 +3,7 @@ const String USERS_COLLECTION = 'users',
     USER_EMAIL = 'email',
     USER_EMAIL_VERIFIED = 'emailVerified',
     USER_UID = 'uid',
-    USER_IMAGE_URL = 'imageUrl',
-    USER_IMAGE_REF = 'imageRef';
+    USER_IMAGE_REFERENCE = 'imageRef';
 
 /// Collection of all [Offer]'s at root ('/OFFER_COLLECTION') of firestore
 const String OFFERS_COLLECTION = 'offers',
@@ -36,4 +35,7 @@ const String CHATS_COLLECTION = 'chats',
     CHAT_OFFER_ID = 'offerId',
     CHAT_DATABASE_REF = 'databaseRef';
 
-const String STORAGE_BUCKET_URL = 'gs://reso-83572.appspot.com/';
+const String STORAGE_DEFAULT_BUCKET = 'gs://reso-83572.appspot.com/',
+    STORAGE_IMAGE_BUCKET = 'gs://images-bkfz5/',
+    DEFAULT_PROFILE_IMAGE_PATH =
+        STORAGE_IMAGE_BUCKET + 'default_profile_image.png';

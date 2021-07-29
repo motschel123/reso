@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:reso/business_logic/services/chat_service.dart';
 import 'package:firebase_image/firebase_image.dart';
 import 'package:intl/intl.dart';
+import 'package:reso/business_logic/services/user_data_service.dart';
 import 'package:reso/consts/firestore.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/model/chat.dart';
 import 'package:reso/model/offer.dart';
+import 'package:reso/model/user_profile.dart';
 import 'package:reso/ui/widgets/offer_heading.dart';
 
 /// A screen for displaying all information about an offer
@@ -25,9 +27,7 @@ class OfferDetail extends StatelessWidget {
       child: Column(
         children: <Widget>[
           OfferHeading(
-            offerTitle: offer.title,
-            offerAuthor: offer.authorDisplayName,
-            profileImage: offer.authorImageUrl,
+            offer: offer,
             offerColor: offerTypeToColor[offer.type]!,
           ),
           Padding(
@@ -44,8 +44,7 @@ class OfferDetail extends StatelessWidget {
                             const BorderRadius.all(Radius.circular(8.0)),
                         image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: FirebaseImage(
-                              STORAGE_BUCKET_URL + offer.imageRef!),
+                          image: FirebaseImage(offer.imageRef!),
                         )),
                   ),
                 const SizedBox(height: 16.0),
@@ -70,8 +69,17 @@ class OfferDetail extends StatelessWidget {
                         children: <Widget>[
                           const Icon(Icons.person, size: 16.0),
                           const SizedBox(width: 4.0),
-                          Text(offer.authorDisplayName,
-                              style: Theme.of(context).textTheme.bodyText1),
+                          FutureBuilder<String>(
+                              future: UserDataService.getUserProfile(
+                                      offer.authorUid)
+                                  .then(
+                                      (UserProfile value) => value.displayName),
+                              builder: (BuildContext context,
+                                      AsyncSnapshot<String> snap) =>
+                                  Text(snap.hasData ? snap.data! : 'Lädt...',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1)),
                         ],
                       ),
                       if (offer.dateCreated != null)
@@ -105,10 +113,18 @@ class OfferDetail extends StatelessWidget {
                     ),
                     child: Center(
                       child: TextButton(
-                        child: Text(
-                          '${offer.authorDisplayName} anschreiben',
-                          style: Theme.of(context).textTheme.button,
-                        ),
+                        child: FutureBuilder<String>(
+                            future: UserDataService.getUserProfile(
+                                    offer.authorUid)
+                                .then((UserProfile value) => value.displayName),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<String> snap) {
+                              return Text(
+                                (snap.hasData ? snap.data! : 'Lädt...') +
+                                    ' anschreiben',
+                                style: Theme.of(context).textTheme.button,
+                              );
+                            }),
                         onPressed: () async {
                           final Chat? chat = await ChatService.getChat(
                             FirebaseAuth.instance.currentUser!,

@@ -47,7 +47,7 @@ Future<void> createOffer(
     String? imageUrl, imageRef;
     if (image != null) {
       imageRef = await StorageService.uploadImage(image);
-      imageUrl = await StorageService.getDownloadURL(imageRef);
+      imageUrl = await StorageService.getImageUrl(imageRef);
     }
 
     final Map<String, dynamic> offerData = Offer(
@@ -56,15 +56,10 @@ Future<void> createOffer(
       price: price,
       type: type,
       authorUid: FirebaseAuth.instance.currentUser!.uid,
-      authorDisplayName: FirebaseAuth.instance.currentUser!.displayName ??
-          'NO DISPLAYNAME IN USER',
-      authorImageUrl: FirebaseAuth.instance.currentUser!.photoURL ??
-          'https://i.pinimg.com/originals/b6/5c/d4/b65cd4b543da7bafc9b0878cce843416.jpg',
       dateCreated: DateTime.now(),
       dateEvent: dateEvent,
       location: location,
       imageRef: imageRef,
-      imageUrl: imageUrl,
     ).toMap();
 
     await _offersCollection.add(offerData);
@@ -96,11 +91,11 @@ Future<void> updateOffer(
   try {
     if (image != null) {
       imageRef = await StorageService.uploadImage(image);
-      imageUrl = await StorageService.getDownloadURL(imageRef);
+      imageUrl = await StorageService.getImageUrl(imageRef);
 
       // Delete old image in FireStorage if it exists
       if (oldOffer.imageRef != null) {
-        await StorageService.deleteFile(imageRef);
+        await StorageService.deleteImage(imageRef);
       }
     }
 
@@ -110,15 +105,10 @@ Future<void> updateOffer(
       price: price,
       type: type,
       authorUid: FirebaseAuth.instance.currentUser!.uid,
-      authorDisplayName: FirebaseAuth.instance.currentUser!.displayName ??
-          'NO DISPlAYNAME IN USER',
-      authorImageUrl: FirebaseAuth.instance.currentUser!.photoURL ??
-          'https://i.pinimg.com/originals/b6/5c/d4/b65cd4b543da7bafc9b0878cce843416.jpg',
       dateCreated: oldOffer.dateCreated,
       dateEvent: dateEvent,
       location: location,
       imageRef: imageRef ?? oldOffer.imageRef,
-      imageUrl: imageUrl ?? oldOffer.imageUrl,
     ).toMap();
 
     offerData.update(OFFER_DATE_CREATED,
@@ -138,7 +128,7 @@ Future<void> deleteOffer(Offer offer,
 
   try {
     if (offer.imageRef != null) {
-      futures.add(StorageService.deleteFile(offer.imageRef!));
+      futures.add(StorageService.deleteImage(offer.imageRef!));
     }
     futures.add(_offersCollection.doc(offer.offerId).delete());
     await Future.wait<dynamic>(futures);

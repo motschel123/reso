@@ -56,20 +56,17 @@ class Offer {
     required this.description,
     required this.price,
     required this.authorUid,
-    required this.authorImageUrl,
-    required this.authorDisplayName,
     this.dateCreated,
     this.dateEvent,
     this.location,
     this.imageRef,
-    this.imageUrl,
     this.offerId,
   });
   final OfferType type;
   final String title, price, description;
-  final String authorUid, authorImageUrl, authorDisplayName;
+  final String authorUid;
   final DateTime? dateCreated, dateEvent;
-  final String? location, imageUrl, imageRef;
+  final String? location, imageRef;
   final String? offerId;
 
   static const Offer sample = Offer(
@@ -77,9 +74,7 @@ class Offer {
       title: 'Sample Title',
       description: 'Sample Description',
       price: 'Sample Price',
-      authorUid: '123456789',
-      authorImageUrl: 'https://thispersondoesnotexist.com/image',
-      authorDisplayName: 'Sample Name');
+      authorUid: '123456789');
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -88,13 +83,10 @@ class Offer {
       OFFER_DESCRIPTION: description,
       OFFER_PRICE: price,
       OFFER_AUTHOR_UID: authorUid,
-      OFFER_AUTHOR_DISPLAY_NAME: authorDisplayName,
-      OFFER_AUTHOR_IMAGE_URL: authorImageUrl,
       OFFER_DATE_CREATED: dateCreated?.toIso8601String(),
       OFFER_DATE_EVENT: dateEvent?.toIso8601String(),
       OFFER_LOCATION: location,
       OFFER_IMAGE_REFERENCE: imageRef,
-      OFFER_IMAGE_URL: imageUrl,
     };
   }
 
@@ -117,12 +109,7 @@ class Offer {
       description: _parse<String>(data, OFFER_DESCRIPTION, 'description'),
       price: _parse<String>(data, OFFER_PRICE, 'price'),
       authorUid: _parse<String>(data, OFFER_AUTHOR_UID, 'authorUid'),
-      authorDisplayName:
-          _parse<String>(data, OFFER_AUTHOR_DISPLAY_NAME, 'authorDisplayName'),
-      authorImageUrl:
-          _parse<String>(data, OFFER_AUTHOR_IMAGE_URL, 'authorImageUrl'),
       imageRef: _parse<String?>(data, OFFER_IMAGE_REFERENCE, 'imageRef'),
-      imageUrl: _parse<String?>(data, OFFER_IMAGE_URL, 'imageUrl'),
       location: _parse<String?>(data, OFFER_LOCATION, 'location'),
       dateCreated:
           dateCreatedString != null ? DateTime.parse(dateCreatedString) : null,

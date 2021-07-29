@@ -1,10 +1,11 @@
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
-final FirebaseStorage _storage = FirebaseStorage.instance;
+//final FirebaseStorage _storage = FirebaseStorage.instance;
+final FirebaseStorage _imageBucket =
+    FirebaseStorage.instanceFor(bucket: 'gs://images-bkfz5/');
 
 class StorageService {
   /// return the imageReference to the uploaded image
@@ -23,19 +24,24 @@ class StorageService {
     } else {
       compressedImage = image;
     }
+    final String imageRef = compressedImage.hashCode.toString();
 
-    final String imageRef =
-        '${FirebaseAuth.instance.currentUser!.uid}/${compressedImage.hashCode}';
-
-    await _storage.ref(imageRef).putFile(compressedImage);
-    return imageRef;
+    return _imageBucket
+        .ref(imageRef)
+        .putFile(compressedImage)
+        .then<String>((TaskSnapshot taskSnap) {
+      if (taskSnap.state == TaskState.error) {
+        throw Exception('image upload failed');
+      } else
+        return imageRef;
+    });
   }
 
-  static Future<void> deleteFile(String path) {
-    return _storage.ref(path).delete();
+  static Future<void> deleteImage(String path) {
+    return _imageBucket.ref(path).delete();
   }
 
-  static Future<String> getDownloadURL(String ref) {
-    return _storage.ref(ref).getDownloadURL();
+  static Future<String> getImageUrl(String ref) {
+    return _imageBucket.ref(ref).getDownloadURL();
   }
 }

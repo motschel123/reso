@@ -14,9 +14,7 @@ void main() {
             title: 'Outdoor walk',
             description: 'Short group walk',
             price: 'free',
-            authorUid: '1a3',
-            authorDisplayName: 'Luca',
-            authorImageUrl: 'https://thispersondoesnotexist.com/image');
+            authorUid: '1a3');
 
         await tester
             .pumpWidget(const MaterialApp(home: OfferDetail(offer: offer)));

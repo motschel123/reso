@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reso/business_logic/providers/feed_manager.dart';
+import 'package:reso/consts/theme.dart';
 import 'package:reso/model/offer.dart';
 import 'package:reso/ui/screens/offer_detail.dart';
 import 'package:reso/ui/widgets/offer_card.dart';
@@ -38,6 +39,7 @@ class LiveFeed extends StatelessWidget {
 
                     return OfferCard(
                       offer: offer,
+                      offerColor: offerTypeToColor[offer.type]!,
                       onTap: () {
                         Navigator.push(
                           context,

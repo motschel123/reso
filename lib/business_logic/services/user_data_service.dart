@@ -13,7 +13,7 @@ class UserDataService {
     if (uid == currentUser.uid) {
       return UserProfile(
         displayName: currentUser.displayName!,
-        imageUrl: currentUser.photoURL,
+        imageRef: currentUser.photoURL!,
         uid: currentUser.uid,
       );
     }

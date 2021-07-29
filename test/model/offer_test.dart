@@ -5,8 +5,6 @@ import 'package:reso/model/offer.dart';
 void main() {
   group('Offer model parsing', () {
     final Offer offerAllFields = Offer(
-      authorDisplayName: 'Max Mustermann',
-      authorImageUrl: 'url',
       authorUid: '12345',
       title: 'Outdoor walk',
       description: 'Short group walk',
@@ -15,7 +13,6 @@ void main() {
       dateCreated: DateTime(1234, 2),
       dateEvent: DateTime(1234, 3),
       imageRef: 'imageRef',
-      imageUrl: 'imageUrl',
       location: 'location',
       offerId: 'Id12Offer',
     );
@@ -26,8 +23,6 @@ void main() {
       description: 'es gibt steak',
       price: '12345€',
       authorUid: 'my123Uid45',
-      authorImageUrl: 'imageAuthorUrl',
-      authorDisplayName: 'Michelle Musterfrau',
     );
 
     test('To Map', () {
@@ -38,13 +33,10 @@ void main() {
           OFFER_DESCRIPTION: offer.description,
           OFFER_PRICE: offer.price,
           OFFER_AUTHOR_UID: offer.authorUid,
-          OFFER_AUTHOR_DISPLAY_NAME: offer.authorDisplayName,
-          OFFER_AUTHOR_IMAGE_URL: offer.authorImageUrl,
           OFFER_DATE_CREATED: offer.dateCreated?.toIso8601String(),
           OFFER_DATE_EVENT: offer.dateEvent?.toIso8601String(),
           OFFER_LOCATION: offer.location,
           OFFER_IMAGE_REFERENCE: offer.imageRef,
-          OFFER_IMAGE_URL: offer.imageUrl,
         });
       }
     });
@@ -58,12 +50,9 @@ void main() {
         expect(offer.description, o.description);
         expect(offer.price, o.price);
         expect(offer.authorUid, o.authorUid);
-        expect(offer.authorDisplayName, o.authorDisplayName);
-        expect(offer.authorImageUrl, o.authorImageUrl);
         expect(offer.dateCreated, o.dateCreated);
         expect(offer.dateEvent, o.dateEvent);
         expect(offer.imageRef, o.imageRef);
-        expect(offer.imageUrl, o.imageUrl);
         expect(offer.location, o.location);
         expect(offer.offerId, o.offerId);
       }

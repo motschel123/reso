@@ -172,8 +172,7 @@ class _CreateOfferState extends State<CreateOffer> {
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(8.0)),
               image: DecorationImage(
-                  image: FirebaseImage(
-                      STORAGE_BUCKET_URL + (widget.editingOffer!).imageRef!),
+                  image: FirebaseImage(widget.editingOffer!.imageRef!),
                   fit: BoxFit.cover),
             )),
       );

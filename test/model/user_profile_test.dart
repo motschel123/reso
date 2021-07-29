@@ -5,14 +5,14 @@ import 'package:reso/model/user_profile.dart';
 void main() {
   group('UserProfile model parsing', () {
     final UserProfile userProfile =
-        UserProfile(uid: 'a1d', displayName: 'Luca Beetz', imageUrl: 'imgUrl');
+        UserProfile(uid: 'a1d', displayName: 'Luca Beetz', imageRef: 'imgUrl');
     test('To Map', () {
       expect(
           userProfile.toMap(),
           equals(<String, dynamic>{
             USER_UID: userProfile.uid,
             USER_DISPLAY_NAME: userProfile.displayName,
-            USER_IMAGE_URL: userProfile.imageUrl,
+            USER_IMAGE_REFERENCE: userProfile.imageRef,
           }));
     });
 
@@ -21,7 +21,7 @@ void main() {
       final UserProfile mappedUserProfile = UserProfile.fromMap(userProfileMap);
 
       expect(mappedUserProfile.displayName, userProfile.displayName);
-      expect(mappedUserProfile.imageUrl, userProfile.imageUrl);
+      expect(mappedUserProfile.imageRef, userProfile.imageRef);
       expect(mappedUserProfile.uid, userProfile.uid);
     });
   });

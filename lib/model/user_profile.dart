@@ -5,18 +5,18 @@ class UserProfile {
   UserProfile({
     required this.uid,
     required this.displayName,
-    required this.imageUrl,
+    required this.imageRef,
   });
 
   final String uid;
   final String displayName;
-  final String? imageUrl;
+  final String imageRef;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       USER_DISPLAY_NAME: displayName,
       USER_UID: uid,
-      USER_IMAGE_URL: imageUrl,
+      USER_IMAGE_REFERENCE: imageRef,
     };
   }
 
@@ -24,7 +24,7 @@ class UserProfile {
     return UserProfile(
       uid: dataMap[USER_UID] as String,
       displayName: dataMap[USER_DISPLAY_NAME] as String,
-      imageUrl: dataMap[USER_IMAGE_URL] as String?,
+      imageRef: dataMap[USER_IMAGE_REFERENCE] as String,
     );
   }
 
