@@ -44,7 +44,6 @@ class Authentication extends StatelessWidget {
 }
 
 class _AuthenticationScreen extends StatelessWidget {
-  // TODO: trim string in email (spaces)
   @override
   Widget build(BuildContext context) {
     return Consumer<AuthManager>(
@@ -67,11 +66,9 @@ class _AuthenticationScreen extends StatelessWidget {
             return RegisterForm(
                 email: authManager.email!,
                 cancel: authManager.cancelRegistration,
-                registerAccount: (String email, String displayName,
-                        String password) =>
+                registerAccount: (String email, String password) =>
                     authManager.registerAccount(
                       email,
-                      displayName,
                       password,
                       errorCallback: (FirebaseAuthException e, StackTrace s) =>
                           _showErrorDialog(context,
@@ -172,8 +169,7 @@ class RegisterForm extends StatefulWidget {
   }) : super(key: key);
 
   final String email;
-  final void Function(String email, String displayName, String password)
-      registerAccount;
+  final void Function(String email, String password) registerAccount;
   final void Function() cancel;
 
   @override
@@ -182,7 +178,6 @@ class RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<RegisterForm> {
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _displayNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _repeatPasswordController =
       TextEditingController();
@@ -210,11 +205,6 @@ class _RegisterFormState extends State<RegisterForm> {
                 ),
                 const SizedBox(height: 8.0),
                 StyledTextFormField(
-                  hintText: 'Benutzername',
-                  controller: _displayNameController,
-                ),
-                const SizedBox(height: 8.0),
-                StyledTextFormField(
                   hintText: 'Passwort',
                   controller: _passwordController,
                   obscureText: true,
@@ -230,9 +220,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     text: 'Registrieren',
                     color: Colors.amber,
                     callback: () => widget.registerAccount(
-                        _emailController.text,
-                        _displayNameController.text,
-                        _passwordController.text)),
+                        _emailController.text, _passwordController.text)),
                 const SizedBox(height: 16.0),
                 StyledButtonLarge(
                     text: 'Zurück', color: Colors.red, callback: widget.cancel),

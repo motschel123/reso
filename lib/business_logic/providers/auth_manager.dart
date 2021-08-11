@@ -77,18 +77,9 @@ class AuthManager with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> registerAccount(
-      String email, String displayName, String password,
+  Future<void> registerAccount(String email, String password,
       {ErrorCallback? errorCallback}) async {
-    _auth
-        .createUserWithEmailAndPassword(email: email, password: password)
-        .then((UserCredential credential) =>
-            credential.user!.updateDisplayName(displayName))
-        .onError<FirebaseAuthException>(
-            (FirebaseAuthException e, StackTrace s) {
-      errorCallback?.call(e, s);
-      return null;
-    });
+    _auth.createUserWithEmailAndPassword(email: email, password: password);
   }
 
   void signOut() {
