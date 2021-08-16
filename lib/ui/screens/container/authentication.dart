@@ -4,93 +4,109 @@ import 'package:provider/provider.dart';
 import 'package:reso/business_logic/providers/auth_manager.dart';
 import 'package:reso/ui/widgets/styled_form_elements.dart';
 
-import '../loading_screen.dart';
-
 class Authentication extends StatelessWidget {
   const Authentication({Key? key, required this.child}) : super(key: key);
 
   final Widget child;
-
+  // TODO: signIn with no passwort throws excption pls fix
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AuthManager>(
-      create: (BuildContext context) => AuthManager(),
-      child: StreamBuilder<User?>(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (BuildContext context, AsyncSnapshot<User?> userSnapshot) {
-            if (userSnapshot.connectionState == ConnectionState.active ||
-                userSnapshot.connectionState == ConnectionState.done) {
-              if (userSnapshot.hasError) {
-                /**
-               * FirebaseAuth ERROR 
-               */
-                throw userSnapshot.error!;
-              } else if (userSnapshot.hasData) {
-                /**
-               * USER IS LOGGED IN
-               */
-                return child;
-              } else {
-                /**
-               * user is NOT LOGGED IN 
-               */
-                return _AuthenticationScreen();
-              }
-            }
-            return const LoadingScreen();
-          }),
-    );
-  }
-}
+      create: (_) => AuthManager(),
+      child: Consumer<AuthManager>(
+        builder: (BuildContext context, AuthManager authManager, _) {
+          Widget currentPage;
+          switch (authManager.loginState) {
+            case LoginState.loggedOut:
+              currentPage =
+                  LoggedOut(startLoginFlow: () => authManager.startLoginFlow());
+              break;
+            case LoginState.enterEmail:
+              currentPage = EmailForm(
+                callback: (String email) => authManager.checkEmail(
+                  email,
+                  errorCallback: (FirebaseAuthException e, StackTrace s) =>
+                      _showErrorDialog(context, 'Ungültige Email', e),
+                ),
+                emailValidator: authManager.emailValidator,
+              );
+              break;
 
-class _AuthenticationScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<AuthManager>(
-      builder: (BuildContext context, AuthManager authManager, _) {
-        switch (authManager.loginState) {
-          case LoginState.loggedOut:
-            return LoggedOut(
-                startLoginFlow: () => authManager.startLoginFlow());
-
-          case LoginState.emailAddress:
-            return EmailForm(
-              callback: (String email) => authManager.verifyEmail(
-                email,
-                errorCallback: (FirebaseAuthException e, StackTrace s) =>
-                    _showErrorDialog(context, 'Ungültige Email', e),
-              ),
-            );
-
-          case LoginState.register:
-            return RegisterForm(
+            case LoginState.signUp:
+              currentPage = SignUpForm(
                 email: authManager.email!,
                 cancel: authManager.cancelRegistration,
-                registerAccount: (String email, String displayName,
-                        String password) =>
+                registerAccount: (String email, String password) =>
                     authManager.registerAccount(
-                      email,
-                      displayName,
-                      password,
-                      errorCallback: (FirebaseAuthException e, StackTrace s) =>
-                          _showErrorDialog(context,
-                              'Account konnte nicht erstellt werden', e),
-                    ));
+                  email,
+                  password,
+                  errorCallback: (FirebaseAuthException e, StackTrace s) =>
+                      _showErrorDialog(
+                          context, 'Account konnte nicht erstellt werden', e),
+                ),
+                emailValidator: authManager.emailValidator,
+                passwordValidator: authManager.passwordValidator,
+              );
+              break;
 
-          case LoginState.password:
-            return LoginForm(
-              email: authManager.email!,
-              cancel: authManager.cancelLogin,
-              loginAccount: (String email, String password) => authManager
-                  .signInWithEmailAndPassword(email, password, errorCallback:
-                      (FirebaseAuthException e, StackTrace stackTrace) {
-                _showErrorDialog(context, 'Anmeldung nicht erfolgreich', e);
-              }),
-            );
-          case LoginState.loggedIn:
-            return const Center(child: Text('Anmelden...'));
-        }
-      },
+            case LoginState.login:
+              currentPage = LoginForm(
+                email: authManager.email!,
+                cancel: authManager.cancelLogin,
+                loginAccount: (String email, String password) => authManager
+                    .signInWithEmailAndPassword(email, password, errorCallback:
+                        (FirebaseAuthException e, StackTrace stackTrace) {
+                  _showErrorDialog(context, 'Anmeldung nicht erfolgreich', e);
+                }),
+                emailValidator: authManager.emailValidator,
+                passwordValidator: authManager.passwordValidator,
+              );
+              break;
+
+            case LoginState.authenticated:
+              currentPage = AuthenticatedScreen(
+                completeSignUp: () => authManager.completeSignUp(),
+              );
+              break;
+            case LoginState.completeSignUp:
+              currentPage = CompleteSignUpForm(
+                initialDisplayName: authManager.displayName,
+                submitDisplayName: authManager.submitDisplayName,
+                displayNameValidator: authManager.displayNameValidator,
+              );
+              break;
+            case LoginState.registered:
+              currentPage = child;
+              break;
+          }
+
+          // Using IgnorePointer, Stack with AnimatedOpacity and CircularProgressIndicator
+          // to signal fetching from server
+          return IgnorePointer(
+            child: Stack(
+              children: <Widget>[
+                Scaffold(body: currentPage),
+                AnimatedOpacity(
+                    opacity: authManager.fetching ? 0.8 : 0,
+                    duration: const Duration(milliseconds: 400),
+                    child: const ColorFiltered(
+                        colorFilter: ColorFilter.mode(
+                          Colors.black87,
+                          BlendMode.darken,
+                        ),
+                        child: Placeholder(
+                          fallbackHeight: double.infinity,
+                          fallbackWidth: double.infinity,
+                          color: Colors.transparent,
+                        ))),
+                if (authManager.fetching)
+                  const Center(child: CircularProgressIndicator())
+              ],
+            ),
+            ignoring: authManager.fetching,
+          );
+        },
+      ),
     );
   }
 }
@@ -102,17 +118,64 @@ class LoggedOut extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            StyledButtonLarge(
+                text: 'Anmelden / Registrieren',
+                color: Colors.amber,
+                callback: startLoginFlow),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class EmailForm extends StatefulWidget {
+  const EmailForm(
+      {Key? key, required this.callback, required this.emailValidator})
+      : super(key: key);
+
+  final void Function(String email) callback;
+  final Validator emailValidator;
+
+  @override
+  _EmailFormState createState() => _EmailFormState();
+}
+
+class _EmailFormState extends State<EmailForm> {
+  final GlobalKey<FormState> _formKey = GlobalKey();
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              StyledTextFormField(
+                hintText: 'Email',
+                controller: _controller,
+                keyboardType: TextInputType.emailAddress,
+                validator: widget.emailValidator,
+              ),
+              const SizedBox(height: 16.0),
               StyledButtonLarge(
-                  text: 'Anmelden / Registrieren',
+                  text: 'Weiter',
                   color: Colors.amber,
-                  callback: startLoginFlow),
+                  callback: () {
+                    final bool? valid = _formKey.currentState?.validate();
+                    if (valid != null && valid)
+                      widget.callback(_controller.text);
+                  })
             ],
           ),
         ),
@@ -121,67 +184,29 @@ class LoggedOut extends StatelessWidget {
   }
 }
 
-class EmailForm extends StatefulWidget {
-  const EmailForm({Key? key, required this.callback}) : super(key: key);
-
-  final void Function(String email) callback;
-
-  @override
-  _EmailFormState createState() => _EmailFormState();
-}
-
-class _EmailFormState extends State<EmailForm> {
-  final TextEditingController _controller = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                StyledTextFormField(
-                  hintText: 'Email',
-                  controller: _controller,
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                const SizedBox(height: 16.0),
-                StyledButtonLarge(
-                    text: 'Weiter',
-                    color: Colors.amber,
-                    callback: () => widget.callback(_controller.text))
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class RegisterForm extends StatefulWidget {
-  const RegisterForm({
+class SignUpForm extends StatefulWidget {
+  const SignUpForm({
     Key? key,
     required this.registerAccount,
     required this.cancel,
     required this.email,
+    required this.emailValidator,
+    required this.passwordValidator,
   }) : super(key: key);
 
   final String email;
-  final void Function(String email, String displayName, String password)
-      registerAccount;
+  final void Function(String email, String password) registerAccount;
   final void Function() cancel;
+  final Validator emailValidator;
+  final Validator passwordValidator;
 
   @override
-  _RegisterFormState createState() => _RegisterFormState();
+  _SignUpFormState createState() => _SignUpFormState();
 }
 
-class _RegisterFormState extends State<RegisterForm> {
+class _SignUpFormState extends State<SignUpForm> {
+  final GlobalKey<FormState> _formKey = GlobalKey();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _displayNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _repeatPasswordController =
       TextEditingController();
@@ -194,49 +219,51 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                StyledTextFormField(
-                  hintText: 'Email',
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                const SizedBox(height: 8.0),
-                StyledTextFormField(
-                  hintText: 'Benutzername',
-                  controller: _displayNameController,
-                ),
-                const SizedBox(height: 8.0),
-                StyledTextFormField(
-                  hintText: 'Passwort',
-                  controller: _passwordController,
-                  obscureText: true,
-                ),
-                const SizedBox(height: 8.0),
-                StyledTextFormField(
-                  hintText: 'Passwort wiederholen',
-                  controller: _repeatPasswordController,
-                  obscureText: true,
-                ),
-                const SizedBox(height: 16.0),
-                StyledButtonLarge(
-                    text: 'Registrieren',
-                    color: Colors.amber,
-                    callback: () => widget.registerAccount(
-                        _emailController.text,
-                        _displayNameController.text,
-                        _passwordController.text)),
-                const SizedBox(height: 16.0),
-                StyledButtonLarge(
-                    text: 'Zurück', color: Colors.red, callback: widget.cancel),
-              ],
-            ),
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              StyledTextFormField(
+                hintText: 'Email',
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+                validator: widget.emailValidator,
+              ),
+              const SizedBox(height: 8.0),
+              StyledTextFormField(
+                hintText: 'Passwort',
+                controller: _passwordController,
+                obscureText: true,
+                validator: widget.passwordValidator,
+              ),
+              const SizedBox(height: 8.0),
+              StyledTextFormField(
+                hintText: 'Passwort wiederholen',
+                controller: _repeatPasswordController,
+                obscureText: true,
+                validator: (String? repeatPass) =>
+                    _passwordController.text == repeatPass
+                        ? null
+                        : 'Passwörter stimmen nicht überein',
+              ),
+              const SizedBox(height: 16.0),
+              StyledButtonLarge(
+                  text: 'Registrieren',
+                  color: Colors.amber,
+                  callback: () {
+                    final bool? valid = _formKey.currentState?.validate();
+                    if (valid != null && valid)
+                      widget.registerAccount(
+                          _emailController.text, _passwordController.text);
+                  }),
+              const SizedBox(height: 16.0),
+              StyledButtonLarge(
+                  text: 'Zurück', color: Colors.red, callback: widget.cancel),
+            ],
           ),
         ),
       ),
@@ -250,17 +277,22 @@ class LoginForm extends StatefulWidget {
     required this.loginAccount,
     required this.cancel,
     required this.email,
+    required this.emailValidator,
+    required this.passwordValidator,
   }) : super(key: key);
 
   final String email;
   final void Function(String email, String password) loginAccount;
   final void Function() cancel;
+  final Validator emailValidator;
+  final Validator passwordValidator;
 
   @override
   _LoginFormState createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm> {
+  final GlobalKey<FormState> _formKey = GlobalKey();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -272,40 +304,115 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                StyledTextFormField(
-                  hintText: 'Email',
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                const SizedBox(height: 8.0),
-                StyledTextFormField(
-                  hintText: 'Passwort',
-                  controller: _passwordController,
-                  obscureText: true,
-                ),
-                const SizedBox(height: 8.0),
-                StyledButtonLarge(
-                    text: 'Anmelden',
-                    color: Colors.amber,
-                    callback: () => widget.loginAccount(
-                        _emailController.text, _passwordController.text)),
-                const SizedBox(height: 16.0),
-                StyledButtonLarge(
-                    text: 'Zurück', color: Colors.red, callback: widget.cancel),
-              ],
-            ),
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              StyledTextFormField(
+                hintText: 'Email',
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+                validator: widget.emailValidator,
+              ),
+              const SizedBox(height: 8.0),
+              StyledTextFormField(
+                hintText: 'Passwort',
+                controller: _passwordController,
+                obscureText: true,
+                validator: widget.passwordValidator,
+              ),
+              const SizedBox(height: 8.0),
+              StyledButtonLarge(
+                text: 'Anmelden',
+                color: Colors.amber,
+                callback: () {
+                  bool? valid = _formKey.currentState?.validate();
+                  if (valid != null && valid)
+                    widget.loginAccount(
+                        _emailController.text, _passwordController.text);
+                },
+              ),
+              const SizedBox(height: 16.0),
+              StyledButtonLarge(
+                  text: 'Zurück', color: Colors.red, callback: widget.cancel),
+            ],
           ),
         ),
       ),
     );
+  }
+}
+
+class AuthenticatedScreen extends StatelessWidget {
+  const AuthenticatedScreen({Key? key, required this.completeSignUp})
+      : super(key: key);
+
+  final void Function() completeSignUp;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          const Text('Authenticated'),
+          TextButton(
+              onPressed: completeSignUp,
+              child: const Text('Finish Registration'))
+        ],
+      ),
+    );
+  }
+}
+
+class CompleteSignUpForm extends StatefulWidget {
+  const CompleteSignUpForm({
+    Key? key,
+    required this.submitDisplayName,
+    this.initialDisplayName,
+    required this.displayNameValidator,
+  }) : super(key: key);
+
+  final Validator displayNameValidator;
+  final Future<void> Function(String displayName) submitDisplayName;
+  final String? initialDisplayName;
+
+  @override
+  State<StatefulWidget> createState() => _CompleteSignUpFormState();
+}
+
+class _CompleteSignUpFormState extends State<CompleteSignUpForm> {
+  final TextEditingController _displayNameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _displayNameController.text = widget.initialDisplayName ?? '';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        const Text('Wie ist dein Name?'),
+        StyledTextFormField(
+          hintText: 'Nutze deinen echten Namen',
+          controller: _displayNameController,
+          validator: widget.displayNameValidator,
+        ),
+        TextButton(
+            onPressed: () =>
+                widget.submitDisplayName.call(_displayNameController.text),
+            child: const Text('Weiter'))
+      ],
+    ));
   }
 }
 

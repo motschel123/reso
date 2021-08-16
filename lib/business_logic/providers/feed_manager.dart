@@ -13,16 +13,7 @@ class FeedManager with ChangeNotifier {
     _initFeed();
   }
 
-  /// Provide mock Firestore instance for testing
-  // FeedManager({FirebaseFirestore firebaseFirestore})
-  //     : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance,
-  //     _currentUser = FirebaseAuth.instance.currentUser!;
-  //     {
-
-  //   _initFeed();
-  // }
-
-  late FirebaseFirestore _firebaseFirestore;
+  final FirebaseFirestore _firebaseFirestore;
 
   static const int _defaultAmount = 20;
 
@@ -78,8 +69,11 @@ class FeedManager with ChangeNotifier {
     for (final QueryDocumentSnapshot<Map<String, dynamic>> doc in qSnap.docs) {
       if (doc.exists && doc.data() != null) {
         try {
-          final Offer newOffer = Offer.fromMap(doc.data(), offerId: doc.id);
-          mappedOffers.add(newOffer);
+          if ((doc.data()['sample'] as bool?) == null ||
+              !(doc.data()['sample'] as bool)) {
+            final Offer newOffer = Offer.fromMap(doc.data(), doc.id);
+            mappedOffers.add(newOffer);
+          }
         } on Exception catch (e) {
           print(e);
           print('Related doc data: ' + doc.data().toString());
