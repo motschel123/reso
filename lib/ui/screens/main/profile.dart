@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reso/business_logic/providers/auth_manager.dart';
 import 'package:reso/business_logic/providers/profile_manager.dart';
-import 'package:reso/ui/screens/create_offer.dart';
 import 'package:reso/consts/theme.dart';
+import 'package:reso/ui/screens/create_offer.dart';
 import 'package:reso/model/offer.dart';
 import 'package:reso/ui/screens/offer_detail.dart';
 import 'package:reso/ui/widgets/offer_card.dart';
@@ -55,12 +55,8 @@ class Profile extends StatelessWidget {
                           final Offer offer = profileManager.offers[index];
 
                           return OfferCard(
-                            offerTitle: offer.title,
-                            offerPrice: offer.price,
-                            offerDescription: offer.description,
-                            offerAuthor: offer.authorUid,
+                            offer: offer,
                             offerColor: offerTypeToColor[offer.type]!,
-                            offerImage: offer.imageUrl,
                             imageIcon:
                                 const Icon(Icons.edit, color: Colors.white),
                             onTap: () {
