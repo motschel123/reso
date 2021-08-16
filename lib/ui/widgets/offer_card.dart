@@ -113,18 +113,21 @@ class OfferCard extends StatelessWidget {
                               const Icon(Icons.person, size: 16.0),
                               const SizedBox(width: 4.0),
                               FutureBuilder<String>(
-                                future: UserDataService.getUserProfile(
-                                        offer.authorUid)
-                                    .then<String>((UserProfile value) =>
-                                        value.displayName),
-                                builder: (BuildContext context,
-                                        AsyncSnapshot<String> snap) =>
-                                    Text(snap.hasData ? snap.data! : 'Lädt...',
-                                        overflow: TextOverflow.fade,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1),
-                              ),
+                                  future: UserDataService.getUserProfile(
+                                          offer.authorUid)
+                                      .then<String>((UserProfile value) =>
+                                          value.displayName),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<String> snap) {
+                                    return snap.connectionState ==
+                                            ConnectionState.waiting
+                                        ? Text('Lädt...',
+                                            overflow: TextOverflow.fade,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1)
+                                        : Text(snap.data.toString());
+                                  }),
                             ],
                           ),
                           if (offer.dateEvent != null)
