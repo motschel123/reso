@@ -11,6 +11,7 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 class UserDataService {
   static Future<UserProfile> getUserProfile(String uid) async {
     final User currentUser = FirebaseAuth.instance.currentUser!;
+
     if (uid == currentUser.uid) {
       return UserProfile(
         displayName: currentUser.displayName!,
@@ -24,8 +25,13 @@ class UserDataService {
             UserProfile.fromDoc(docSnap));
   }
 
+  static Future<bool> waitUserDocExists(String uid) async {
+    return _firestore.collection(USERS_COLLECTION).doc(uid).snapshots().any(
+        (DocumentSnapshot<Map<String, dynamic>> docSnap) => docSnap.exists);
+  }
+
   static Future<void> updateUserData(
-      String? newDisplayName, String? newImageRef) async {
+      {String? newDisplayName, String? newImageRef}) async {
     // check user is signed in
     final User? currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) {
