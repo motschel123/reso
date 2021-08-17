@@ -19,13 +19,13 @@ class Authentication extends StatelessWidget {
           switch (authManager.loginState) {
             case LoginState.loggedOut:
               currentPage =
-                  LoggedOut(startLoginFlow: () => authManager.startLoginFlow());
+                  LoggedOut(startLoginFlow: authManager.startLoginFlow);
               break;
             case LoginState.enterEmail:
               currentPage = EmailForm(
                 callback: (String email) => authManager.checkEmail(
                   email,
-                  errorCallback: (FirebaseAuthException e, StackTrace s) =>
+                  errorCallback: (Exception e, StackTrace s) =>
                       _showErrorDialog(context, 'Ungültige Email', e),
                 ),
                 emailValidator: authManager.emailValidator,
@@ -40,7 +40,7 @@ class Authentication extends StatelessWidget {
                     authManager.registerAccount(
                   email,
                   password,
-                  errorCallback: (FirebaseAuthException e, StackTrace s) =>
+                  errorCallback: (Exception e, StackTrace s) =>
                       _showErrorDialog(
                           context, 'Account konnte nicht erstellt werden', e),
                 ),
@@ -54,8 +54,8 @@ class Authentication extends StatelessWidget {
                 email: authManager.email!,
                 cancel: authManager.cancelLogin,
                 loginAccount: (String email, String password) => authManager
-                    .signInWithEmailAndPassword(email, password, errorCallback:
-                        (FirebaseAuthException e, StackTrace stackTrace) {
+                    .signInWithEmailAndPassword(email, password,
+                        errorCallback: (Exception e, StackTrace stackTrace) {
                   _showErrorDialog(context, 'Anmeldung nicht erfolgreich', e);
                 }),
                 emailValidator: authManager.emailValidator,
@@ -65,14 +65,35 @@ class Authentication extends StatelessWidget {
 
             case LoginState.authenticated:
               currentPage = AuthenticatedScreen(
-                completeSignUp: () => authManager.completeSignUp(),
+                completeSignUp: authManager.completeSignUp,
               );
               break;
-            case LoginState.completeSignUp:
-              currentPage = CompleteSignUpForm(
+            case LoginState.enterName:
+              currentPage = EnterNameForm(
                 initialDisplayName: authManager.displayName,
-                submitDisplayName: authManager.submitDisplayName,
+                submitDisplayName: (String name) => authManager
+                    .submitDisplayName(name,
+                        errorCallback: (Exception e, StackTrace stacktrace) {
+                  _showErrorDialog(context, 'Ein Fehler ist aufgetreten', e);
+                }),
                 displayNameValidator: authManager.displayNameValidator,
+              );
+              break;
+            case LoginState.uploadImage:
+              currentPage = Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const Text('upload profile image'),
+                    TextButton(
+                        onPressed: () => authManager.submitImage(
+                              errorCallback: (Exception e, StackTrace s) =>
+                                  _showErrorDialog(
+                                      context, 'Ungültige Email', e),
+                            ),
+                        child: const Text('skip')),
+                  ],
+                ),
               );
               break;
             case LoginState.registered:
@@ -370,8 +391,8 @@ class AuthenticatedScreen extends StatelessWidget {
   }
 }
 
-class CompleteSignUpForm extends StatefulWidget {
-  const CompleteSignUpForm({
+class EnterNameForm extends StatefulWidget {
+  const EnterNameForm({
     Key? key,
     required this.submitDisplayName,
     this.initialDisplayName,
@@ -383,10 +404,11 @@ class CompleteSignUpForm extends StatefulWidget {
   final String? initialDisplayName;
 
   @override
-  State<StatefulWidget> createState() => _CompleteSignUpFormState();
+  State<StatefulWidget> createState() => _EnterNameFormState();
 }
 
-class _CompleteSignUpFormState extends State<CompleteSignUpForm> {
+class _EnterNameFormState extends State<EnterNameForm> {
+  final GlobalKey<FormState> _formKey = GlobalKey();
   final TextEditingController _displayNameController = TextEditingController();
 
   @override
@@ -398,20 +420,26 @@ class _CompleteSignUpFormState extends State<CompleteSignUpForm> {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        const Text('Wie ist dein Name?'),
-        StyledTextFormField(
-          hintText: 'Nutze deinen echten Namen',
-          controller: _displayNameController,
-          validator: widget.displayNameValidator,
-        ),
-        TextButton(
-            onPressed: () =>
-                widget.submitDisplayName.call(_displayNameController.text),
-            child: const Text('Weiter'))
-      ],
+        child: Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          const Text('Wie ist dein Name?'),
+          StyledTextFormField(
+            hintText: 'Nutze deinen echten Namen',
+            controller: _displayNameController,
+            validator: widget.displayNameValidator,
+          ),
+          TextButton(
+              onPressed: () {
+                final bool? valid = _formKey.currentState?.validate();
+                if (valid != null && valid)
+                  widget.submitDisplayName(_displayNameController.text);
+              },
+              child: const Text('Weiter'))
+        ],
+      ),
     ));
   }
 }
