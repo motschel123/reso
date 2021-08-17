@@ -10,16 +10,15 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 class UserDataService {
   static Future<UserProfile> getUserProfile(String uid) async {
-    final User currentUser = FirebaseAuth.instance.currentUser!;
+    /*final User currentUser = FirebaseAuth.instance.currentUser!;
     if (uid == currentUser.uid) {
       // TODO: add picture upload to registration and add default link if no image is povided
-      // make sure displayName and photoUrl are never null ...
       return UserProfile(
         displayName: currentUser.displayName!,
         imageRef: currentUser.photoURL!,
         uid: currentUser.uid,
       );
-    }
+    }*/
 
     return _firestore.collection(USERS_COLLECTION).doc(uid).get().then(
         (DocumentSnapshot<Map<String, dynamic>> docSnap) =>
