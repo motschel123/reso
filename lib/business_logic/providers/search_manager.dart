@@ -1,20 +1,9 @@
 import 'package:algolia/algolia.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:reso/business_logic/services/algolia_service.dart';
 import 'package:reso/model/offer.dart';
 
 class SearchManager with ChangeNotifier {
-  SearchManager({FirebaseFirestore? firebaseFirestore, User? user})
-      : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance,
-        _currentUser = user ?? FirebaseAuth.instance.currentUser! {}
-
-  final FirebaseFirestore _firebaseFirestore;
-  // ignore: unused_field
-  final User _currentUser;
-  late final Query<Map<String, dynamic>> _baseQuery;
-
   List<Offer> get offers => _offers;
   List<Offer> _offers = <Offer>[];
 
