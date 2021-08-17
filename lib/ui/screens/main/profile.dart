@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reso/business_logic/providers/auth_manager.dart';
@@ -35,6 +36,8 @@ class Profile extends StatelessWidget {
                           style: Theme.of(context).textTheme.headline1),
                     ),
                     const Divider(height: 0),
+                    Text(
+                        'Du: ${FirebaseAuth.instance.currentUser!.displayName}'),
                     TextButton(
                         onPressed: () {
                           Provider.of<AuthManager>(context, listen: false)

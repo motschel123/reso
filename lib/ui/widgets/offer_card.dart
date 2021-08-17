@@ -119,6 +119,7 @@ class OfferCard extends StatelessWidget {
                                           value.displayName),
                                   builder: (BuildContext context,
                                       AsyncSnapshot<String> snap) {
+                                    if (snap.hasError) print(snap.error);
                                     return snap.connectionState ==
                                             ConnectionState.waiting
                                         ? Text('Lädt...',
