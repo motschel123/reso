@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:reso/business_logic/providers/message_manager.dart';
-import 'package:reso/consts/database.dart';
 import 'package:reso/consts/firestore.dart';
 import 'package:reso/model/chat.dart';
 import 'package:reso/model/message.dart';
@@ -28,13 +27,11 @@ class ChatService {
   /// returns the documentId of the newly created ChatDocument
   static Future<String> _newChat(
       final User currentUser, final Offer offer, final Message message) async {
-    final DatabaseReference ref =
+    /*final DatabaseReference ref =
         _database.reference().child(CHATS_COLLECTION).push();
     ref.keepSynced(true);
 
-    await ref.set(NewDatabaseChat(currentUser, offer).toMap());
-    DataSnapshot? snap = await ref.get();
-    //  Chat.fromMap(snap.value as Map<Object?, Object?>, snap.key));
+    await ref.set(NewDatabaseChat(currentUser, offer).toMap());*/
 
     if (currentUser.uid == offer.authorUid) {
       throw Exception("Can't create chat with self");
@@ -77,7 +74,7 @@ class ChatService {
       {required BuildContext context,
       required Chat? chat,
       required Offer offer}) async {
-    // TODO: impl second lvl navigator
+    // TODO(motschel123): impl second lvl navigator
     return Navigator.of(context).push<void>(MaterialPageRoute<void>(
       builder: (BuildContext context) => ChatDialogue(
         messageManager: MessageManager(chat, offer),

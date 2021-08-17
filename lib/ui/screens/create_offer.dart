@@ -5,7 +5,6 @@ import 'package:firebase_image/firebase_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reso/business_logic/services/offer_service.dart';
-import 'package:reso/consts/firestore.dart';
 import 'package:reso/model/offer.dart';
 import 'package:reso/ui/widgets/styled_form_elements.dart';
 
@@ -140,11 +139,11 @@ class _CreateOfferState extends State<CreateOffer> {
   }
 
   Future<void> _selectImage(ImageSource source) async {
-    final PickedFile? pickedFile = await _imagePicker.getImage(source: source);
+    final XFile? xFile = await _imagePicker.pickImage(source: source);
 
     setState(() {
-      if (pickedFile != null) {
-        _selectedImage = File(pickedFile.path);
+      if (xFile != null) {
+        _selectedImage = File(xFile.path);
         print(_selectedImage);
       } else {
         print('No image selected.');

@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reso/business_logic/providers/auth_manager.dart';
@@ -8,7 +7,7 @@ class Authentication extends StatelessWidget {
   const Authentication({Key? key, required this.child}) : super(key: key);
 
   final Widget child;
-  // TODO: signIn with no passwort throws excption pls fix
+  // TODO(motschel123): signIn with no passwort throws excption pls fix
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AuthManager>(
@@ -351,7 +350,7 @@ class _LoginFormState extends State<LoginForm> {
                 text: 'Anmelden',
                 color: Colors.amber,
                 callback: () {
-                  bool? valid = _formKey.currentState?.validate();
+                  final bool? valid = _formKey.currentState?.validate();
                   if (valid != null && valid)
                     widget.loginAccount(
                         _emailController.text, _passwordController.text);

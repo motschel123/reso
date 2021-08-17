@@ -4,7 +4,6 @@ import 'package:reso/business_logic/services/chat_service.dart';
 import 'package:firebase_image/firebase_image.dart';
 import 'package:intl/intl.dart';
 import 'package:reso/business_logic/services/user_data_service.dart';
-import 'package:reso/consts/firestore.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/model/chat.dart';
 import 'package:reso/model/offer.dart';

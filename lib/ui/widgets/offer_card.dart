@@ -7,7 +7,7 @@ import 'package:reso/model/user_profile.dart';
 import 'package:reso/ui/widgets/storage_image.dart';
 
 class OfferCard extends StatelessWidget {
-  // TODO: rewrite doc
+  // TODO(motschel123): rewrite doc
   /// A Card-like widget to display information about an offer
   ///
   /// The [offerTitle], [offerPrice], [offerDescription] and [offerAuthor] arguments
@@ -119,7 +119,9 @@ class OfferCard extends StatelessWidget {
                                           value.displayName),
                                   builder: (BuildContext context,
                                       AsyncSnapshot<String> snap) {
-                                    if (snap.hasError) print(snap.error);
+                                    if (snap.hasError) {
+                                      print(snap.error);
+                                    }
                                     return snap.connectionState ==
                                             ConnectionState.waiting
                                         ? Text('Lädt...',
