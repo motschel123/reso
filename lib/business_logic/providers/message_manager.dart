@@ -37,7 +37,7 @@ class MessageManager {
   }
 
   void _init() {
-    // ignore: always_put_control_body_ on_new_line
+    // ignore: always_put_control_body_on_new_line
     if (_chat == null) return;
 
     _databaseRef =
