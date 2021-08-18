@@ -27,12 +27,12 @@ typedef ErrorCallback = void Function(
 typedef Validator = String? Function(String? string);
 
 class AuthManager with ChangeNotifier {
-  AuthManager({FirebaseAuth? authOverride})
+  AuthManager({@visibleForTesting FirebaseAuth? authOverride})
       : _auth = authOverride ?? FirebaseAuth.instance {
     _email = null;
     _displayName = null;
     _imageRef = null;
-    _auth.authStateChanges().listen((User? currentUser) async {
+    _auth.authStateChanges().listen((User? currentUser) {
       if (currentUser != null) {
         // signed in
         switch (_loginState) {
@@ -141,6 +141,9 @@ class AuthManager with ChangeNotifier {
         .onError<FirebaseAuthException>(
       (FirebaseAuthException e, StackTrace s) {
         errorCallback?.call(e, s);
+        _loginState = LoginState.enterEmail;
+        _fetching = false;
+        notifyListeners();
       },
     );
   }
@@ -234,10 +237,11 @@ class AuthManager with ChangeNotifier {
   }
 
   /// has to be called when user sign in or registers
-  FutureOr<void> _userAuthenticated({ErrorCallback? errorCallback}) {
-    if (_auth.currentUser!.displayName == null)
+  Future<void> _userAuthenticated({ErrorCallback? errorCallback}) {
+    Future<void> future;
+    if (_auth.currentUser!.displayName == null) {
       // wait for user doc to be created
-      return UserDataService.waitUserDocExists(_auth.currentUser!.uid)
+      future = UserDataService.waitUserDocExists(_auth.currentUser!.uid)
           // get user doc
           .then<UserProfile>((bool exists) {
         if (!exists)
@@ -255,10 +259,16 @@ class AuthManager with ChangeNotifier {
               (FirebaseException error, StackTrace stackTrace) {
         errorCallback?.call(error, stackTrace);
       });
-    else {
-      _loginState = LoginState.registered;
-      notifyListeners();
+    } else {
+      future = Future<void>(() {
+        _loginState = LoginState.registered;
+        notifyListeners();
+      });
     }
+    return future.then((_) {
+      _fetching = false;
+      notifyListeners();
+    });
   }
 
   /// has to be called when FirebaseAuth reports user signed out
