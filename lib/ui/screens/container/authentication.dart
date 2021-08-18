@@ -22,12 +22,12 @@ class Authentication extends StatelessWidget {
               break;
             case LoginState.enterEmail:
               currentPage = EmailForm(
-                callback: (String email) => authManager.checkEmail(
+                callback: (String email) => authManager.submitEmail(
                   email,
-                  errorCallback: (Exception e, StackTrace s) =>
+                  errorCallback: (dynamic e, StackTrace s) =>
                       _showErrorDialog(context, 'Ungültige Email', e),
                 ),
-                emailValidator: authManager.emailValidator,
+                emailValidator: AuthManager.emailValidator,
               );
               break;
 
@@ -39,12 +39,11 @@ class Authentication extends StatelessWidget {
                     authManager.registerAccount(
                   email,
                   password,
-                  errorCallback: (Exception e, StackTrace s) =>
-                      _showErrorDialog(
-                          context, 'Account konnte nicht erstellt werden', e),
+                  errorCallback: (dynamic e, StackTrace s) => _showErrorDialog(
+                      context, 'Account konnte nicht erstellt werden', e),
                 ),
-                emailValidator: authManager.emailValidator,
-                passwordValidator: authManager.passwordValidator,
+                emailValidator: AuthManager.emailValidator,
+                passwordValidator: AuthManager.passwordValidator,
               );
               break;
 
@@ -54,11 +53,11 @@ class Authentication extends StatelessWidget {
                 cancel: authManager.cancelLogin,
                 loginAccount: (String email, String password) => authManager
                     .signInWithEmailAndPassword(email, password,
-                        errorCallback: (Exception e, StackTrace stackTrace) {
+                        errorCallback: (dynamic e, StackTrace stackTrace) {
                   _showErrorDialog(context, 'Anmeldung nicht erfolgreich', e);
                 }),
-                emailValidator: authManager.emailValidator,
-                passwordValidator: authManager.passwordValidator,
+                emailValidator: AuthManager.emailValidator,
+                passwordValidator: AuthManager.passwordValidator,
               );
               break;
 
@@ -72,10 +71,10 @@ class Authentication extends StatelessWidget {
                 initialDisplayName: authManager.displayName,
                 submitDisplayName: (String name) => authManager
                     .submitDisplayName(name,
-                        errorCallback: (Exception e, StackTrace stacktrace) {
+                        errorCallback: (dynamic e, StackTrace stacktrace) {
                   _showErrorDialog(context, 'Ein Fehler ist aufgetreten', e);
                 }),
-                displayNameValidator: authManager.displayNameValidator,
+                displayNameValidator: AuthManager.displayNameValidator,
               );
               break;
             case LoginState.uploadImage:
@@ -86,7 +85,7 @@ class Authentication extends StatelessWidget {
                     const Text('upload profile image'),
                     TextButton(
                         onPressed: () => authManager.submitImage(
-                              errorCallback: (Exception e, StackTrace s) =>
+                              errorCallback: (dynamic e, StackTrace s) =>
                                   _showErrorDialog(
                                       context, 'Ungültige Email', e),
                             ),
@@ -443,13 +442,13 @@ class _EnterNameFormState extends State<EnterNameForm> {
   }
 }
 
-void _showErrorDialog(BuildContext context, String title, Exception e) {
+void _showErrorDialog(BuildContext context, String title, dynamic e) {
   showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(title, style: Theme.of(context).textTheme.headline2),
-          content: Text('${(e as dynamic).message}',
+          content: Text('${e.message}',
               style: Theme.of(context).textTheme.bodyText1),
           actions: <Widget>[
             StyledButtonLarge(

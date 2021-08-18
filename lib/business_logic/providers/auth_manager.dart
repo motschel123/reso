@@ -21,7 +21,8 @@ enum LoginState {
   registered,
 }
 
-typedef ErrorCallback = void Function(Exception e, StackTrace stackTrace);
+typedef ErrorCallback = void Function(
+    FirebaseException e, StackTrace stackTrace);
 
 typedef Validator = String? Function(String? string);
 
@@ -74,7 +75,7 @@ class AuthManager with ChangeNotifier {
   String? get imageRef => _imageRef;
   String? _imageRef;
 
-  String? emailValidator(String? email) {
+  static String? emailValidator(String? email) {
     if (email == null || (email = email.trim()).isEmpty) {
       return EMAIL_EMPTY;
     }
@@ -95,10 +96,10 @@ class AuthManager with ChangeNotifier {
     }
   }
 
-  String? passwordValidator(String? password) {
+  static String? passwordValidator(String? password) {
     // TODO(motschel123): implement
   }
-  String? displayNameValidator(String? displayName) {
+  static String? displayNameValidator(String? displayName) {
     // TODO(motschel123): implement
   }
 
@@ -107,7 +108,7 @@ class AuthManager with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> checkEmail(String email, {ErrorCallback? errorCallback}) async {
+  Future<void> submitEmail(String email, {ErrorCallback? errorCallback}) async {
     _fetching = true;
     notifyListeners();
     return _auth.fetchSignInMethodsForEmail(email).then((List<String> methods) {
@@ -116,11 +117,13 @@ class AuthManager with ChangeNotifier {
       } else {
         _loginState = LoginState.signUp;
       }
-      _email = email;
-    }).onError<FirebaseAuthException>((FirebaseAuthException e, StackTrace s) {
-      errorCallback?.call(e, s);
+    }).onError<FirebaseException>(
+        (FirebaseException error, StackTrace stacktrace) {
+      _loginState = LoginState.enterEmail;
+      errorCallback?.call(error, stacktrace);
     }).whenComplete(() {
       _fetching = false;
+      _email = email;
       notifyListeners();
     });
   }
@@ -191,7 +194,8 @@ class AuthManager with ChangeNotifier {
     return UserDataService.updateUserData(newDisplayName: newName).then((_) {
       _loginState = LoginState.uploadImage;
       notifyListeners();
-    }).onError<Exception>((Exception error, StackTrace stackTrace) {
+    }).onError<FirebaseException>(
+        (FirebaseException error, StackTrace stackTrace) {
       errorCallback?.call(error, stackTrace);
     }).whenComplete(() {
       _fetching = false;
@@ -207,7 +211,7 @@ class AuthManager with ChangeNotifier {
         .then((_) {
       _loginState = LoginState.registered;
       notifyListeners();
-    }).onError<Exception>((Exception e, StackTrace stacktrace) {
+    }).onError<FirebaseException>((FirebaseException e, StackTrace stacktrace) {
       errorCallback?.call(e, stacktrace);
     }).whenComplete(() {
       _fetching = false;
@@ -247,7 +251,8 @@ class AuthManager with ChangeNotifier {
         _imageRef = profile.imageRef;
         _loginState = LoginState.authenticated;
         notifyListeners();
-      }).onError<Exception>((Exception error, StackTrace stackTrace) {
+      }).onError<FirebaseException>(
+              (FirebaseException error, StackTrace stackTrace) {
         errorCallback?.call(error, stackTrace);
       });
     else {
