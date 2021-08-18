@@ -37,6 +37,9 @@ class UserDataService {
     if (currentUser == null) {
       throw Exception('No user signed in to update data on');
     }
+    if (newDisplayName == null && newImageRef == null) {
+      return;
+    }
 
     // data map for firestore update
     final Map<String, dynamic> updates = <String, dynamic>{};

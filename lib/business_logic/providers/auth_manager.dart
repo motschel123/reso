@@ -117,8 +117,8 @@ class AuthManager with ChangeNotifier {
       } else {
         _loginState = LoginState.signUp;
       }
-    }).onError<FirebaseException>(
-        (FirebaseException error, StackTrace stacktrace) {
+    }).onError<FirebaseAuthException>(
+        (FirebaseAuthException error, StackTrace stacktrace) {
       _loginState = LoginState.enterEmail;
       errorCallback?.call(error, stacktrace);
     }).whenComplete(() {

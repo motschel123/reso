@@ -30,7 +30,11 @@ class UserProfile {
 
   static UserProfile fromDoc(DocumentSnapshot<Map<String, dynamic>> docSnap) {
     if (!docSnap.exists) {
-      throw Exception("User Document doesn't exist");
+      throw FirebaseException(
+        plugin: 'FirebaseFirestore',
+        message: "UserProfile.fromDoc: User Document doesn't exist",
+        stackTrace: StackTrace.current,
+      );
     }
     if (docSnap.data() == null || docSnap.data()!.isEmpty)
       throw Exception('User Document has no data: ${docSnap.id}');
