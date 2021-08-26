@@ -26,8 +26,15 @@ class UserDataService {
   }
 
   static Future<bool> waitUserDocExists(String uid) async {
-    return _firestore.collection(USERS_COLLECTION).doc(uid).snapshots().any(
-        (DocumentSnapshot<Map<String, dynamic>> docSnap) => docSnap.exists);
+    return _firestore
+        .collection(USERS_COLLECTION)
+        .doc(uid)
+        .snapshots()
+        .any((DocumentSnapshot<Map<String, dynamic>> docSnap) => docSnap.exists)
+        .onError<Object>((Object? error, StackTrace stackTrace) {
+      throw FirebaseException(
+          plugin: 'FirebaseAuth/FirebaseFunctions', message: error.toString());
+    });
   }
 
   static Future<void> updateUserData(
