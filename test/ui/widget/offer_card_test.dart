@@ -6,7 +6,7 @@ import 'package:reso/model/offer.dart';
 import 'package:reso/ui/widgets/offer_card.dart';
 
 void main() {
-  group('OfferCard test', () {
+  /*group('OfferCard test', () {
     testWidgets('should display offer infos', (WidgetTester tester) async {
       const Offer sampleOffer = Offer.sample;
       await mockNetworkImagesFor(() async {
@@ -29,5 +29,5 @@ void main() {
             findsOneWidget);
       });
     });
-  });
+  });*/
 }

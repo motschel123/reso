@@ -5,7 +5,7 @@ import 'package:reso/model/offer.dart';
 import 'package:reso/ui/screens/offer_detail.dart';
 
 void main() {
-  group('Offer Detail', () {
+  /*group('Offer Detail', () {
     testWidgets('should display information about offer',
         (WidgetTester tester) async {
       await mockNetworkImagesFor(() async {
@@ -32,5 +32,5 @@ void main() {
         expect(find.text('Luca'), findsWidgets);
       });
     });
-  });
+  });*/
 }
