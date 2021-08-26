@@ -60,41 +60,7 @@ class Authentication extends StatelessWidget {
                 passwordValidator: AuthManager.passwordValidator,
               );
               break;
-
             case LoginState.authenticated:
-              currentPage = AuthenticatedScreen(
-                completeSignUp: authManager.completeSignUp,
-              );
-              break;
-            case LoginState.enterName:
-              currentPage = EnterNameForm(
-                initialDisplayName: authManager.displayName,
-                submitDisplayName: (String name) => authManager
-                    .submitDisplayName(name,
-                        errorCallback: (dynamic e, StackTrace stacktrace) {
-                  _showErrorDialog(context, 'Ein Fehler ist aufgetreten', e);
-                }),
-                displayNameValidator: AuthManager.displayNameValidator,
-              );
-              break;
-            case LoginState.uploadImage:
-              currentPage = Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    const Text('upload profile image'),
-                    TextButton(
-                        onPressed: () => authManager.submitImage(
-                              errorCallback: (dynamic e, StackTrace s) =>
-                                  _showErrorDialog(
-                                      context, 'Ungültige Email', e),
-                            ),
-                        child: const Text('skip')),
-                  ],
-                ),
-              );
-              break;
-            case LoginState.registered:
               currentPage = child;
               break;
           }

@@ -7,10 +7,10 @@ import 'dart:async' as _i6;
 import 'package:firebase_auth/firebase_auth.dart' as _i3;
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart'
     as _i2;
-import 'package:firebase_core/firebase_core.dart' as _i4;
+import 'package:firebase_core/firebase_core.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:reso/business_logic/services/user_data_service.dart' as _i7;
-import 'package:reso/model/user_profile.dart' as _i5;
+import 'package:reso/model/user_profile.dart' as _i4;
 
 // ignore_for_file: avoid_redundant_argument_values
 // ignore_for_file: avoid_setters_without_getters
@@ -31,11 +31,11 @@ class _FakeConfirmationResult_3 extends _i1.Fake
 
 class _FakeUser_4 extends _i1.Fake implements _i3.User {}
 
-class _FakeFirebaseApp_5 extends _i1.Fake implements _i4.FirebaseApp {}
+class _FakeUserProfile_5 extends _i1.Fake implements _i4.UserProfile {}
 
-class _FakeActionCodeInfo_6 extends _i1.Fake implements _i2.ActionCodeInfo {}
+class _FakeFirebaseApp_6 extends _i1.Fake implements _i5.FirebaseApp {}
 
-class _FakeUserProfile_7 extends _i1.Fake implements _i5.UserProfile {}
+class _FakeActionCodeInfo_7 extends _i1.Fake implements _i2.ActionCodeInfo {}
 
 /// A class which mocks [User].
 ///
@@ -178,15 +178,71 @@ class MockUserCredential extends _i1.Mock implements _i3.UserCredential {
   String toString() => super.toString();
 }
 
+/// A class which mocks [UserProfile].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockUserProfile extends _i1.Mock implements _i4.UserProfile {
+  MockUserProfile() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  String get uid =>
+      (super.noSuchMethod(Invocation.getter(#uid), returnValue: '') as String);
+  @override
+  String get displayName =>
+      (super.noSuchMethod(Invocation.getter(#displayName), returnValue: '')
+          as String);
+  @override
+  String get imageRef =>
+      (super.noSuchMethod(Invocation.getter(#imageRef), returnValue: '')
+          as String);
+  @override
+  Map<String, dynamic> toMap() =>
+      (super.noSuchMethod(Invocation.method(#toMap, []),
+          returnValue: <String, dynamic>{}) as Map<String, dynamic>);
+  @override
+  String toString() => super.toString();
+}
+
+/// A class which mocks [UserDataService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockUserDataService extends _i1.Mock implements _i7.UserDataService {
+  MockUserDataService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.Future<_i4.UserProfile> getUserProfile(String? uid) =>
+      (super.noSuchMethod(Invocation.method(#getUserProfile, [uid]),
+              returnValue: Future<_i4.UserProfile>.value(_FakeUserProfile_5()))
+          as _i6.Future<_i4.UserProfile>);
+  @override
+  _i6.Future<bool> waitUserDocExists(String? uid) =>
+      (super.noSuchMethod(Invocation.method(#waitUserDocExists, [uid]),
+          returnValue: Future<bool>.value(false)) as _i6.Future<bool>);
+  @override
+  _i6.Future<void> updateUserData(
+          {String? newDisplayName, String? newImageRef}) =>
+      (super.noSuchMethod(
+          Invocation.method(#updateUserData, [],
+              {#newDisplayName: newDisplayName, #newImageRef: newImageRef}),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
+  @override
+  String toString() => super.toString();
+}
+
 /// A class which mocks [FirebaseAuth].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockFirebaseAuth extends _i1.Mock implements _i3.FirebaseAuth {
   @override
-  _i4.FirebaseApp get app => (super.noSuchMethod(Invocation.getter(#app),
-      returnValue: _FakeFirebaseApp_5()) as _i4.FirebaseApp);
+  _i5.FirebaseApp get app => (super.noSuchMethod(Invocation.getter(#app),
+      returnValue: _FakeFirebaseApp_6()) as _i5.FirebaseApp);
   @override
-  set app(_i4.FirebaseApp? _app) =>
+  set app(_i5.FirebaseApp? _app) =>
       super.noSuchMethod(Invocation.setter(#app, _app),
           returnValueForMissingStub: null);
   @override
@@ -216,7 +272,7 @@ class MockFirebaseAuth extends _i1.Mock implements _i3.FirebaseAuth {
   _i6.Future<_i2.ActionCodeInfo> checkActionCode(String? code) =>
       (super.noSuchMethod(Invocation.method(#checkActionCode, [code]),
               returnValue:
-                  Future<_i2.ActionCodeInfo>.value(_FakeActionCodeInfo_6()))
+                  Future<_i2.ActionCodeInfo>.value(_FakeActionCodeInfo_7()))
           as _i6.Future<_i2.ActionCodeInfo>);
   @override
   _i6.Future<void> confirmPasswordReset({String? code, String? newPassword}) =>
@@ -394,23 +450,6 @@ class MockFirebaseAuth extends _i1.Mock implements _i3.FirebaseAuth {
           }),
           returnValue: Future<void>.value(),
           returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
-  @override
-  String toString() => super.toString();
-}
-
-/// A class which mocks [UserDataService].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockUserDataService extends _i1.Mock implements _i7.UserDataService {
-  @override
-  _i6.Future<bool> WaitUserDocExists(String? uid) =>
-      (super.noSuchMethod(Invocation.method(#WaitUserDocExists, [uid]),
-          returnValue: Future<bool>.value(false)) as _i6.Future<bool>);
-  @override
-  _i6.Future<_i5.UserProfile> GetUserProfile(String? uid) =>
-      (super.noSuchMethod(Invocation.method(#GetUserProfile, [uid]),
-              returnValue: Future<_i5.UserProfile>.value(_FakeUserProfile_7()))
-          as _i6.Future<_i5.UserProfile>);
   @override
   String toString() => super.toString();
 }

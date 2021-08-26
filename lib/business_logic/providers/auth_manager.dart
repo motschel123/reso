@@ -1,14 +1,9 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:reso/business_logic/services/storage_service.dart';
-import 'package:reso/business_logic/services/user_data_service.dart';
-import 'package:reso/consts/firestore.dart';
 import 'package:reso/consts/strings_german.dart';
-import 'package:reso/model/user_profile.dart';
 
 enum LoginState {
   loggedOut,
@@ -16,13 +11,9 @@ enum LoginState {
   login,
   signUp,
   authenticated,
-  enterName,
-  uploadImage,
-  registered,
 }
 
-typedef ErrorCallback = void Function(
-    FirebaseException e, StackTrace stackTrace);
+typedef ErrorCallback = void Function(dynamic e, StackTrace stackTrace);
 
 typedef Validator = String? Function(String? string);
 
@@ -34,30 +25,11 @@ class AuthManager with ChangeNotifier {
     _imageRef = null;
     _auth.authStateChanges().listen((User? currentUser) {
       if (currentUser != null) {
-        // signed in
-        switch (_loginState) {
-          case LoginState.loggedOut:
-          case LoginState.enterEmail:
-          case LoginState.signUp:
-          case LoginState.login:
-            _userAuthenticated();
-            break;
-          default:
-            break;
-        }
+        _loginState = LoginState.authenticated;
       } else {
-        // signed out
-        switch (_loginState) {
-          case LoginState.authenticated:
-          case LoginState.enterName:
-          case LoginState.uploadImage:
-          case LoginState.registered:
-            _userSignedOut();
-            break;
-          default:
-            break;
-        }
+        _loginState = LoginState.loggedOut;
       }
+      notifyListeners();
     });
   }
   final FirebaseAuth _auth;
@@ -74,6 +46,8 @@ class AuthManager with ChangeNotifier {
   String? _displayName;
   String? get imageRef => _imageRef;
   String? _imageRef;
+  bool get isNewUser => _isNewUser;
+  bool _isNewUser = true;
 
   static String? emailValidator(String? email) {
     if (email == null || (email = email.trim()).isEmpty) {
@@ -137,15 +111,16 @@ class AuthManager with ChangeNotifier {
     notifyListeners();
     return _auth
         .signInWithEmailAndPassword(email: email, password: password)
-        .then((_) => null)
+        .then((_) {})
         .onError<FirebaseAuthException>(
       (FirebaseAuthException e, StackTrace s) {
         errorCallback?.call(e, s);
         _loginState = LoginState.enterEmail;
-        _fetching = false;
-        notifyListeners();
       },
-    );
+    ).whenComplete(() {
+      _fetching = false;
+      notifyListeners();
+    });
   }
 
   Future<void> registerAccount(String email, String password,
@@ -155,46 +130,21 @@ class AuthManager with ChangeNotifier {
 
     return _auth
         .createUserWithEmailAndPassword(email: email, password: password)
-        .then<String>((UserCredential user) async {
-      // wait for firebase function to create user document
-      final String uid = user.user!.uid;
-      final bool exists = await UserDataService.waitUserDocExists(uid);
-      if (exists) {
-        return uid;
-      } else {
-        throw FirebaseException(
-          plugin: 'FirebaseFunctions',
-          message: "User document couldn't be created",
-        );
-      }
-    }).then((String uid) async {
-      // get the default values from user document to display in ui
-      final UserProfile profile = await UserDataService.getUserProfile(uid);
-      _displayName = profile.displayName;
-      _imageRef = profile.imageRef;
-      notifyListeners();
-    }).onError<FirebaseException>((FirebaseException e, StackTrace stacktrace) {
-      errorCallback?.call(e, stacktrace);
+        .then((UserCredential userCredential) {
+      _isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
+    }).catchError((dynamic error, StackTrace stack) async {
+      errorCallback?.call(error, stack);
     }).whenComplete(() {
       _fetching = false;
       notifyListeners();
     });
   }
 
-  void completeSignUp() {
-    if (_auth.currentUser!.displayName == null) {
-      _loginState = LoginState.enterName;
-    } else {
-      _loginState = LoginState.registered;
-    }
-    notifyListeners();
-  }
-
-  Future<void> submitDisplayName(String newName,
+/*  Future<void> submitDisplayName(String newName,
       {ErrorCallback? errorCallback}) {
     _fetching = true;
     notifyListeners();
-    return UserDataService.updateUserData(newDisplayName: newName).then((_) {
+    return _userDataService.updateUserData(newDisplayName: newName).then((_) {
       _loginState = LoginState.uploadImage;
       notifyListeners();
     }).onError<FirebaseException>(
@@ -220,7 +170,7 @@ class AuthManager with ChangeNotifier {
       _fetching = false;
       notifyListeners();
     });
-  }
+  }*/
 
   void cancelRegistration() {
     _loginState = LoginState.enterEmail;
@@ -234,46 +184,5 @@ class AuthManager with ChangeNotifier {
 
   void signOut() {
     _auth.signOut();
-  }
-
-  /// has to be called when user sign in or registers
-  Future<void> _userAuthenticated({ErrorCallback? errorCallback}) {
-    Future<void> future;
-    if (_auth.currentUser!.displayName == null) {
-      // wait for user doc to be created
-      future = UserDataService.waitUserDocExists(_auth.currentUser!.uid)
-          // get user doc
-          .then<UserProfile>((bool exists) {
-        if (!exists)
-          throw FirebaseException(
-              plugin: 'FirebaseFunctions',
-              message: "User data couldn't be written");
-        return UserDataService.getUserProfile(_auth.currentUser!.uid);
-        // updated initial values for ui
-      }).then((UserProfile profile) {
-        _displayName = profile.displayName;
-        _imageRef = profile.imageRef;
-        _loginState = LoginState.authenticated;
-        notifyListeners();
-      }).onError<FirebaseException>(
-              (FirebaseException error, StackTrace stackTrace) {
-        errorCallback?.call(error, stackTrace);
-      });
-    } else {
-      future = Future<void>(() {
-        _loginState = LoginState.registered;
-        notifyListeners();
-      });
-    }
-    return future.then((_) {
-      _fetching = false;
-      notifyListeners();
-    });
-  }
-
-  /// has to be called when FirebaseAuth reports user signed out
-  void _userSignedOut() {
-    _loginState = LoginState.loggedOut;
-    notifyListeners();
   }
 }

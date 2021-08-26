@@ -5,39 +5,20 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:reso/business_logic/providers/auth_manager.dart';
-import 'package:reso/business_logic/services/user_data_service.dart';
 import 'package:reso/consts/strings_german.dart';
-import 'package:reso/model/user_profile.dart';
 
 import 'auth_manager_test.mocks.dart';
 
-// workaround mocking static methods
-Future<bool> waitUserDocExists(String uid) async =>
-    UserDataService.waitUserDocExists(uid);
-
-Future<UserProfile> getUserProfile(String uid) async =>
-    UserDataService.getUserProfile(uid);
-
 @GenerateMocks(<Type>[
   User,
-  UserCredential,
-  UserProfile
+  UserCredential
 ], customMocks: <MockSpec<dynamic>>[
   MockSpec<FirebaseAuth>(
     as: Symbol('MockFirebaseAuth'),
     returnNullOnMissingStub: true,
-  ),
-  MockSpec<UserDataService>(
-      returnNullOnMissingStub: true,
-      fallbackGenerators: <Symbol, Function>{
-        Symbol('waitUserDocExists'): waitUserDocExists,
-        Symbol('getUserProfile'): getUserProfile,
-      })
+  )
 ])
 void main() {
-  const String exDisplayName = 'Max Mustermann';
-  const String exUid = '12345';
-
   group('Validators', () {
     test('emailValidator should only validate @fau.de mails', () {
       final Map<String, String?> mails = <String, String?>{
@@ -76,16 +57,7 @@ void main() {
 
     AuthManager authManager = AuthManager(authOverride: mockAuth);
 
-    int isFetchingNotified = 0;
-    int notFetchingNotified = 0;
-    int notFetchingAfterIsFetchingNotified = 0;
-    int helperCount = 0;
-
     setUp(() {
-      isFetchingNotified = 0;
-      notFetchingNotified = 0;
-      notFetchingAfterIsFetchingNotified = 0;
-
       clearInteractions(mockUser);
       clearInteractions(mockUserCredential);
       clearInteractions(mockAuth);
@@ -94,20 +66,6 @@ void main() {
           (Invocation realInvocation) => authStreamController.stream);
       authManager = AuthManager(authOverride: mockAuth);
     });
-
-    void fetchNotificationListener() {
-      if (authManager.fetching) {
-        isFetchingNotified++;
-        helperCount++;
-      }
-      if (!authManager.fetching) {
-        notFetchingNotified++;
-        if (helperCount > 0) {
-          notFetchingAfterIsFetchingNotified++;
-          helperCount = 0;
-        }
-      }
-    }
 
     test('startLoginFlow', () {
       bool switchedStateToEnterEmail = false;
@@ -120,10 +78,8 @@ void main() {
       }
 
       authManager.addListener(listener);
-      authManager.addListener(fetchNotificationListener);
       authManager.startLoginFlow();
       authManager.removeListener(listener);
-      authManager.removeListener(fetchNotificationListener);
 
       expect(switchedStateToEnterEmail, true,
           reason: "AuthManager din't switch to enterEmail state");
@@ -131,33 +87,109 @@ void main() {
           reason: "AuthManager didn't notify on switched state");
     });
 
-    test('submitEmail fetchNotifications', () async {
+    test('submitEmail user already registered => should login', () async {
       when(mockAuth.fetchSignInMethodsForEmail('login'))
           .thenAnswer((_) async => <String>['password']);
-      when(mockAuth.fetchSignInMethodsForEmail('register'))
+
+      int notified = 0;
+      bool isStateLogin = false;
+      bool calledErrorCallback = false;
+
+      void listener() {
+        notified++;
+        if (authManager.loginState == LoginState.login) {
+          isStateLogin = true;
+        }
+      }
+
+      void errorCallback(dynamic dynamic, StackTrace stack) {
+        calledErrorCallback = true;
+      }
+
+      authManager.addListener(listener);
+      await authManager.submitEmail('login', errorCallback: errorCallback);
+      authManager.removeListener(listener);
+
+      expect(notified, 2,
+          reason:
+              'Authmanager should notify once for fetching and once for fetching done');
+
+      expect(isStateLogin, true,
+          reason: 'after registered email is entered, state should be login');
+
+      expect(calledErrorCallback, false,
+          reason: 'should not call errorCallback on registered user mail');
+    });
+
+    test('submitEmail user not registered => should signUp', () async {
+      when(mockAuth.fetchSignInMethodsForEmail('signup'))
           .thenAnswer((_) async => <String>[]);
+
+      int notified = 0;
+      bool isStateSignUp = false;
+      bool calledErrorCallback = false;
+
+      void listener() {
+        notified++;
+        if (authManager.loginState == LoginState.signUp) {
+          isStateSignUp = true;
+        }
+      }
+
+      void errorCallback(dynamic dynamic, StackTrace stack) {
+        calledErrorCallback = true;
+      }
+
+      authManager.addListener(listener);
+      await authManager.submitEmail('signup', errorCallback: errorCallback);
+      authManager.removeListener(listener);
+
+      // todo expect
+      expect(notified, 2,
+          reason:
+              'Authmanager should notify once for fetching and once for fetching done');
+
+      expect(isStateSignUp, true,
+          reason: 'after new email is entered, state should be signUp');
+
+      expect(calledErrorCallback, false,
+          reason: 'should not call errorCallback on registered user mail');
+    });
+
+    test('submitEmail error => should call errorCallback', () async {
       when(mockAuth.fetchSignInMethodsForEmail('error'))
           .thenAnswer((_) => Future<List<String>>.error(FirebaseAuthException(
                 code: 'invalid-email',
               )));
 
-      authManager.addListener(fetchNotificationListener);
+      int notified = 0;
+      bool isStateEmail = false;
+      bool calledErrorCallback = false;
 
-      await authManager.submitEmail('login');
-      await authManager.submitEmail('register');
-      await authManager.submitEmail('error');
+      void listener() {
+        notified++;
+        if (authManager.loginState == LoginState.enterEmail) {
+          isStateEmail = true;
+        }
+      }
 
-      authManager.removeListener(fetchNotificationListener);
+      void errorCallback(dynamic dynamic, StackTrace stack) {
+        calledErrorCallback = true;
+      }
 
-      expect(isFetchingNotified, greaterThanOrEqualTo(3),
+      authManager.addListener(listener);
+      await authManager.submitEmail('error', errorCallback: errorCallback);
+      authManager.removeListener(listener);
+
+      expect(notified, 2,
           reason:
-              "submitEmail doesn't notifyListeners of fetching=true in some cases ");
-      expect(notFetchingNotified, greaterThanOrEqualTo(3),
-          reason:
-              "submitEmail doesn't notifyListeners after fetching=false in some cases");
-      expect(notFetchingAfterIsFetchingNotified, equals(isFetchingNotified),
-          reason:
-              "submitEmail doesn't always set fetching=false and notifies listeners after fetching was set to true");
+              'Authmanager should notify once for fetching and once for fetching done');
+
+      expect(isStateEmail, true,
+          reason: 'after error is produced, should remain in state enterEmail');
+
+      expect(calledErrorCallback, true,
+          reason: 'should call errorCallback on error');
     });
 
     test('signInWithEmailAndPassword errors', () async {
@@ -168,50 +200,57 @@ void main() {
         'wrong-password'
       ];
 
-      authManager.addListener(fetchNotificationListener);
+      int notified = 0;
+      bool calledErrorCallback = true;
+
+      void listener() {
+        notified++;
+      }
+
+      void errorCallback(dynamic dyn, StackTrace stack) {
+        calledErrorCallback = true;
+      }
+
+      authManager.addListener(listener);
 
       for (final String mail in badMails) {
+        notified = 0;
+        calledErrorCallback = false;
+
         when(mockAuth.signInWithEmailAndPassword(
                 email: mail, password: anyNamed('password')))
             .thenAnswer((_) async => Future<UserCredential>.error(
                 FirebaseAuthException(code: mail)));
 
-        await authManager.signInWithEmailAndPassword(mail, 'passwort');
+        await authManager.signInWithEmailAndPassword(mail, 'passwort',
+            errorCallback: errorCallback);
 
-        expect(authManager.fetching, false,
+        expect(notified, 2,
             reason:
-                "AuthMananger shouldn't be fetching after waiting for signIn with an error");
+                'Authmanager should notify once for fetching and once for fetching done');
         expect(authManager.loginState, LoginState.enterEmail,
             reason:
                 "AuthManager didn't keep his loginState after sign in error");
+        expect(calledErrorCallback, true,
+            reason: 'AuthManager should call errorCallback ');
       }
 
-      authManager.removeListener(fetchNotificationListener);
-
-      verify(mockAuth.signInWithEmailAndPassword(
-              email: anyNamed('email'), password: anyNamed('password')))
-          .called(badMails.length);
-
-      expect(isFetchingNotified, greaterThanOrEqualTo(badMails.length),
-          reason:
-              "signInWithEmailAndPassword didn't notify about fetching state");
-      expect(notFetchingNotified, greaterThanOrEqualTo(badMails.length),
-          reason:
-              "signInWithEmailAndPassword didn't notify about end of fetching state");
-      expect(notFetchingAfterIsFetchingNotified,
-          greaterThanOrEqualTo(badMails.length),
-          reason:
-              "signInWithEmailAndPassword didn't notify the end of each started fetching state");
+      authManager.removeListener(listener);
     });
 
-    test('signInWithEmailAndPassword fetching if user registered', () async {
+    /*test('signInWithEmailAndPassword fetching if user registered', () async {
+      when(mockUserDataService.waitUserDocExists(any))
+          .thenAnswer((_) => Future<bool>(() => true));
+      when(mockUserDataService.getUserProfile(any)).thenAnswer((_) =>
+          Future<UserProfile>(() => UserProfile(
+              uid: exUid, displayName: exDisplayName, imageRef: exImageRef)));
       // mock registered sign in
       when(mockAuth.signInWithEmailAndPassword(
               email: anyNamed('email'), password: anyNamed('password')))
           .thenAnswer((_) async {
         when(mockUser.displayName).thenReturn(exDisplayName);
         when(mockUser.uid).thenReturn(exUid);
-        when(mockAuth.currentUser).thenReturn(mockUser);
+        when(mockUserCredential.user).thenReturn(mockUser);
         authStreamController.add(mockUser);
         return mockUserCredential;
       });
@@ -225,15 +264,16 @@ void main() {
           reason:
               "Authmanager didn't swtich to LoginState.registered after successfull signIn");
 
-      expect(isFetchingNotified, greaterThanOrEqualTo(1),
+      // check that function notifies first with fetching = true, then with fetching =false
+      expect(isFetchingNotified, 1,
           reason:
-              "signInWithEmailAndPassword doesn't notify fetching for registered user signin");
-      expect(notFetchingNotified, greaterThanOrEqualTo(1),
+              'signInWithEmailAndPassword should notifyListeners once with fetching = true');
+      expect(notFetchingNotified, 1,
           reason:
-              "signInWithEmailAndPassword doesn't notify end of fetching for registered user signin");
-      expect(notFetchingAfterIsFetchingNotified, greaterThanOrEqualTo(1),
+              'signInWithEmailAndPassword should notifyListeners once with fetching = true');
+      expect(notFetchingAfterIsFetchingNotified, 1,
           reason:
-              "signInWithEmailAndPassword doesn't notify end of fetching after start of fetching");
+              'signInWithEmailAndPassword should first notify with fetching=true, then with fetching=false');
     });
 
     test('signInWithEmailAndPassword fetching if user not registered',
@@ -363,6 +403,6 @@ void main() {
 
         authManager.addListener(() {});
       });
-    });*/
+    });*/*/
   });
 }
