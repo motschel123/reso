@@ -6,6 +6,7 @@ import 'package:reso/model/chat.dart';
 import 'package:reso/model/offer.dart';
 import 'package:reso/ui/screens/chat_dialogue.dart';
 import 'package:reso/ui/screens/main/live_feed.dart';
+import 'package:reso/ui/screens/main/main_layout.dart';
 import 'package:reso/ui/screens/main/messaging.dart';
 import 'package:reso/ui/screens/main/profile.dart';
 import 'package:reso/ui/screens/main/search.dart';
@@ -21,11 +22,40 @@ class NavigationContainer extends StatefulWidget {
 
 class _NavigationContainerState extends State<NavigationContainer> {
   int _selectedIndex = 0;
-  final List<Widget> _widgetOptions = <Widget>[
-    const LiveFeed(),
-    const SearchOffers(),
-    const Messaging(),
-    const Profile(),
+
+  final List<_NavigationOption> _navOptions = <_NavigationOption>[
+    const _NavigationOption(
+      title: 'Feed',
+      bottomNavigationBarItem: BottomNavigationBarItem(
+        icon: Icon(Icons.feed),
+        label: 'Feed',
+      ),
+      widget: LiveFeed(),
+    ),
+    const _NavigationOption(
+      title: 'Suche',
+      bottomNavigationBarItem: BottomNavigationBarItem(
+        icon: Icon(Icons.search),
+        label: 'Suchen',
+      ),
+      widget: SearchOffers(),
+    ),
+    const _NavigationOption(
+      title: 'Nachrichten',
+      bottomNavigationBarItem: BottomNavigationBarItem(
+        icon: Icon(Icons.message),
+        label: 'Nachrichten',
+      ),
+      widget: Messaging(),
+    ),
+    const _NavigationOption(
+      title: 'Profil',
+      bottomNavigationBarItem: BottomNavigationBarItem(
+        icon: Icon(Icons.person),
+        label: 'Profil',
+      ),
+      widget: Profile(),
+    ),
   ];
 
   void _onItemTapped(int index) {
@@ -43,28 +73,15 @@ class _NavigationContainerState extends State<NavigationContainer> {
         WidgetBuilder builder;
         switch (settings.name) {
           case '/':
-            builder = (BuildContext context) => Scaffold(
-                  body: _widgetOptions[_selectedIndex],
+            builder = (BuildContext context) => MainLayout(
+                  title: _navOptions[_selectedIndex].title,
+                  body: _navOptions[_selectedIndex].widget,
                   bottomNavigationBar: BottomNavigationBar(
                     unselectedItemColor: Theme.of(context).buttonColor,
-                    items: const <BottomNavigationBarItem>[
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.feed),
-                        label: 'Feed',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.search),
-                        label: 'Suchen',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.message),
-                        label: 'Nachrichten',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.person),
-                        label: 'Profil',
-                      ),
-                    ],
+                    items: _navOptions
+                        .map((_NavigationOption navOp) =>
+                            navOp.bottomNavigationBarItem)
+                        .toList(),
                     currentIndex: _selectedIndex,
                     selectedItemColor: Colors.amber,
                     onTap: _onItemTapped,
@@ -94,4 +111,16 @@ class _NavigationContainerState extends State<NavigationContainer> {
       },
     );
   }
+}
+
+class _NavigationOption {
+  const _NavigationOption({
+    required this.title,
+    required this.bottomNavigationBarItem,
+    required this.widget,
+  });
+
+  final String title;
+  final BottomNavigationBarItem bottomNavigationBarItem;
+  final Widget widget;
 }
