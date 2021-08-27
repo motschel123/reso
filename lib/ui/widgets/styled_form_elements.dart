@@ -18,6 +18,7 @@ class StyledTextFormField extends StatelessWidget {
       this.multiline = false,
       this.obscureText = false,
       this.keyboardType = TextInputType.text,
+      this.autocorrect = true,
       this.validator,
       this.suffixIcon})
       : super(key: key);
@@ -26,7 +27,7 @@ class StyledTextFormField extends StatelessWidget {
 
   final String hintText;
 
-  final bool multiline, obscureText;
+  final bool multiline, obscureText, autocorrect;
 
   final TextInputType keyboardType;
 
@@ -45,6 +46,7 @@ class StyledTextFormField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       validator: validator,
+      autocorrect: autocorrect,
       decoration: InputDecoration(
           suffixIcon: suffixIcon,
           hintText: hintText,
