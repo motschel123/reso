@@ -148,6 +148,7 @@ class _EmailFormState extends State<EmailForm> {
             children: <Widget>[
               StyledTextFormField(
                 hintText: 'Email',
+                autocorrect: false,
                 controller: _controller,
                 keyboardType: TextInputType.emailAddress,
                 validator: widget.emailValidator,
