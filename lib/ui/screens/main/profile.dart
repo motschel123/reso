@@ -14,6 +14,7 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: move FAB to main_layout
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
@@ -29,12 +30,6 @@ class Profile extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 8.0),
-                      child: Text('Deine Angebote',
-                          style: Theme.of(context).textTheme.headline1),
-                    ),
                     const Divider(height: 0),
                     Text(
                         'Du: ${FirebaseAuth.instance.currentUser!.displayName}'),

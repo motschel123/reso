@@ -49,7 +49,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
       widget: Messaging(),
     ),
     const _NavigationOption(
-      title: 'Profil',
+      title: 'Meine Angebot',
       bottomNavigationBarItem: BottomNavigationBarItem(
         icon: Icon(Icons.person),
         label: 'Profil',
