@@ -44,10 +44,9 @@ Future<void> createOffer(
   void Function(FirebaseException e)? errorCallback,
 }) async {
   try {
-    String? imageUrl, imageRef;
+    String? imageRef;
     if (image != null) {
       imageRef = await StorageService.uploadImage(image);
-      imageUrl = await StorageService.getImageUrl(imageRef);
     }
 
     final Map<String, dynamic> offerData = Offer(
@@ -81,7 +80,7 @@ Future<void> updateOffer(
   void Function()? successCallback,
   void Function(FirebaseException e)? errorCallback,
 }) async {
-  String? imageUrl, imageRef;
+  String? imageRef;
 
   if (oldOffer.offerId == null) {
     print('Can update offer that is not created!');
@@ -91,7 +90,6 @@ Future<void> updateOffer(
   try {
     if (image != null) {
       imageRef = await StorageService.uploadImage(image);
-      imageUrl = await StorageService.getImageUrl(imageRef);
 
       // Delete old image in FireStorage if it exists
       if (oldOffer.imageRef != null) {

@@ -29,7 +29,7 @@ class _SearchOffersState extends State<SearchOffers> {
                 padding: const EdgeInsets.symmetric(
                     horizontal: 16.0, vertical: 16.0),
                 child: Row(
-                  children: [
+                  children: <Widget>[
                     Expanded(
                       child: StyledTextFormField(
                           hintText: 'Angebot suchen',

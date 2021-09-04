@@ -37,5 +37,6 @@ const String CHATS_COLLECTION = 'chats',
 
 const String STORAGE_DEFAULT_BUCKET = 'gs://reso-83572.appspot.com/',
     STORAGE_IMAGE_BUCKET = 'gs://images-bkfz5/',
+    DEFAULT_PROFILE_IMAGE_NAME = 'default_profile_image.png',
     DEFAULT_PROFILE_IMAGE_PATH =
-        STORAGE_IMAGE_BUCKET + 'default_profile_image.png';
+        STORAGE_IMAGE_BUCKET + DEFAULT_PROFILE_IMAGE_NAME;

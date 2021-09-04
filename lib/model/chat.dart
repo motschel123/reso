@@ -64,7 +64,7 @@ class Chat {
     if (snap == null) {
       throw const FormatException("chat data doesn't exist");
     }
-    Map<String, dynamic> data = snap.value as Map<String, dynamic>;
+    final Map<String, dynamic> data = snap.value as Map<String, dynamic>;
 
     return Chat(
         key: snap.key!,

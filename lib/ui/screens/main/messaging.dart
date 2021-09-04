@@ -15,36 +15,24 @@ class Messaging extends StatefulWidget {
 class _MessagingState extends State<Messaging> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-            child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Consumer<ChatManager>(
-        builder: (BuildContext context, ChatManager value, _) => Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text('Nachrichten', style: Theme.of(context).textTheme.headline1),
-            Expanded(
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: value.chats.length,
-                  itemBuilder: (BuildContext context, int index) => TextButton(
-                        onPressed: () {
-                          getOffer(value.chats[index].offerId).then(
-                              (Offer? offer) => offer == null
-                                  ? throw const FormatException(
-                                      "Offer doesn't exist or has no data")
-                                  : ChatService.openChat(
-                                      context: context,
-                                      chat: value.chats[index],
-                                      offer: offer));
-                        },
-                        child: Text(value.chats[index].key),
-                      )),
-            ),
-          ],
-        ),
-      ),
-    )));
+    return SafeArea(
+        child: Consumer<ChatManager>(
+      builder: (BuildContext context, ChatManager value, _) => ListView.builder(
+          shrinkWrap: true,
+          itemCount: value.chats.length,
+          itemBuilder: (BuildContext context, int index) => TextButton(
+                onPressed: () {
+                  getOffer(value.chats[index].offerId).then((Offer? offer) =>
+                      offer == null
+                          ? throw const FormatException(
+                              "Offer doesn't exist or has no data")
+                          : ChatService.openChat(
+                              context: context,
+                              chat: value.chats[index],
+                              offer: offer));
+                },
+                child: Text(value.chats[index].key),
+              )),
+    ));
   }
 }

@@ -29,7 +29,7 @@ Future<void> main() async {
   } else {
     // Handle Crashlytics enabled status when not in Debug,
     // e.g. allow your users to opt-in to crash reporting.
-    // TODO: add opt-in
+    // TODO(motschel): add opt-in
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   }
   runZonedGuarded<Future<void>>(() async {
@@ -39,8 +39,6 @@ Future<void> main() async {
     runApp(const App());
   }, FirebaseCrashlytics.instance.recordError);
 }
-
-final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
