@@ -14,72 +14,53 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: move FAB to main_layout
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        backgroundColor: Colors.amber,
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute<CreateOffer>(
-              builder: (BuildContext context) => const CreateOffer()));
-        },
-      ),
-      body: SafeArea(
-        child: Consumer<ProfileManager>(
-            builder: (BuildContext context, ProfileManager profileManager, _) =>
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const Divider(height: 0),
-                    Text(
-                        'Du: ${FirebaseAuth.instance.currentUser!.displayName}'),
-                    TextButton(
-                        onPressed: () {
-                          Provider.of<AuthManager>(context, listen: false)
-                              .signOut();
-                        },
-                        child: const Text('Sign Out')),
-                    Expanded(
-                      child: ListView.separated(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        itemCount: profileManager.offers.length,
-                        separatorBuilder: (BuildContext context, int index) {
-                          return const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Divider(),
-                          );
-                        },
-                        itemBuilder: (BuildContext context, int index) {
-                          final Offer offer = profileManager.offers[index];
+    return SafeArea(
+      child: Consumer<ProfileManager>(
+          builder: (BuildContext context, ProfileManager profileManager, _) =>
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const Divider(height: 0),
+                  Expanded(
+                    child: ListView.separated(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      itemCount: profileManager.offers.length,
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Divider(),
+                        );
+                      },
+                      itemBuilder: (BuildContext context, int index) {
+                        final Offer offer = profileManager.offers[index];
 
-                          return OfferCard(
-                            offer: offer,
-                            offerColor: offerTypeToColor[offer.type]!,
-                            imageIcon:
-                                const Icon(Icons.edit, color: Colors.white),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute<CreateOffer>(
-                                    builder: (BuildContext context) =>
-                                        OfferDetail(offer: offer)),
-                              );
-                            },
-                            onIconTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute<CreateOffer>(
-                                    builder: (BuildContext context) =>
-                                        CreateOffer(editingOffer: offer)),
-                              );
-                            },
-                          );
-                        },
-                      ),
+                        return OfferCard(
+                          offer: offer,
+                          offerColor: offerTypeToColor[offer.type]!,
+                          imageIcon:
+                              const Icon(Icons.edit, color: Colors.white),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute<CreateOffer>(
+                                  builder: (BuildContext context) =>
+                                      OfferDetail(offer: offer)),
+                            );
+                          },
+                          onIconTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute<CreateOffer>(
+                                  builder: (BuildContext context) =>
+                                      CreateOffer(editingOffer: offer)),
+                            );
+                          },
+                        );
+                      },
                     ),
-                  ],
-                )),
-      ),
+                  ),
+                ],
+              )),
     );
   }
 }

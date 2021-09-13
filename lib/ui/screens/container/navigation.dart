@@ -10,6 +10,7 @@ import 'package:reso/ui/screens/main/main_layout.dart';
 import 'package:reso/ui/screens/main/messaging.dart';
 import 'package:reso/ui/screens/main/profile.dart';
 import 'package:reso/ui/screens/main/search.dart';
+import 'package:reso/ui/screens/settings.dart';
 
 final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -48,13 +49,21 @@ class _NavigationContainerState extends State<NavigationContainer> {
       ),
       widget: Messaging(),
     ),
-    const _NavigationOption(
+    _NavigationOption(
       title: 'Meine Angebot',
-      bottomNavigationBarItem: BottomNavigationBarItem(
+      bottomNavigationBarItem: const BottomNavigationBarItem(
         icon: Icon(Icons.person),
         label: 'Profil',
       ),
-      widget: Profile(),
+      widget: const Profile(),
+      appBarActions: <Widget>[
+        IconButton(
+            onPressed: () {
+              appNavigatorKey.currentState?.push(MaterialPageRoute<Settings>(
+                  builder: (BuildContext context) => const Settings()));
+            },
+            icon: const Icon(Icons.settings))
+      ],
     ),
   ];
 
@@ -75,6 +84,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
           case '/':
             builder = (BuildContext context) => MainLayout(
                   title: _navOptions[_selectedIndex].title,
+                  actions: _navOptions[_selectedIndex].appBarActions,
                   body: _navOptions[_selectedIndex].widget,
                   bottomNavigationBar: BottomNavigationBar(
                     unselectedItemColor: Theme.of(context).buttonColor,
@@ -118,8 +128,10 @@ class _NavigationOption {
     required this.title,
     required this.bottomNavigationBarItem,
     required this.widget,
+    this.appBarActions,
   });
 
+  final List<Widget>? appBarActions;
   final String title;
   final BottomNavigationBarItem bottomNavigationBarItem;
   final Widget widget;
