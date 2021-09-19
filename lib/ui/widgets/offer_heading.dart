@@ -54,9 +54,7 @@ class OfferHeading extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(offer.title,
-                      style: Theme.of(context).textTheme.headline2),
-                  Text('sample name pls implement',
-                      style: Theme.of(context).textTheme.subtitle1)
+                      style: Theme.of(context).textTheme.headline2)
                 ],
               ),
             )),
