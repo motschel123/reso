@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reso/business_logic/providers/auth_manager.dart';
-import 'package:reso/ui/screens/main/main_layout.dart';
+import 'package:reso/ui/widgets/default_app_bar.dart';
 
 class Settings extends StatelessWidget {
   const Settings({Key? key}) : super(key: key);
@@ -10,7 +10,7 @@ class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MainLayout.appBar(context, 'Settings'),
+        appBar: defaultAppBar(context: context, title: const Text('Settings')),
         body: Column(
           children: <Widget>[
             Padding(

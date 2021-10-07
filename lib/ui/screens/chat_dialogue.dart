@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:reso/business_logic/providers/message_manager.dart';
 import 'package:reso/consts/theme.dart';
 import 'package:reso/model/message.dart';
+import 'package:reso/ui/widgets/default_app_bar.dart';
 import 'package:reso/ui/widgets/message_input.dart';
 import 'package:reso/ui/widgets/offer_heading.dart';
 
@@ -18,13 +19,15 @@ class ChatDialogue extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: defaultAppBar(
+          context: context,
+          title: OfferHeading(
+            offer: messageManager.offer,
+            offerColor: offerTypeToColor[messageManager.offer.type]!,
+          )),
       body: SafeArea(
           child: Column(
         children: <Widget>[
-          OfferHeading(
-            offer: messageManager.offer,
-            offerColor: offerTypeToColor[messageManager.offer.type]!,
-          ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),

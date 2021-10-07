@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reso/business_logic/providers/feed_manager.dart';
@@ -32,7 +33,7 @@ class LiveFeed extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute<OfferDetail>(
+                    CupertinoPageRoute<OfferDetail>(
                         builder: (BuildContext context) =>
                             OfferDetail(offer: offer)),
                   );

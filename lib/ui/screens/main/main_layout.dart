@@ -43,20 +43,4 @@ class MainLayout extends StatelessWidget {
       bottomNavigationBar: bottomNavigationBar,
     );
   }
-
-  static AppBar appBar(BuildContext context, String title,
-      {List<Widget>? actions}) {
-    return AppBar(
-      actions: actions,
-      elevation: 0,
-      backgroundColor: Colors.white,
-      title: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          title,
-          style: Theme.of(context).textTheme.headline1,
-        ),
-      ),
-    );
-  }
 }
